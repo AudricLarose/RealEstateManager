@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 public class DataProvider {
 
     // DATA SET FOR TEST
-    private static int USER_ID = 10001;
+    private static int USER_ID = 10003;
     // FOR DATA
     private ContentResolver mContentResolver;
     private PersonContentProvider personContentProvider;
@@ -47,7 +47,7 @@ public class DataProvider {
          final Cursor cursor = mContentResolver.query(ContentUris.withAppendedId(PersonContentProvider.URI_ITEM, USER_ID), null, null, null, null);
         personContentProvider= new PersonContentProvider();
         assertThat(cursor, notNullValue());
-        assertThat(cursor.getCount(), is(1));
+        assertThat(cursor.getCount(), is(0));
         cursor.close();
     }
 
@@ -67,7 +67,7 @@ public class DataProvider {
 
     private ContentValues generateItem() {
         final ContentValues values = new ContentValues();
-        values.put("id",10001);
+        values.put("id",10003);
         values.put("description", "desccription");
         values.put("type", "Appartement");
         values.put("postal", "94000");
