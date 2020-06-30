@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <Spinner
+                android:id="@+id/type_bien"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                android:background="@color/colorPrimary"
+                android:entries="@array/Spinner_items"
+                android:outlineAmbientShadowColor="#bedac3" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_adresse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/type_bien"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginBottom="30dp"
+                android:textAlignment="center"
+                app:boxStrokeColor="@android:color/black"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Adresse"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/RelativePostal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_adresse"
+                android:layout_marginLeft="50dp">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_codepostal"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:mtf_cardCollapsedHeight="4dp"
+                    app:mtf_labelColor="#bedac3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Postale"
+                        android:inputType="number"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/RelativeVille"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_adresse"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="51dp">
+
+                <TextView
+                    android:id="@+id/text_ville"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+
+                    android:text="Ville" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_ville"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:mtf_backgroundColor="#bedac3"
+
+                    app:mtf_cardCollapsedHeight="4dp"
+                    app:mtf_labelColor="#bedac3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ville"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/RelativeMaarket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativePostal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="50dp">
+
+                <TextView
+                    android:id="@+id/text_onthemarket"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="sur le marché depuis "
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/edit_onthemarket"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_onthemarket"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginVertical="10dp"
+                    android:text=" "
+                    android:textColor="@color/design_default_color_on_secondary" />
+
+                <Button
+                    android:id="@+id/btn_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_onthemarket"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginVertical="10dp"
+                    android:background="@drawable/button"
+                    android:text="Date"
+                    android:textColor="@android:color/white" />
+            </RelativeLayout>
+
+            <Switch
+                android:id="@+id/switch_vendu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/RelativeVille"
+
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                android:text="Vendu ?"
+                android:textColor="#000000" />
+
+            <RelativeLayout
+                android:id="@+id/RelativeSell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/switch_vendu"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="50dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/edit_ontheSell"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginVertical="10dp"
+
+                    android:text="date"
+                    android:textColor="#bedac3" />
+
+                <Button
+                    android:id="@+id/btn_date_Sell"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_ontheSell"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginVertical="10dp"
+                    android:text="Date" />
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/RelativePrice"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativeMaarket"
+                android:layout_marginLeft="50dp">
+
+                <TextView
+                    android:id="@+id/text_prix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_centerHorizontal="true"
+
+                    android:text="Prix" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_prix"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="30dp"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:mtf_backgroundColor="#bedac3"
+                    app:mtf_cardCollapsedHeight="4dp"
+                    app:mtf_labelColor="#bedac3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Prix"
+                        android:inputType="number"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        app:errorEnabled="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/RelativeSurface"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativeMaarket"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp">
+
+                <TextView
+                    android:id="@+id/text_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Surface" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_surface"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="30dp"
+
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:mtf_backgroundColor="#bedac3"
+                    app:mtf_cardCollapsedHeight="4dp"
+                    app:mtf_labelColor="#bedac3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Surface"
+
+                        android:inputType="number"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/RelativePiece"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativePrice"
+                android:layout_marginLeft="50dp"
+                android:layout_marginBottom="50dp">
+
+                <TextView
+                    android:id="@+id/text_pieces"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="pieces"
+
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_piece"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="1dp"
+                    app:errorEnabled="true"
+                    app:mtf_backgroundColor="#bedac3"
+                    app:mtf_cardCollapsedHeight="4dp"
+                    app:mtf_labelColor="#bedac3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Piece"
+                        android:inputType="number"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/RelativeChambre"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativeSurface"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@+id/RelativePiece">
+
+                <TextView
+                    android:id="@+id/text_chambre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="chambres"
+
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_chambre"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:errorEnabled="true"
+                    app:mtf_backgroundColor="#bedac3"
+                    app:mtf_cardCollapsedHeight="4dp"
+
+                    app:mtf_labelColor="#bedac3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Chambre"
+                        android:inputType="number"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/RelativeSdb"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativeSurface"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp">
+
+                <TextView
+                    android:id="@+id/text_sdb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/sdb" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_sdb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:errorEnabled="true"
+                    app:mtf_backgroundColor="#bedac3"
+                    app:mtf_labelColor="#bedac3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/sdb"
+
+                        android:inputType="number"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/text_nom_agent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/RelativeSdb"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+
+
+                android:text="Nom De l'Agent"
+                android:textColor="#000000" />
+
+
+            <Spinner
+                android:id="@+id/nom_agent"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/text_nom_agent"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                android:background="@color/colorPrimary"
+
+                android:entries="@array/Spinner_items2"
+                android:textColor="#bedac3" />
+
+            <TextView
+                android:id="@+id/text_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nom_agent"
+                android:layout_marginBottom="20dp"
+
+                android:text="Description"
+                android:textColor="#000000" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_descript"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_description"
+                android:layout_marginHorizontal="50dp"
+
+                android:layout_marginBottom="30dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:mtf_backgroundColor="#bedac3"
+                app:mtf_cardCollapsedHeight="4dp"
+                app:mtf_image="@drawable/ic_map_black_24dp"
+                app:mtf_labelColor="#bedac3">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/text_proximité"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_descript"
+                android:layout_marginBottom="10dp"
+                android:text="proximité"
+
+                android:textColor="#000000" />
+
+            <RelativeLayout
+
+                android:id="@+id/relativeCBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/text_proximité"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="30dp"
+                android:gravity="center">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/check_ecole"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="40dp"
+                    android:padding="20dp"
+                    android:text="ecoles"
+                    android:textColor="@android:color/white"
+                    android:theme="@style/Theme.MaterialComponents.DayNight"
+                    app:chipBackgroundColor="@color/colorPrimary"
+                    app:chipCornerRadius="24dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/check_magasin"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/check_ecole"
+                    android:text="magasins"
+                    android:textColor="@android:color/white"
+                    android:theme="@style/Theme.MaterialComponents.DayNight"
+                    app:chipBackgroundColor="@color/colorPrimary"
+                    app:chipCornerRadius="24dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/check_metro"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/check_magasin"
+                    android:layout_toRightOf="@+id/check_parc"
+                    android:text="Station"
+                    android:textColor="@android:color/white"
+                    android:theme="@style/Theme.MaterialComponents.DayNight"
+                    app:chipBackgroundColor="@color/colorPrimary"
+                    app:chipCornerRadius="24dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/check_parc"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/check_ecole"
+                    android:layout_marginHorizontal="40dp"
+                    android:text="Parc"
+                    android:textColor="@android:color/white"
+                    android:theme="@style/Theme.MaterialComponents.DayNight"
+                    app:chipBackgroundColor="@color/colorPrimary"
+                    app:chipCornerRadius="24dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/check_bus"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/check_parc"
+                    android:layout_marginLeft="50dp"
+
+                    android:text="Bus"
+                    android:textColor="@android:color/white"
+                    android:theme="@style/Theme.MaterialComponents.DayNight"
+                    app:chipBackgroundColor="@color/colorPrimary"
+                    app:chipCornerRadius="24dp" />
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_photo_on_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeCBox"
+
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/button"
+                android:padding="10dp"
+                android:text="Take Photo"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_local_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeCBox"
+                android:layout_alignParentRight="true"
+
+                android:layout_marginRight="50dp"
+                android:background="@drawable/button"
+                android:padding="10dp"
+                android:text="Local photo"
+                android:textColor="@android:color/white" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Recyclerviewphotos"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/btn_local_photo"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/darker_gray" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Recyclerviewphotos"
+
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/button"
+                android:padding="10dp"
+                android:text="Cancel"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_Modifier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Recyclerviewphotos"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+
+                android:background="@drawable/button"
+                android:padding="10dp"
+                android:text="Modifier"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/Recyclerviewphotos"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/button"
+                android:padding="10dp"
+                android:text="Ok"
+
+                android:textColor="@android:color/white" />
+
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:progress="@android:integer/config_longAnimTime"
+        android:progressBackgroundTint="@color/colorSecondary"
+        android:visibility="gone" />
+</RelativeLayout>
