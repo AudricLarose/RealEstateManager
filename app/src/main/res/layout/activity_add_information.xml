@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativel"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -25,7 +26,7 @@
                 android:layout_marginBottom="50dp"
                 android:background="@color/colorPrimary"
                 android:entries="@array/Spinner_items"
-                android:outlineAmbientShadowColor="#bedac3" />
+                tools:targetApi="o" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edit_adresse"
@@ -37,12 +38,13 @@
                 android:textAlignment="center"
                 app:boxStrokeColor="@android:color/black"
                 app:endIconMode="clear_text"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                tools:targetApi="o">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Adresse"
+                    android:hint="@string/adresse"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="15sp" />
@@ -182,9 +184,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginVertical="10dp"
-
                     android:text="date"
-                    android:textColor="#bedac3" />
+                    android:textColor="@android:color/black" />
 
                 <Button
                     android:id="@+id/btn_date_Sell"
@@ -192,7 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/edit_ontheSell"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="2dp"
                     android:text="Date" />
 
 
@@ -486,7 +487,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="40dp"
                     android:padding="20dp"
-                    android:text="ecoles"
+                    android:text="@string/ecole"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -498,7 +499,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/check_ecole"
-                    android:text="magasins"
+                    android:text="@string/magasins"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -511,7 +512,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/check_magasin"
                     android:layout_toRightOf="@+id/check_parc"
-                    android:text="Station"
+                    android:text="@string/station"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -524,7 +525,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/check_ecole"
                     android:layout_marginHorizontal="40dp"
-                    android:text="Parc"
+                    android:text="@string/parc"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -538,7 +539,7 @@
                     android:layout_below="@+id/check_parc"
                     android:layout_marginLeft="50dp"
 
-                    android:text="Bus"
+                    android:text="@string/bus"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -555,7 +556,7 @@
                 android:layout_marginLeft="50dp"
                 android:background="@drawable/button"
                 android:padding="10dp"
-                android:text="Take Photo"
+                android:text="@string/take_a_photo"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -568,7 +569,7 @@
                 android:layout_marginRight="50dp"
                 android:background="@drawable/button"
                 android:padding="10dp"
-                android:text="Local photo"
+                android:text="@string/local_photo"
                 android:textColor="@android:color/white" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -602,7 +603,7 @@
 
                 android:background="@drawable/button"
                 android:padding="10dp"
-                android:text="Modifier"
+                android:text="@string/modifier"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
 

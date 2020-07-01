@@ -37,14 +37,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.florent37.materialtextfield.MaterialTextField;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
-import com.openclassrooms.realestatemanager.utils.AdaptateurImage;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.EstateViewModel;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
-import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
+import com.openclassrooms.realestatemanager.utils.AdaptateurImage;
+import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -90,6 +90,12 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private boolean CameraActivate;
     private ProgressBar progressBar;
 
+    public static Uri getImageUri(Activity inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +158,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 if (isChecked) {
                     relativeLayoutSell.setVisibility(View.VISIBLE);
                     getTimeIfDateIsEmpty(edit_ontheSell);
+
                 } else {
                     relativeLayoutSell.setVisibility(View.GONE);
                     edit_ontheSell.setText(" ");
@@ -207,6 +214,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         eSurface = findViewById(R.id.edit_surface);
         eVille = findViewById(R.id.edit_ville);
         edit_ontheSell = findViewById(R.id.edit_ontheSell);
+        getTimeIfDateIsEmpty(eMarket);
     }
 
     private void saveEntryEditText() {
@@ -220,6 +228,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         globalResultEstate.put("Surface", eSurface.getEditText().getText().toString());
         globalResultEstate.put("Ville", eVille.getEditText().getText().toString());
         globalResultEstate.put("dateSell", edit_ontheSell.getText().toString());
+        globalResultEstate.put("date", eMarket.getText().toString());
+
     }
 
     private void deployeChipes() {
@@ -316,7 +326,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         finish();
     }
 
-
     private boolean checkIfEveryFieldIsHere() {
         boolean isCheck = false;
         List<TextInputLayout> entryUser = new ArrayList<>();
@@ -350,13 +359,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 askDescription();
             }
         });
-    }
-
-    public static Uri getImageUri(Activity inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
     }
 
     private void initiateAndActivateLocalButton() {
@@ -450,7 +452,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void getTimeIfDateIsEmpty(TextView bloc) {
-        if (bloc.getText().toString().trim().isEmpty()) {
+        if (bloc.getText().toString().trim().isEmpty() || bloc.getText().toString().contains("date")) {
             bloc.setText(Utils.getDateFormat(AddInformationActivity.this, Calendar.getInstance()));
         }
     }
@@ -499,9 +501,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private RealEstate generateEstateObject() {
         estate = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
-                globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), date, globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
+                globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), globalResultEstate.get("date"), globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
                 , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
-       estate.setId(estate.hashCode());
+        estate.setId(estate.hashCode());
         return estate;
     }
 
@@ -550,7 +552,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             @Override
             public void onClick(View v) {
                 RealEstate estateForModifier = modifyEstate();
-                Utils.upDateMyBDDPlease(modifyEstate(),estate);
+                Utils.upDateMyBDDPlease(modifyEstate(), estate);
                 try {
                     Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
                         @Override
@@ -694,12 +696,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         deployRecyclerView();
     }
 
-    public interface SendCallBack {
-        void onFinish(RealEstate estateFireBase);
-
-        void onFail();
-    }
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -768,5 +764,11 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 spinnerChoicce.setSelection(i);
             }
         }
+    }
+
+    public interface SendCallBack {
+        void onFinish(RealEstate estateFireBase);
+
+        void onFail();
     }
 }
