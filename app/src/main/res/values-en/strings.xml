@@ -47,7 +47,7 @@
     <string name="piece">Room</string>
     <string name="chambre">Bedrooms</string>
     <string name="proximity">promximity</string>
-    <string name="magasins">shops</string>
+    <string name="magasins">Shops</string>
     <string name="metro">Subway</string>
     <string name="nbrphotomin">Minimum nbr photos</string>
     <string name="adresse">Adress</string>
@@ -55,7 +55,7 @@
     <string name="ville">Town</string>
     <string name="sur_le_march_depuis">On the market</string>
     <string name="ornot">Selled ?</string>
-    <string name="ecole">school</string>
+    <string name="ecole">School</string>
     <string name="station_bus_metro">Bus</string>
     <string name="local_photo">Local Photo</string>
     <string name="take_a_photo">Take a photo</string>
@@ -66,4 +66,6 @@
     <string name="date">Date</string>
     <string name="station">Station</string>
     <string name="ok">Ok</string>
+    <string name="both">Both</string>
+    <string name="all">All</string>
 </resources>

@@ -362,7 +362,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void deleteNearByIfResultMatch(int i) {
 
         if (resultsValidatedByUser != null && resultsValidatedByUser.size() != 0 && !listRealEstate.isEmpty()) {
-            if (listRealEstate.get(i).getNearby().contains(resultsValidatedByUser)) {
+            if (!listRealEstate.get(i).getNearby().containsAll(resultsValidatedByUser)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -451,9 +451,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteifsimplyselled(int i) {
         String selledEstateList = listRealEstate.get(i).getSelled();
-        if ((selledEstateList.equals("")) ||  selledEstateList.equals("date")){
-            resultResearchRealEstate.remove(listRealEstate.get(i));
-        }
+       if (switchVendu.isChecked()) {
+           if ((selledEstateList.equals("")) || selledEstateList.equals("date")) {
+               resultResearchRealEstate.remove(listRealEstate.get(i));
+           }
+       }
     }
 
 

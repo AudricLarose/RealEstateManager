@@ -8,10 +8,15 @@
     <item>Autres</item>
 </string-array>
     <string-array name="Spinner_photos">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
-        <item>4</item>
+    </string-array>
+    <string-array name="SellorNot">
+        <item>Selled</item>
+        <item>Available</item>
+        <item>Both</item>
     </string-array>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC_WkswyFXkxGjNsC4Ie_zoMbA5WuiRR68</string>
     <string name="title_item_list" translatable="false">Items</string>
@@ -53,27 +58,27 @@
     <string name="vendu">Vendu</string>
     <string name="prix">Prix</string>
     <string name="putdescription">Vous saisir votre description</string>
-    <string name="prix_min">prix min</string>
-    <string name="prix_max">prix max</string>
-    <string name="onmarketsince">sur le marché depuis</string>
+    <string name="prix_min">Prix min</string>
+    <string name="prix_max">Prix max</string>
+    <string name="onmarketsince">Sur le marché depuis</string>
     <string name="venduornot">Vendu ?</string>
     <string name="surface_min">Surface Min</string>
     <string name="surface_max">Surface Max</string>
     <string name="piece">Piece</string>
     <string name="chambre">Chambre</string>
     <string name="proximity">proximité</string>
-    <string name="magasins">magasins</string>
+    <string name="magasins">Magasins</string>
     <string name="metro">Station metro</string>
     <string name="parc">Parc</string>
     <string name="bus">Bus</string>
-    <string name="nbrphotomin">nombre de photos Minimum :</string>
+    <string name="nbrphotomin">Nombre de photos Minimum :</string>
     <string name="adresse">Adresse</string>
     <string name="postale">Postale</string>
     <string name="ville">Ville</string>
-    <string name="sur_le_march_depuis">sur le marché depuis</string>
+    <string name="sur_le_march_depuis">Sur le marché depuis</string>
     <string name="date">Date</string>
     <string name="ornot">Vendu ?</string>
-    <string name="ecole">ecole</string>
+    <string name="ecole">Ecole</string>
     <string name="station">Station</string>
     <string name="station_bus_metro">station Bus/Metro</string>
     <string name="local_photo">Local photo</string>
@@ -82,4 +87,7 @@
     <string name="modifier">Modifier</string>
     <string name="ok">Ok</string>
     <string name="actualisation">Vous devez actualiser la page pour avoir de nouvelles notifications</string>
+    <string name="reset">Reset</string>
+    <string name="all">All</string>
+    <string name="both">Both</string>
 </resources>

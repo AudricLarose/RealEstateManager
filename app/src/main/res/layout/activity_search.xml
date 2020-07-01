@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,7 +19,8 @@
                 android:id="@+id/search_RelativePostal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp">
+                android:layout_marginLeft="50dp"
+                tools:ignore="RtlHardcoded">
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -55,7 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp">
+                android:layout_marginRight="50dp"
+                tools:ignore="RtlHardcoded">
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -74,7 +77,6 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
                         android:hint="@string/prix_max"
                         android:inputType="number"
                         android:maxLength="7"
@@ -90,7 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativePostal"
-                android:layout_marginLeft="40dp">
+                android:layout_marginLeft="40dp"
+                tools:ignore="RtlHardcoded">
 
                 <TextView
                     android:id="@+id/search_text_onthemarket"
@@ -106,7 +109,8 @@
                     android:layout_below="@+id/search_text_onthemarket"
                     android:layout_centerHorizontal="true"
                     android:layout_marginVertical="10dp"
-                    android:text=" " />
+                    android:text=" "
+                    tools:ignore="HardcodedText,UnusedAttribute" />
 
                 <Button
                     android:id="@+id/search_btn_date"
@@ -115,8 +119,23 @@
                     android:layout_below="@+id/search_edit_onthemarket"
                     android:layout_centerHorizontal="true"
                     android:layout_marginVertical="10dp"
-                    android:text="@string/date" />
+                    android:text="@string/date"
+                    tools:ignore="UnusedAttribute" />
             </RelativeLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_all"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_text_proximité"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="70dp"
+                android:text="@string/both"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
 
             <Switch
                 android:id="@+id/search_switch_vendu"
@@ -125,35 +144,50 @@
                 android:layout_below="@id/search_RelativeVille"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="50dp"
-                android:text="@string/venduornot" />
-
+                android:text="@string/venduornot"
+                tools:ignore="RtlHardcoded"
+                android:visibility="gone"
+                />
+            <Spinner
+                android:id="@+id/sellornot"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/search_RelativeVille"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                android:background="@color/colorPrimary"
+                android:entries="@array/SellorNot"
+                tools:targetApi="o">
+            </Spinner>
             <RelativeLayout
                 android:id="@+id/search_RelativeSellDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_switch_vendu"
+                android:layout_below="@+id/sellornot"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="50dp"
-                android:visibility="gone">
+                android:visibility="visible"
+                tools:ignore="RtlHardcoded">
 
                 <TextView
                     android:id="@+id/search_edit_ontheSell"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="10dp"
-                    android:text="date"
-                    android:textColor="#bedac3" />
+                    android:text="@string/date"
+                    android:textColor="@android:color/black"
+                    tools:targetApi="o" />
 
                 <Button
                     android:id="@+id/search_btn_date_Sell"
+                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/search_edit_ontheSell"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="10dp"
-                    android:text="Date" />
+                    android:text="@string/date"
+                    tools:targetApi="o" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -161,7 +195,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeMaarket"
-                android:layout_marginLeft="50dp">
+                android:layout_marginLeft="50dp"
+                tools:ignore="RtlHardcoded">
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -169,7 +204,6 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/search_text_prix"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="20dp"
                     app:boxStrokeColor="@android:color/black"
@@ -198,7 +232,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeMaarket"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp">
+                android:layout_marginRight="50dp"
+                tools:ignore="RtlHardcoded">
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -235,7 +270,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativePrice"
-                android:layout_marginLeft="40dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginBottom="50dp">
 
 
@@ -273,7 +308,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeSurface"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@+id/search_RelativePiece">
+                android:layout_toRightOf="@+id/search_RelativePiece"
+                tools:ignore="RtlHardcoded">
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -310,7 +346,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeSurface"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp">
+                android:layout_marginRight="50dp"
+                tools:ignore="RtlHardcoded">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/sdbmin"
@@ -340,11 +377,36 @@
             </RelativeLayout>
 
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/townSearch"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="20dp"
+                app:boxStrokeColor="@android:color/black"
+                android:layout_below="@+id/search_RelativeSdb"
+                app:endIconMode="clear_text"
+                app:mtf_backgroundColor="#bedac3"
+                app:mtf_cardCollapsedHeight="4dp"
+                app:mtf_image="@drawable/ic_map_black_24dp"
+                app:mtf_labelColor="#bedac3">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:hint="@string/ville"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:text="" />
+
+            </com.google.android.material.textfield.TextInputLayout>
             <TextView
                 android:id="@+id/search_text_proximité"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativeSdb"
+                android:layout_below="@+id/townSearch"
                 android:layout_marginBottom="10dp"
                 android:text="@string/proximity" />
 
@@ -356,11 +418,12 @@
                 android:layout_below="@+id/search_text_proximité"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="30dp"
-                android:text="ecoles"
+                android:text="@string/ecole"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp" />
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_magasin"
@@ -374,7 +437,8 @@
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp" />
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_metro"
@@ -387,7 +451,8 @@
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp" />
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_parc"
@@ -403,7 +468,8 @@
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp" />
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_bus"
@@ -413,14 +479,100 @@
                 android:layout_below="@+id/search_check_ecole"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="0dp"
-
                 android:layout_marginRight="70dp"
                 android:layout_marginBottom="20dp"
                 android:text="@string/bus"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp" />
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
+
+            <TextView
+                android:id="@+id/type_bienSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_check_parc"
+                android:layout_marginBottom="10dp"
+                android:text="@string/type" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_check_ecole"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_text_proximité"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="30dp"
+                android:text="@string/ecole"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_check_magasin"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_text_proximité"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="70dp"
+                android:text="@string/magasins"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_check_metro"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_check_magasin"
+                android:layout_marginLeft="20dp"
+                android:text="@string/metro"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_check_parc"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_check_metro"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/parc"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_check_bus"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_check_ecole"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="70dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/bus"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/textPhotos"
@@ -437,7 +589,8 @@
                 android:layout_below="@+id/textPhotos"
                 android:layout_marginHorizontal="150dp"
                 android:background="@color/colorPrimary"
-                android:entries="@array/Spinner_photos">
+                android:entries="@array/Spinner_photos"
+                tools:targetApi="o">
 
             </Spinner>
 
@@ -457,7 +610,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RecyclerSearch"
 
-                android:text="Reset" />
+                android:text="@string/reset" />
 
             <Button
                 android:id="@+id/search_btn_ok"
@@ -465,7 +618,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RecyclerSearch"
                 android:layout_alignParentRight="true"
-                android:text="Ok" />
+                android:text="@string/ok"
+                tools:ignore="RtlHardcoded" />
 
         </RelativeLayout>
     </ScrollView>

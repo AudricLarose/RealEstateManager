@@ -22,7 +22,7 @@
     <string name="pays">Pays</string>
     <string name="vendu_le">Vendu le</string>
     <string name="agent">Agent</string>
-    <string name="chiffres">CHiffres</string>
+    <string name="chiffres">Chiffres</string>
     <string name="nonew">Aucune Données dans la Base De Données</string>
     <string name="vendu">Vendu</string>
     <string name="prix">Prix</string>
@@ -31,18 +31,18 @@
     <string name="piece">Piece</string>
     <string name="chambre">Chambre</string>
     <string name="proximity">proximité</string>
-    <string name="magasins">magasins</string>
+    <string name="magasins">Magasins</string>
     <string name="metro">Station metro</string>
     <string name="parc">Parc</string>
     <string name="bus">Bus</string>
-    <string name="nbrphotomin">nombre de photos Minimum :</string>
+    <string name="nbrphotomin">Nombre de photos Minimum :</string>
     <string name="adresse">Adresse</string>
     <string name="postale">Postale</string>
     <string name="ville">Ville</string>
-    <string name="sur_le_march_depuis">sur le marché depuis</string>
+    <string name="sur_le_march_depuis">Sur le marché depuis</string>
     <string name="date">Date</string>
     <string name="ornot">Vendu ?</string>
-    <string name="ecole">ecole</string>
+    <string name="ecole">Ecole</string>
     <string name="station">Station</string>
     <string name="station_bus_metro">Bus</string>
     <string name="local_photo">Photo local</string>
@@ -50,8 +50,8 @@
     <string name="cancel">Annuler</string>
     <string name="modifier">Modifier</string>
     <string name="ok">Ok</string>
-    <string name="prix_min">prix min</string>
-    <string name="prix_max">prix max</string>
+    <string name="prix_min">Prix min</string>
+    <string name="prix_max">Prix max</string>
     <string name="onmarketsince">sur le marché depuis</string>
     <string name="venduornot">Vendu ?</string>
     <string name="appartement">Appartement</string>
@@ -66,4 +66,7 @@
     <string name="aucunmail">Aucun Mail en Attente D\'Envoie</string>
     <string name="ni_internet">Vous n\'avez pas internet nous ne pouvons envoyer ce fichier a la BDD</string>
     <string name="Search">Rechercher</string>
+    <string name="actualisation">Vous devez actualiser la page pour avoir de nouvelles notifications</string>
+    <string name="all">Tous</string>
+    <string name="both">Les deux</string>
 </resources>
