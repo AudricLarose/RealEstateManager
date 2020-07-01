@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private EstateViewModel estateViewModel;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView textNotif;
+    int countLoup=0;
 
     private static void buttonInternetInfo(Context context) {
         AlertDialog alertDialog = buttonInternetInfoDialog(context);
@@ -200,34 +201,26 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<RealEstate> realEstates) {
                 listRealEstate.clear();
                 listRealEstate.addAll(realEstates);
-                antiDoublonCheck(realEstates);
                 searchForNotif(realEstates);
                 deployRecyclerView();
             }
         });
     }
 
-    private void antiDoublonCheck(List<RealEstate> realEstates) {
-        int count = 0;
-        for (int i = 0; i < realEstates.size(); i++) {
-            if (realEstates.contains(realEstates.get(i))) {
-                count = 1 + count;
-            }
-        }
-    }
-
     private void searchForNotif(List<RealEstate> realEstates) {
-        listTemp.clear();
-        for (int i = 0; i < realEstates.size(); i++) {
-            if (realEstates.get(i).getTemp().equals("true")) {
-                listTemp.add(realEstates.get(i));
-                majNotif();
+        countLoup=countLoup+1;
+        if (countLoup==1) {
+            listTemp.clear();
+            for (int i = 0; i < realEstates.size(); i++) {
+                if (realEstates.get(i).getTemp().equals("true")) {
+                    listTemp.add(realEstates.get(i));
+                    majNotif();
+                }
             }
         }
     }
 
     private void deployementNotificationMail() {
-//        dialogBoxInformaer();
         iniatiateAndActivateNotifLayout();
     }
 
@@ -300,11 +293,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.iconebarmenu, menu);
-//        MenuItem menuItem = menu.findItem(R.id.action_cart);
-//        menuItem.setActionView(R.layout.notification_badge);
-//        View view =menuItem.getActionView();
-//        TextView badgeCOunter= view.findViewById(R.id.badge_counter);
-//        badgeCOunter.setText(String.valueOf(listTemp.size()));
         return true;
     }
 
@@ -402,14 +390,5 @@ public class MainActivity extends AppCompatActivity {
         takeDataInBDDIfInternetIsHere();
         saveDataInSQLITE();
         majNotif();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        majNotif();
-        takeDataInBDDIfInternetIsHere();
-        saveDataInSQLITE();
-
     }
 }
