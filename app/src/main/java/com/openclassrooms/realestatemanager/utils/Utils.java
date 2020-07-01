@@ -339,6 +339,7 @@ public class Utils {
         note.put("link", estate.getLink());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("realestates").document(String.valueOf(estate.getId())).update(note);
+        estate;
     }
 
     public interface CallBackImage{
