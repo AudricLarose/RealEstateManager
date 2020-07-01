@@ -89,7 +89,11 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
         estate = liste.get(position);
         holder.type.setText(estate.getType());
         if (Boolean.valueOf(estate.getInEuro())) {
-            holder.prix.setText(Utils.getEuroFormat(Integer.parseInt(estate.getPrix())));
+            try {
+                holder.prix.setText(Utils.getEuroFormat(Integer.parseInt(estate.getPrix())));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         } else {
             holder.prix.setText(Utils.getDollarFormat(Integer.parseInt(estate.getPrix())));
 

@@ -81,4 +81,5 @@
     <string name="cancel">Cancel</string>
     <string name="modifier">Modifier</string>
     <string name="ok">Ok</string>
+    <string name="actualisation">Vous devez actualiser la page pour avoir de nouvelles notifications</string>
 </resources>

@@ -155,7 +155,7 @@ public class Utils {
     }
 
     // Verify if user have Internet is on and stop if not
-    public static boolean InternetOnVerify(Context context) {
+    public static boolean internetOnVerify(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
@@ -187,7 +187,7 @@ public class Utils {
         builder.setMessage("Vous devez activer votre connexion internet pour profiter de l'application").setTitle("Alert Internet").setPositiveButton("J'ai bien activé ma connexion", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Utils.InternetOnVerify(context);
+                Utils.internetOnVerify(context);
             }
         });
         return builder.create();
@@ -312,7 +312,7 @@ public class Utils {
         firebaseFirestore.collection("realestates").document(String.valueOf(estate.hashCode())).set(note);
     }
 
-    public static void upDateMyBDDPlease(RealEstate estate) {
+    public static void upDateMyBDDPlease(RealEstate estate, RealEstate realEstate) {
         Map note = new HashMap();
         note.put("id", estate.getId());
         note.put("type", estate.getType());
@@ -338,7 +338,7 @@ public class Utils {
         note.put("descriptionImage", estate.getDescriptionImage());
         note.put("link", estate.getLink());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestates").document(String.valueOf(estate.hashCode())).update(note);
+        firebaseFirestore.collection("realestates").document(String.valueOf(estate.getId())).update(note);
     }
 
     public interface CallBackImage{

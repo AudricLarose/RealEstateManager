@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,12 +25,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
@@ -45,8 +42,6 @@ import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 
 import java.util.List;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 /**
  * An activity representing a list of Items. This activity
@@ -84,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(R.string.conexioGPStest).setTitle(R.string.alertinternet).setPositiveButton(R.string.internetActivate, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Utils.InternetOnVerify(context);
+                Utils.internetOnVerify(context);
             }
         });
         return builder.create();
@@ -95,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         if ((MainActivity.this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         } else {
-        //    placeMeOnMap(googleMap);
+            //    placeMeOnMap(googleMap);
         }
     }
 
@@ -130,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         deployementButtonAdd();
         deployementButtonMail();
         onSwipeToRefresh();
-        Utils.InternetOnVerify(this);
+        Utils.internetOnVerify(this);
         Utils.internetIsOn(this);
 //        Utils.GPSOnVerify(this);
         DeploytempHandler();
@@ -172,9 +167,13 @@ public class MainActivity extends AppCompatActivity {
         Utils.saveDataInBDD(new Utils.CallBackInterfaceForBDD() {
             @Override
             public void onFinish(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
-                estateViewModel.deleteAlldata();
-                for (int i = 0; i < realEstateList.size(); i++) {
-                    estateViewModel.InsertThisData(realEstateList.get(i));
+                if (listTemp.size() == 0) {
+                    estateViewModel.deleteAlldata();
+                    for (int i = 0; i < realEstateList.size(); i++) {
+                        estateViewModel.InsertThisData(realEstateList.get(i));
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -245,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         if (listTemp.size() == 0) {
             Toast.makeText(this, R.string.aucunmail, Toast.LENGTH_SHORT).show();
         } else {
-            if (Utils.InternetOnVerify(this)) {
+            if (Utils.internetOnVerify(this)) {
                 if (listTemp.size() > 0) {
                     for (int i = 0; i < listTemp.size(); i++) {
                         Utils.sendItToMyBDDatRealEstate(listTemp.get(i));
@@ -348,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
         Utils.GPSOnVerify(this, new Utils.GPSCallBAck() {
             @Override
             public void onRetrieve() {
-                if (Utils.InternetOnVerify(MainActivity.this)) {
+                if (Utils.internetOnVerify(MainActivity.this)) {
                     Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                     startActivity(intent);
                 }

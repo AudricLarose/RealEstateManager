@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +31,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,8 +53,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.internal.Util;
 
 public class AddInformationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = "ShowResult";
@@ -117,7 +113,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void setTitleToAdapt() {
-        if (verifyEstateExist()) {
+        if (verifyEstateExistAlreadyForModify()) {
             setTitle(R.string.modify);
         } else {
             setTitle(R.string.ajouter);
@@ -128,8 +124,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         relativeLayoutSell = findViewById(R.id.RelativeSell);
     }
 
-
-    private Boolean verifyEstateExist() {
+    private Boolean verifyEstateExistAlreadyForModify() {
         Intent intent = this.getIntent();
         Bundle extra = intent.getExtras();
         if (extra != null) {
@@ -258,11 +253,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                     if (ChipesContainer.get(finalI).isChecked()) {
                         globalResultEstate.put(ChipesContainer.get(finalI).getText().toString(), String.valueOf(ChipesContainer.get(finalI).getText()));
                         resultList.add(String.valueOf(ChipesContainer.get(finalI).getText()));
-                        showResult(resultsValidatedByUser);
                     } else if (!ChipesContainer.get(finalI).isChecked()) {
                         globalResultEstate.remove(ChipesContainer.get(finalI).getText().toString(), String.valueOf(ChipesContainer.get(finalI).getText()));
                         resultList.remove(String.valueOf(ChipesContainer.get(finalI).getText()));
-                        showResult(resultsValidatedByUser);
                     }
                 }
             });
@@ -270,67 +263,14 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         return resultList;
     }
 
-    private void showResult(List<String> resultsValidatedByUser) {
-        Log.d(TAG, "showResult: " + resultsValidatedByUser);
-    }
-
     private void deployeButton() {
-        initiateAndActivateOkButton();
-        initiateAndActivateCancelButton();
-        initiateAndActivateLocalButton();
-        initiateAndActivateCameraButton();
         initiateAndActivateDateButton();
         initiateAndActivateDateSellButton();
+        initiateAndActivateLocalButton();
+        initiateAndActivateCameraButton();
+        initiateAndActivateCancelButton();
+        initiateAndActivateOkButton();
         initiateAndActivateModifyButton();
-    }
-
-    private void initiateAndActivateDateSellButton() {
-        btnDateSell = findViewById(R.id.btn_date_Sell);
-        btnDateSell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment datepicker = new DatePickerFragment();
-                datepicker.show(getSupportFragmentManager(), "Date Picker1");
-            }
-        });
-    }
-
-    private void initiateAndActivateModifyButton() {
-        btnModify = findViewById(R.id.btn_Modifier);
-        btnModify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RealEstate estateForModifier = modifyEstate();
-                Utils.upDateMyBDDPlease(modifyEstate());
-                try {
-                    Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
-                        @Override
-                        public void onFinish(List<String> s) {
-                            modifyEstate().setLink(s);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                redirectToDetailsActivity(estateForModifier);
-            }
-        });
-    }
-
-    private RealEstate modifyEstate() {
-        saveEntryEditText();
-        RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
-                globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), date, globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
-                , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
-        estateNew.setId(estate.getId());
-        estateViewModel = new ViewModelProvider(this).get(EstateViewModel.class);
-        estateViewModel.UpdateThisData(estateNew);
-
-        return null;
-    }
-
-    private void redirectToDetailsActivity(RealEstate estateForModifier) {
-        finish();
     }
 
     private void initiateAndActivateDateButton() {
@@ -361,25 +301,21 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         }
     }
 
-    private void initiateAndActivateOkButton() {
-        btnOk = findViewById(R.id.btn_ok);
-        btnOk.setOnClickListener(new View.OnClickListener() {
+    private void initiateAndActivateDateSellButton() {
+        btnDateSell = findViewById(R.id.btn_date_Sell);
+        btnDateSell.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (checkIfEveryFieldIsHere()) {
-                    getTimeIfDateIsEmpty(eMarket);
-                    saveEntryEditText();
-                    showGlobalResult();
-                }
+            public void onClick(View v) {
+                DialogFragment datepicker = new DatePickerFragment();
+                datepicker.show(getSupportFragmentManager(), "Date Picker1");
             }
         });
     }
 
-    private void getTimeIfDateIsEmpty(TextView bloc) {
-        if (bloc.getText().toString().trim().isEmpty()) {
-            bloc.setText(Utils.getDateFormat(AddInformationActivity.this, Calendar.getInstance()));
-        }
+    private void redirectToDetailsActivity(RealEstate estateForModifier) {
+        finish();
     }
+
 
     private boolean checkIfEveryFieldIsHere() {
         boolean isCheck = false;
@@ -404,17 +340,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         }
         return true;
     }
-
-    private void initiateAndActivateCancelButton() {
-        btnCancel = findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-    }
-
 
     private void initiateAndActivateCameraButton() {
         btnLocalPhoto = findViewById(R.id.btn_photo_on_phone);
@@ -500,12 +425,53 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         }
     }
 
+    private void initiateAndActivateCancelButton() {
+        btnCancel = findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    private void initiateAndActivateOkButton() {
+        btnOk = findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkIfEveryFieldIsHere()) {
+                    getTimeIfDateIsEmpty(eMarket);
+                    saveEntryEditText();
+                    showGlobalResult();
+                }
+            }
+        });
+    }
+
+    private void getTimeIfDateIsEmpty(TextView bloc) {
+        if (bloc.getText().toString().trim().isEmpty()) {
+            bloc.setText(Utils.getDateFormat(AddInformationActivity.this, Calendar.getInstance()));
+        }
+    }
+
     private void showGlobalResult() {
         Utils.buttonBlocker(btnOk);
         Utils.buttonBlocker(btnCancel);
         RealEstate estate1 = generateEstateObject();
         if (estate1 != null) {
             final RealEstate finalEstate = estate1;
+            if (listPhotoRealistetate.size() > 0) {
+                sendPhotoAtBDD(estate1, finalEstate);
+            } else {
+                knowIfTempOrNot(finalEstate);
+                finish();
+            }
+        }
+    }
+
+    private void sendPhotoAtBDD(RealEstate estate1, final RealEstate finalEstate) {
+        if (Utils.internetOnVerify(this)) {
             sendToFireStock(estate1, new SendCallBack() {
                 @Override
                 public void onFinish(RealEstate estateFireBase) {
@@ -521,7 +487,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                     finish();
                 }
             });
-
+        } else {
+            knowIfTempOrNot(finalEstate);
         }
     }
 
@@ -534,7 +501,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         estate = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
                 globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), date, globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
                 , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
-
+       estate.setId(estate.hashCode());
         return estate;
     }
 
@@ -557,7 +524,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void knowIfTempOrNot(RealEstate estate) {
-        if (Utils.InternetOnVerify(this)) {
+        if (Utils.internetOnVerify(this)) {
             Utils.sendItToMyBDDatRealEstate(estate);
             estate.setTemp("false");
         } else {
@@ -568,7 +535,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private RealEstate saveInTempIfNoInternet(RealEstate estate) {
-        if (!Utils.InternetOnVerify(this)) {
+        if (!Utils.internetOnVerify(this)) {
             Toast.makeText(this, R.string.not_connecte, Toast.LENGTH_LONG).show();
             tempList.add(estate);
             progressBar.setVisibility(View.GONE);
@@ -577,8 +544,42 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         return estate;
     }
 
+    private void initiateAndActivateModifyButton() {
+        btnModify = findViewById(R.id.btn_Modifier);
+        btnModify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RealEstate estateForModifier = modifyEstate();
+                Utils.upDateMyBDDPlease(modifyEstate(),estate);
+                try {
+                    Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
+                        @Override
+                        public void onFinish(List<String> s) {
+                            modifyEstate().setLink(s);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                redirectToDetailsActivity(estateForModifier);
+            }
+        });
+    }
+
+    private RealEstate modifyEstate() {
+        saveEntryEditText();
+        RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
+                globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), date, globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
+                , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
+        estateNew.setId(estate.getId());
+        estateViewModel = new ViewModelProvider(this).get(EstateViewModel.class);
+        estateViewModel.UpdateThisData(estateNew);
+        return estateNew;
+    }
+
+
     private void deployModificationAction() {
-        isEstateExist = verifyEstateExist();
+        isEstateExist = verifyEstateExistAlreadyForModify();
         if (isEstateExist) {
             giveEstat2ViewsIfNotNull();
             replaceOkButtonByModifyButton();

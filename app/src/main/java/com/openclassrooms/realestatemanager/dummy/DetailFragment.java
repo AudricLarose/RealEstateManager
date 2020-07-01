@@ -164,7 +164,10 @@ public class DetailFragment extends Fragment {
         typeCHiffre.setText(estateGrabbed.getType());
         bathroomchiffre.setText(estateGrabbed.getSdb());
         if (estateGrabbed.getNearby() != null) {
-            nearbyChiffre.setText(estateGrabbed.getNearby().toString());
+            String nearby=estateGrabbed.getNearby().toString();
+            String nearbyNew=nearby.replace("[","");
+            String nearbyChiffreNew=nearbyNew.replace("]","");
+            nearbyChiffre.setText(nearbyChiffreNew);
         }
         chamber.setText(estateGrabbed.getChambre());
         description.setText(estateGrabbed.getDescription());

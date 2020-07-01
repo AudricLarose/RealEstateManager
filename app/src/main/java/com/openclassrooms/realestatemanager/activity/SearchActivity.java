@@ -49,6 +49,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     List<TextInputLayout> editTextContainer = new ArrayList<>();
     private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus;
     private TextInputLayout ePrixmin, eSurfaceMax, ePrixMax, eSurface, ePiece, eChambre, eSdb;
+    private Switch search_switch_vendu;
     private TextView eMarket;
     private Spinner spinerPhoto;
     private Switch switchVendu;
@@ -80,10 +81,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         editTextContainer = initiateEditText();
         deployeChipes();
         deployButton();
+        deploySwitch();
         deployRecyclerView();
         deployRelativeLayout();
         deployeSpinner();
     }
+
 
     private void actionfleche() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -108,6 +111,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         relativeLayoutSell = findViewById(R.id.search_RelativeSellDetails);
     }
 
+    private void deploySwitch() {
+        search_switch_vendu = findViewById(R.id.search_switch_vendu);
+    }
+
     private List<TextInputLayout> initiateEditText() {
         List<TextInputLayout> editTextsContainer = new ArrayList<>();
         eChambre = findViewById(R.id.ChamberMin);
@@ -119,6 +126,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         eSurface = findViewById(R.id.surfacemin);
         eSurfaceMax = findViewById(R.id.surfacemax);
         edit_ontheSell = findViewById(R.id.search_edit_ontheSell);
+
         editTextsContainer.add(eChambre);
         editTextsContainer.add(ePrixmin);
         editTextsContainer.add(ePiece);
@@ -137,6 +145,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         globalResultEstate.put("SDB", eSdb.getEditText().getText().toString());
         globalResultEstate.put("SurfaceMin", eSurface.getEditText().getText().toString());
         globalResultEstate.put("SurfaceMAx", eSurfaceMax.getEditText().getText().toString());
+
     }
 
     private void deployButton() {
@@ -154,6 +163,21 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                 reset();
             }
         });
+        resetEntry();
+
+
+    }
+
+    private void resetEntry() {
+        eChambre.getEditText().setText("");
+        eMarket.setText("");
+        ePiece.getEditText().setText("");
+        ePrixMax.getEditText().setText("");
+        ePrixmin.getEditText().setText("");
+        eSdb.getEditText().setText("");
+        eSurface.getEditText().setText("");
+        eSurfaceMax.getEditText().setText("");
+        edit_ontheSell.setText("");
     }
 
     private void reset() {
@@ -301,9 +325,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             deleteNearByIfResultMatch(i);
             deleteDateEntryIfResultMatch(i);
             deleteDateSelledIfResultMatch(i);
+            deleteifsimplyselled(i);
         }
         deployRecyclerView();
     }
+
 
     private void deleteDateEntryIfResultMatch(int i) {
         try {
@@ -414,7 +440,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void deleteSDBIfResultMatch(int i) {
-
         String sdbEntryByUser = globalResultEstate.get("SDB");
         String sdbEstateList = listRealEstate.get(i).getSdb();
         if (sdbEntryByUser != null && !sdbEntryByUser.isEmpty()) {
@@ -423,6 +448,15 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             }
         }
     }
+
+    private void deleteifsimplyselled(int i) {
+        String selledEstateList = listRealEstate.get(i).getSelled();
+        if ((selledEstateList.equals("")) ||  selledEstateList.equals("date")){
+            resultResearchRealEstate.remove(listRealEstate.get(i));
+        }
+    }
+
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {

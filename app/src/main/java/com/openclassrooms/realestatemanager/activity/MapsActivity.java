@@ -187,13 +187,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 @Override
                 public void onEchec() {
-                    Toast.makeText(MapsActivity.this, "Aucune Place n'a été trouvé", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onCrash() {
-                    Toast.makeText(MapsActivity.this, "Aucune Place n'a été trouvé", Toast.LENGTH_SHORT).show();
-
                 }
             });
         }
