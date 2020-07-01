@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deployRecyclerView() {
-        adapter = new Adaptateur(listRealEstate, mTwoPane, this);
+        adapter = new Adaptateur(Utils.sortedbyPriceDecroissant(listRealEstate), mTwoPane, this);
         recyclerView = findViewById(R.id.RecyclerviewEstate);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(MainActivity.this);
@@ -318,9 +318,6 @@ public class MainActivity extends AppCompatActivity {
                 adapter = new Adaptateur(realEstateListdecroissant, mTwoPane, this);
                 recyclerView.setAdapter(adapter);
                 return true;
-//            case  R.id.action_cart:
-//                DeploytempHandler();
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
