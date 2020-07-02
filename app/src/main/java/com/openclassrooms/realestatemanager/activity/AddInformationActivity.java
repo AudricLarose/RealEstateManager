@@ -493,6 +493,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 public void onFinish(RealEstate estateFireBase) {
                     knowIfTempOrNot(estateFireBase);
                     saveToRoom(estateFireBase);
+                    Toast.makeText(AddInformationActivity.this, R.string.filesuploads, Toast.LENGTH_SHORT).show();
                     finish();
                 }
 
@@ -643,7 +644,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         listForPosition.add(getString(R.string.House));
         listForPosition.add(getString(R.string.attic));
         listForPosition.add(getString(R.string.parking));
-        listForPosition.add(getString(R.string.villa));
+        listForPosition.add(getString(R.string.Loft));
+        listForPosition.add(getString(R.string.Other));
         for (int i = 0; i < listForPosition.size(); i++) {
             if (estate.getType().equals(listForPosition.get(i))) {
                 spinnerChoicce.setSelection(i);
@@ -759,7 +761,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         listForPosition.add(getString(R.string.House));
         listForPosition.add(getString(R.string.attic));
         listForPosition.add(getString(R.string.parking));
-        listForPosition.add(getString(R.string.villa));
+        listForPosition.add(getString(R.string.Loft));
+        listForPosition.add(getString(R.string.Other));
         for (int i = 0; i < listForPosition.size(); i++) {
             if (savedInstanceState.getString("type").equals(listForPosition.get(i))) {
                 spinnerChoicce.setSelection(i);
