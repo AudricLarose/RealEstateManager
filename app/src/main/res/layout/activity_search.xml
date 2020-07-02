@@ -19,7 +19,7 @@
                 android:id="@+id/search_RelativePostal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="20dp"
                 tools:ignore="RtlHardcoded">
 
 
@@ -79,7 +79,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/prix_max"
                         android:inputType="number"
-                        android:maxLength="7"
                         android:text=""
                         android:textColor="@android:color/black" />
 
@@ -92,11 +91,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativePostal"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
                 tools:ignore="RtlHardcoded">
 
                 <TextView
                     android:id="@+id/search_text_onthemarket"
+                    android:layout_marginLeft="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -122,20 +123,6 @@
                     android:text="@string/date"
                     tools:ignore="UnusedAttribute" />
             </RelativeLayout>
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_all"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_text_proximité"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="70dp"
-                android:text="@string/both"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
 
             <Switch
                 android:id="@+id/search_switch_vendu"
@@ -145,9 +132,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="50dp"
                 android:text="@string/venduornot"
-                tools:ignore="RtlHardcoded"
                 android:visibility="gone"
-                />
+                tools:ignore="RtlHardcoded" />
+
             <Spinner
                 android:id="@+id/sellornot"
                 android:layout_width="wrap_content"
@@ -157,8 +144,8 @@
                 android:layout_marginRight="50dp"
                 android:background="@color/colorPrimary"
                 android:entries="@array/SellorNot"
-                tools:targetApi="o">
-            </Spinner>
+                tools:targetApi="o"></Spinner>
+
             <RelativeLayout
                 android:id="@+id/search_RelativeSellDetails"
                 android:layout_width="wrap_content"
@@ -181,11 +168,11 @@
 
                 <Button
                     android:id="@+id/search_btn_date_Sell"
-                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/search_edit_ontheSell"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
                     android:text="@string/date"
                     tools:targetApi="o" />
             </RelativeLayout>
@@ -195,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeMaarket"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="20dp"
                 tools:ignore="RtlHardcoded">
 
 
@@ -270,7 +257,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativePrice"
-                android:layout_marginStart="40dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginBottom="50dp">
 
 
@@ -307,7 +294,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeSurface"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="40dp"
                 android:layout_toRightOf="@+id/search_RelativePiece"
                 tools:ignore="RtlHardcoded">
 
@@ -382,10 +369,10 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
+                android:layout_below="@+id/search_RelativeSdb"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="20dp"
                 app:boxStrokeColor="@android:color/black"
-                android:layout_below="@+id/search_RelativeSdb"
                 app:endIconMode="clear_text"
                 app:mtf_backgroundColor="#bedac3"
                 app:mtf_cardCollapsedHeight="4dp"
@@ -397,129 +384,131 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:hint="@string/ville"
-                    android:inputType="number"
-                    android:maxLength="10"
                     android:text="" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
                 android:id="@+id/search_text_proximité"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/townSearch"
+                android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
+                android:textStyle="bold"
                 android:text="@string/proximity" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_ecole"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_text_proximité"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginHorizontal="100dp"
                 android:text="@string/ecole"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipBackgroundColor="@color/colorAccent"
                 app:chipCornerRadius="24dp"
                 tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_magasin"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_text_proximité"
+                android:layout_below="@+id/search_check_ecole"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="70dp"
+                android:layout_marginHorizontal="100dp"
                 android:text="@string/magasins"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipBackgroundColor="@color/colorAccent"
                 app:chipCornerRadius="24dp"
                 tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_metro"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_magasin"
-                android:layout_marginLeft="20dp"
+                android:layout_marginHorizontal="100dp"
                 android:text="@string/metro"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipBackgroundColor="@color/colorAccent"
                 app:chipCornerRadius="24dp"
                 tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_parc"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_metro"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="100dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginHorizontal="100dp"
                 android:text="@string/parc"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipBackgroundColor="@color/colorAccent"
                 app:chipCornerRadius="24dp"
                 tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_bus"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_ecole"
+                android:layout_below="@+id/search_check_parc"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="0dp"
-                android:layout_marginRight="70dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginHorizontal="100dp"
                 android:text="@string/bus"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipBackgroundColor="@color/colorAccent"
                 app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/nonenearbysearch"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_check_bus"
+                android:layout_alignParentRight="true"
+                android:layout_marginHorizontal="100dp"
+                android:text="@string/none"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorAccent"
+                app:chipCornerRadius="24dp"
+                android:layout_marginBottom="20dp"
                 tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/type_bienSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_parc"
-                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/nonenearbysearch"
+                android:textStyle="bold"
+                android:layout_marginLeft="20dp"
+
+                android:layout_marginBottom="20dp"
                 android:text="@string/type" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_ecole"
+                android:id="@+id/search_check_appartement"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_text_proximité"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="30dp"
-                android:text="@string/ecole"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_magasin"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_text_proximité"
+                android:layout_below="@+id/type_bienSearch"
                 android:layout_alignParentRight="true"
+                android:layout_marginHorizontal="100dp"
                 android:layout_marginRight="70dp"
-                android:text="@string/magasins"
+                android:text="@string/appartement"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
@@ -527,13 +516,14 @@
                 tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_metro"
+                android:id="@+id/search_check_attic"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_magasin"
+                android:layout_below="@+id/search_check_appartement"
+                android:layout_marginHorizontal="100dp"
                 android:layout_marginLeft="20dp"
-                android:text="@string/metro"
+                android:text="@string/attic"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
@@ -541,16 +531,16 @@
                 tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_parc"
+                android:id="@+id/search_check_loft"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_metro"
+                android:layout_below="@+id/search_check_attic"
                 android:layout_centerInParent="true"
+                android:layout_marginHorizontal="100dp"
                 android:layout_marginLeft="100dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/parc"
+                android:text="@string/Loft"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
@@ -558,32 +548,73 @@
                 tools:ignore="RtlHardcoded" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_bus"
+                android:id="@+id/search_check_house"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_ecole"
+                android:layout_below="@+id/search_check_loft"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="0dp"
+                android:layout_marginHorizontal="100dp"
                 android:layout_marginRight="70dp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/bus"
+                android:text="@string/House"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
                 app:chipCornerRadius="24dp"
                 tools:ignore="RtlHardcoded" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_other"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_check_house"
+                android:layout_alignParentRight="true"
+                android:layout_marginHorizontal="100dp"
+                android:layout_marginRight="70dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/House"
+                android:textColor="@android:color/white"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipCornerRadius="24dp"
+                tools:ignore="RtlHardcoded" />
+
+
+            <TextView
+                android:id="@+id/textAgent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_other"
+                android:layout_marginBottom="20dp"
+                android:textStyle="bold"
+                android:text="@string/nbrphotomin" />
+
+            <Spinner
+                android:id="@+id/spinnerAgent"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/textAgent"
+                android:layout_marginHorizontal="100dp"
+                android:background="@color/colorAccent"
+                android:entries="@array/Spinner_items3"
+                android:layout_marginBottom="20dp"
+                tools:targetApi="o">
+
+            </Spinner>
+
 
             <TextView
                 android:id="@+id/textPhotos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/search_check_parc"
+                android:layout_below="@id/spinnerAgent"
                 android:layout_marginBottom="20dp"
                 android:text="@string/nbrphotomin" />
 
             <Spinner
                 android:id="@+id/spinnerphotonbr"
+                android:textColor="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/textPhotos"

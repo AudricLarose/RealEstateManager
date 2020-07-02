@@ -15,6 +15,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
+import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.openclassrooms.realestatemanager.utils.PersonContentProvider;
 import com.openclassrooms.realestatemanager.utils.Utils;
@@ -24,7 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowNetworkInfo;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
@@ -156,6 +159,17 @@ public class ExampleUnitTest {
         assertEquals(prixModified, prixEsperer);
     }
 
+    @Test
+    public void getDatetFormatTest() {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, 2020);
+        c.set(Calendar.MONTH, 11);
+        c.set(Calendar.DATE, 12);
+        String dategettd = Utils.getTodayDate();
+        String date = Utils.getDateFormat(getApplicationContext(), c);
+        String dateTransformed = "12/12/2020";
+        assertEquals(date, dateTransformed);
+    }
     @Test
     public void checkIFInternetIsOff() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 public class DataProvider {
 
     // DATA SET FOR TEST
-    private static int USER_ID = 10003;
+    private static int USER_ID = (int) (2000 + (Math.random() * 100000));
     // FOR DATA
     private ContentResolver mContentResolver;
     private PersonContentProvider personContentProvider;
@@ -38,7 +38,6 @@ public class DataProvider {
                 .allowMainThreadQueries()
                 .build();
         mContentResolver = ApplicationProvider.getApplicationContext().getContentResolver();
-
     }
 
     //
@@ -67,7 +66,7 @@ public class DataProvider {
 
     private ContentValues generateItem() {
         final ContentValues values = new ContentValues();
-        values.put("id",10003);
+        values.put("id",USER_ID);
         values.put("description", "desccription");
         values.put("type", "Appartement");
         values.put("postal", "94000");

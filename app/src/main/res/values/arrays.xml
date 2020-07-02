@@ -6,4 +6,11 @@
         <item>Gilles De Saintpatus</item>
         <item>Audric Richards</item>
     </string-array>
+    <string-array name="Spinner_items3">
+        <item> </item>
+        <item>Mckeal Keal</item>
+        <item>Jackson Myrtis</item>
+        <item>Gilles De Saintpatus</item>
+        <item>Audric Richards</item>
+    </string-array>
 </resources>

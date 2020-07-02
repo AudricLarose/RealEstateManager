@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -174,7 +175,20 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private void initiateSpinner() {
         spinnerChoicce = findViewById(R.id.type_bien);
+        putDataOnTheSpinner();
         spinnerNom = findViewById(R.id.nom_agent);
+    }
+
+    private void putDataOnTheSpinner() {
+        List<String> categories = new ArrayList<String>();
+        categories.add(getString(R.string.appartement));
+        categories.add(getString(R.string.House));
+        categories.add(getString(R.string.Garage));
+        categories.add(getString(R.string.Loft));
+        categories.add(getString(R.string.Other));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerChoicce.setAdapter(dataAdapter);
     }
 
     private void activeSpinner() {

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -47,14 +48,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private static RealEstate estate;
     private static String dateActuelle, date;
     List<TextInputLayout> editTextContainer = new ArrayList<>();
-    private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus;
-    private TextInputLayout ePrixmin, eSurfaceMax, ePrixMax, eSurface, ePiece, eChambre, eSdb;
+    private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus, cNone, cAp, cAttic, cLoft, cHouse;
+    private TextInputLayout ePrixmin, eSurfaceMax, ePrixMax, eSurface, ePiece, eChambre, eSdb, eTown;
     private Switch search_switch_vendu;
     private TextView eMarket;
-    private Spinner spinerPhoto;
+    private Spinner spinerPhoto, spinnerAgent, spinnersell;
     private Switch switchVendu;
     private Button btnOk, btnReset, btnDate, btnDateSell;
-    private List<String> resultsValidatedByUser = new ArrayList<>();
+    private List<String> resultsValidatedByUserForNearBy = new ArrayList<>();
     private List<String> globalResult = new ArrayList<>();
     private ExtendedServiceEstate serviceEstate = DI.getService();
     private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
@@ -67,6 +68,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private List<String> globaleResulforCompare = new ArrayList<>();
     private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     private List<String> resultsValidatedByUserForPhotos = new ArrayList<>();
+    private String resultsValidatedByUserForAgent;
+    private String resultsValidatedByUserForSell;
+    private List<String> resultsValidatedByUserForTypes;
+    private int positionSwitch;
 
 
     @Override
@@ -126,7 +131,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         eSurface = findViewById(R.id.surfacemin);
         eSurfaceMax = findViewById(R.id.surfacemax);
         edit_ontheSell = findViewById(R.id.search_edit_ontheSell);
-
+        eTown = findViewById(R.id.townSearch);
         editTextsContainer.add(eChambre);
         editTextsContainer.add(ePrixmin);
         editTextsContainer.add(ePiece);
@@ -145,7 +150,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         globalResultEstate.put("SDB", eSdb.getEditText().getText().toString());
         globalResultEstate.put("SurfaceMin", eSurface.getEditText().getText().toString());
         globalResultEstate.put("SurfaceMAx", eSurfaceMax.getEditText().getText().toString());
-
+        globalResultEstate.put("town", eTown.getEditText().getText().toString());
     }
 
     private void deployButton() {
@@ -169,14 +174,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void resetEntry() {
-        eChambre.getEditText().setText("");
         eMarket.setText("");
-        ePiece.getEditText().setText("");
-        ePrixMax.getEditText().setText("");
-        ePrixmin.getEditText().setText("");
-        eSdb.getEditText().setText("");
-        eSurface.getEditText().setText("");
-        eSurfaceMax.getEditText().setText("");
         edit_ontheSell.setText("");
     }
 
@@ -255,12 +253,63 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
 
     private void deployeChipes() {
-        final List<Chip> ChipesContainer = initiateChipes();
-        resultsValidatedByUser = activateChip(ChipesContainer);
+        final List<Chip> ChipesContainer = initiateChipesNearby();
+        final List<Chip> ChipesContainer2 = initiateChipesType();
+        resultsValidatedByUserForNearBy = activateChip(ChipesContainer);
+        resultsValidatedByUserForTypes = activateChip(ChipesContainer2);
     }
 
+
     private void deployeSpinner() {
-        spinerPhoto = findViewById(R.id.spinnerphotonbr);
+        initiateSpinner();
+        putDataOnSpinnerSell();
+        spinnerPhotoActivate();
+        spinnerAgentActivate();
+        spinnerSellActivate();
+    }
+
+    private void spinnerSellActivate() {
+        spinnersell.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                resultsValidatedByUserForSell = adapterView.getSelectedItem().toString();
+                switch (i) {
+                    case 0:
+                        positionSwitch = 0;
+                        relativeLayoutSell.setVisibility(View.INVISIBLE);
+                        break;
+
+                    case 1:
+                        positionSwitch = 1;
+                        relativeLayoutSell.setVisibility(View.INVISIBLE);
+                        break;
+                    case 2:
+                        positionSwitch = 2;
+                        relativeLayoutSell.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
+    private void spinnerAgentActivate() {
+        spinnerAgent.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                resultsValidatedByUserForAgent = adapterView.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
+    private void spinnerPhotoActivate() {
         spinerPhoto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -273,17 +322,66 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         });
     }
 
-    private List<Chip> initiateChipes() {
+    private void putDataOnSpinnerSell() {
+        List<String> categories = new ArrayList<String>();
+        categories.add(getString(R.string.both));
+        categories.add(getString(R.string.Available));
+        categories.add(getString(R.string.selledstate));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnersell.setAdapter(dataAdapter);
+    }
+
+    private void initiateSpinner() {
+        spinerPhoto = findViewById(R.id.spinnerphotonbr);
+        spinnerAgent = findViewById(R.id.spinnerAgent);
+        spinnersell = findViewById(R.id.sellornot);
+    }
+
+    private List<Chip> initiateChipesNearby() {
         final List<Chip> ChipesContainer = new ArrayList<>();
         Cecole = findViewById(R.id.search_check_ecole);
         Cmagasin = findViewById(R.id.search_check_magasin);
         CParc = findViewById(R.id.search_check_parc);
         Cbus = findViewById(R.id.search_check_bus);
         Cmetro = findViewById(R.id.search_check_metro);
+        cNone = findViewById(R.id.nonenearbysearch);
+        cNoneIsCheckedEvent();
         ChipesContainer.add(Cecole);
         ChipesContainer.add(Cmagasin);
         ChipesContainer.add(CParc);
         ChipesContainer.add(Cbus);
+        ChipesContainer.add(Cmetro);
+        ChipesContainer.add(cNone);
+        return ChipesContainer;
+    }
+
+    private void cNoneIsCheckedEvent() {
+        if (cNone.isChecked()) {
+            Cecole.setEnabled(false);
+            Cmagasin.setEnabled(false);
+            CParc.setEnabled(false);
+            Cbus.setEnabled(false);
+            Cmetro.setEnabled(false);
+        } else if (!cNone.isChecked()) {
+            Cecole.setEnabled(true);
+            Cmagasin.setEnabled(true);
+            CParc.setEnabled(true);
+            Cbus.setEnabled(true);
+            Cmetro.setEnabled(true);
+        }
+    }
+
+    private List<Chip> initiateChipesType() {
+        final List<Chip> ChipesContainer = new ArrayList<>();
+        cAp = findViewById(R.id.search_check_appartement);
+        cAttic = findViewById(R.id.search_check_attic);
+        cHouse = findViewById(R.id.search_check_house);
+        cLoft = findViewById(R.id.search_check_loft);
+        ChipesContainer.add(cAp);
+        ChipesContainer.add(cAttic);
+        ChipesContainer.add(cHouse);
+        ChipesContainer.add(cLoft);
         return ChipesContainer;
     }
 
@@ -308,7 +406,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void addGlobalResult() {
         globaleResulforCompare.addAll(globalResult);
-        globaleResulforCompare.addAll(resultsValidatedByUser);
+        globaleResulforCompare.addAll(resultsValidatedByUserForNearBy);
     }
 
 
@@ -325,15 +423,17 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             deleteNearByIfResultMatch(i);
             deleteDateEntryIfResultMatch(i);
             deleteDateSelledIfResultMatch(i);
+            deleteTypeByIfResultMatch(i);
             deleteifsimplyselled(i);
+            deleteifsimplyNotselled(i);
+            deleteAgentByIfResultMatch(i);
+            deleteTownIfResultMatch(i);
         }
         deployRecyclerView();
     }
 
-
     private void deleteDateEntryIfResultMatch(int i) {
         try {
-
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date dateEntryByUSer = sdf.parse(eMarket.getText().toString().replace("/", "-"));
             Date dateRealEstate = sdf.parse(listRealEstate.get(i).getMarket().replace("/", "-"));
@@ -361,8 +461,22 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteNearByIfResultMatch(int i) {
 
-        if (resultsValidatedByUser != null && resultsValidatedByUser.size() != 0 && !listRealEstate.isEmpty()) {
-            if (!listRealEstate.get(i).getNearby().containsAll(resultsValidatedByUser)) {
+        if (resultsValidatedByUserForNearBy != null && resultsValidatedByUserForNearBy.size() != 0 && !listRealEstate.isEmpty()) {
+            if (!listRealEstate.get(i).getNearby().containsAll(resultsValidatedByUserForNearBy)) {
+                resultResearchRealEstate.remove(listRealEstate.get(i));
+            }
+            if (cNone.isChecked()) {
+                if (listRealEstate.get(i).getNearby().size() == 0) {
+                    resultResearchRealEstate.remove(listRealEstate.get(i));
+                }
+            }
+        }
+
+    }
+
+    private void deleteTypeByIfResultMatch(int i) {
+        if (resultsValidatedByUserForTypes != null && resultsValidatedByUserForTypes.size() != 0 && !listRealEstate.isEmpty()) {
+            if (!resultsValidatedByUserForTypes.contains(listRealEstate.get(i).getType())) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -374,6 +488,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                 if (listRealEstate.get(i).getPhotosReal().size() < Integer.valueOf(resultsValidatedByUserForPhotos.get(j))) {
                     resultResearchRealEstate.remove(listRealEstate.get(i));
                 }
+            }
+        }
+    }
+
+    private void deleteAgentByIfResultMatch(int i) {
+        if (resultsValidatedByUserForAgent != null && !listRealEstate.isEmpty()) {
+            if (!listRealEstate.get(i).getNomAgent().contains(resultsValidatedByUserForAgent)) {
+                resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
     }
@@ -449,16 +571,34 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-    private void deleteifsimplyselled(int i) {
-        String selledEstateList = listRealEstate.get(i).getSelled();
-       if (switchVendu.isChecked()) {
-           if ((selledEstateList.equals("")) || selledEstateList.equals("date")) {
-               resultResearchRealEstate.remove(listRealEstate.get(i));
-           }
-       }
+    private void deleteTownIfResultMatch(int i) {
+        String townEntryByUser = globalResultEstate.get("town").toLowerCase();
+        String townEstateList = listRealEstate.get(i).getTown().toLowerCase();
+        if (townEntryByUser != null && !townEntryByUser.isEmpty()) {
+            if (!townEntryByUser.equals(townEstateList)) {
+                resultResearchRealEstate.remove(listRealEstate.get(i));
+            }
+        }
     }
 
+    private void deleteifsimplyselled(int i) {
+        String selledEstateList = listRealEstate.get(i).getSelled();
+        if (positionSwitch == 2) {
+            if ((selledEstateList.equals("")) || selledEstateList.equals("date")) {
+                resultResearchRealEstate.remove(listRealEstate.get(i));
+            }
+        }
 
+    }
+
+    private void deleteifsimplyNotselled(int i) {
+        String selledEstateList = listRealEstate.get(i).getSelled();
+        if (positionSwitch == 1) {
+            if (!selledEstateList.equals("date")) {
+                resultResearchRealEstate.remove(listRealEstate.get(i));
+            }
+        }
+    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
