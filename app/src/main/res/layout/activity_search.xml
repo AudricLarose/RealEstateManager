@@ -245,8 +245,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
                         android:inputType="number"
-                        android:maxLength="2"
-
                         android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -588,7 +586,7 @@
                 android:layout_below="@id/search_other"
                 android:layout_marginBottom="20dp"
                 android:textStyle="bold"
-                android:text="@string/nbrphotomin" />
+                android:text="Agent en charge :" />
 
             <Spinner
                 android:id="@+id/spinnerAgent"

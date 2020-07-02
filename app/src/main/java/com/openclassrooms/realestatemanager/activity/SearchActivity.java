@@ -434,7 +434,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteDateEntryIfResultMatch(int i) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf    = new SimpleDateFormat("dd-MM-yyyy");
             Date dateEntryByUSer = sdf.parse(eMarket.getText().toString().replace("/", "-"));
             Date dateRealEstate = sdf.parse(listRealEstate.get(i).getMarket().replace("/", "-"));
             if ((dateRealEstate.compareTo(dateEntryByUSer) < 0)) {

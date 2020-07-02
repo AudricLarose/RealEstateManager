@@ -84,8 +84,6 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             holder.ville.setTextColor(Color.BLACK);
             holder.type.setTextColor(Color.BLACK);
         }
-
-
         estate = liste.get(position);
         holder.type.setText(estate.getType());
         if (Boolean.valueOf(estate.getInEuro())) {
@@ -95,11 +93,14 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
                 e.printStackTrace();
             }
         } else {
-            holder.prix.setText(Utils.getDollarFormat(Integer.parseInt(estate.getPrix())));
+            try {
+                holder.prix.setText(Utils.getDollarFormat(Integer.parseInt(estate.getPrix())));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
 
         }
         holder.ville.setText(estate.getTown());
-
         imageHandling(holder);
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
@@ -114,7 +115,6 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
                 replaceIfTablet(v, position);
             }
         });
-
         checkIfitsSellOrNot(holder);
         verifyIfitisTemp(holder);
     }
