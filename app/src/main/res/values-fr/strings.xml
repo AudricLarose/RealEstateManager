@@ -69,4 +69,13 @@
     <string name="actualisation">Vous devez actualiser la page pour avoir de nouvelles notifications</string>
     <string name="all">Tous</string>
     <string name="both">Les deux</string>
+    <string name="reset">Reset</string>
+    <string name="none">None</string>
+    <string name="Loft">Loft</string>
+    <string name="Appter">Appartement</string>
+    <string name="Garage">Garage</string>
+    <string name="Other">Others</string>
+    <string name="Available">Available</string>
+    <string name="selledstate">Selled</string>
+    <string name="filesuploads">Vos fichiers ont bien été sauvegardés</string>
 </resources>

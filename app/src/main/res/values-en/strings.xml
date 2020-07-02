@@ -68,4 +68,14 @@
     <string name="ok">Ok</string>
     <string name="both">Both</string>
     <string name="all">All</string>
+    <string name="actualisation">You must update the page to get news</string>
+    <string name="reset">Reset</string>
+    <string name="none">Aucun</string>
+    <string name="Loft">Loft</string>
+    <string name="Appter">Appartment</string>
+    <string name="Garage">Garage</string>
+    <string name="Other">Others</string>
+    <string name="Available">Available</string>
+    <string name="selledstate">Selled</string>
+    <string name="filesuploads">Files have been Saved Successfully</string>
 </resources>
