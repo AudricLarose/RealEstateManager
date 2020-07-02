@@ -554,13 +554,13 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginHorizontal="100dp"
                 android:layout_marginRight="70dp"
-                android:layout_marginBottom="20dp"
                 android:text="@string/House"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
                 app:chipCornerRadius="24dp"
                 tools:ignore="RtlHardcoded" />
+
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_other"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
@@ -571,7 +571,7 @@
                 android:layout_marginHorizontal="100dp"
                 android:layout_marginRight="70dp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/House"
+                android:text="@string/Other"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorPrimary"
