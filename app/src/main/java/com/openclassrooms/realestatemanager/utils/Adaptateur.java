@@ -34,17 +34,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
     public Boolean mTwoPane;
     public MainActivity mParentActivity;
     public RealEstate estate;
-    public Boolean selected;
-    int selected_position = 0; // You have to set this globally in the Adapter class
-
-
-
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-        }
-    };
+    int selected_position = RecyclerView.NO_POSITION; // You have to set this globally in the Adapter class
 
     private void goToItemDetailsActivity(View view, RealEstate estate1) {
         Intent intent = new Intent(view.getContext(), ItemDetailActivity.class);
@@ -68,18 +58,15 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
     @Override
     public LeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
-
         return new LeHolder(view);
     }
 
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final LeHolder holder, final int position) {
-        if (mTwoPane){
-            selected_position=0;
-        }
+
         holder.relativeLayout.setBackgroundColor(selected_position == position ? Color.MAGENTA : Color.TRANSPARENT);
-        if (selected_position== position){
+        if (selected_position == position){
             holder.prix.setTextColor(Color.WHITE);
             holder.ville.setTextColor(Color.BLACK);
             holder.type.setTextColor(Color.BLACK);
@@ -107,11 +94,9 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             @Override
             public void onClick(View v) {
                 if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) return;
-                // Updating old as well as new positions
                 notifyItemChanged(selected_position);
                 selected_position =holder.getAdapterPosition();
                 notifyItemChanged(selected_position);
-//                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
                 replaceIfTablet(v, position);
             }
         });
