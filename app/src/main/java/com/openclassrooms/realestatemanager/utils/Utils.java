@@ -10,16 +10,20 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.text.format.DateUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
@@ -154,11 +158,58 @@ public class Utils {
         return builder.create();
     }
 
+    @IntRange(from = 0, to = 3)
+    public static int getConnectionType(Context context) {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            result = getResultIfVersionIsNewer(result, cm);
+        } else {
+            result = getResultIfVersionIsOlder(result, cm);
+        }
+        return result;
+    }
+
+    @SuppressLint("NewApi")
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static int getResultIfVersionIsNewer(int result, ConnectivityManager cm) {
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
+
+    @SuppressWarnings("Deprecated")
+    private static int getResultIfVersionIsOlder(int result, ConnectivityManager cm) {
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork != null) {
+                // connected to the internet
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                    result = 2;
+                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                    result = 1;
+                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_VPN) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
+
     // Verify if user have Internet is on and stop if not
     public static boolean internetOnVerify(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+        int connection =getConnectionType(context);
+        if (connection==1 || connection==2){
             return true;
         } else {
             return false;

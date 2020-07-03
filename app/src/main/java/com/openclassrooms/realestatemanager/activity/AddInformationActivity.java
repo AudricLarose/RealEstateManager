@@ -3,8 +3,10 @@ package com.openclassrooms.realestatemanager.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -39,7 +41,7 @@ import com.github.florent37.materialtextfield.MaterialTextField;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
 import com.openclassrooms.realestatemanager.Api.DI;
-import com.openclassrooms.realestatemanager.Api.EstateViewModel;
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
@@ -85,7 +87,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private Double longitudeRealEState;
     private String url, date;
     private boolean emptyField = true;
-    private EstateViewModel estateViewModel;
+    public DataBaseSQL dataBaseSQL;
+    public Uri imageUri;
+
     private List<String> listPhotoRealistetate = new ArrayList<>();
     private List<String> descritpionImage = new ArrayList<>();
     private boolean CameraActivate;
@@ -104,6 +108,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         setContentView(R.layout.activity_add_information);
         setTitleToAdapt();
         initiateEditText();
+        initiateDataBaseSQL();
         deployeChipes();
         deployeButton();
         deployRelativeLayout();
@@ -113,6 +118,10 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         deployProgressBar();
         deployModificationAction();
         actionfleche();
+    }
+
+    private void initiateDataBaseSQL() {
+        dataBaseSQL = DataBaseSQL.getInstance(this);
     }
 
     private void deployProgressBar() {
@@ -423,22 +432,41 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void goToCameraDisplay() {
-        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(takePicture, IMAGE_REQUEST);
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+         imageUri = getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, IMAGE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK) {
-            Bitmap selectedImageBitmap = (Bitmap) data.getExtras().get("data");
-            Uri selectedImage = getImageUri(this, selectedImageBitmap);
-            listPhotoRealistetate.add(selectedImage.toString());
+            try {
+                Bitmap thumbnail = MediaStore.Images.Media.getBitmap(
+                        getContentResolver(), imageUri);
+                String imageurl = getRealPathFromURI(imageUri);
+                listPhotoRealistetate.add(imageUri.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if ((requestCode == REQUESTCODEGALLERY) && (resultCode == RESULT_OK)) {
             Uri selectedImage = data.getData();
             listPhotoRealistetate.add(selectedImage.toString());
         }
+    }
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
     private void initiateAndActivateCancelButton() {
@@ -510,8 +538,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void saveToRoom(RealEstate estate1) {
-        estateViewModel = new EstateViewModel(getApplication());
-        estateViewModel.InsertThisData(estate1);
+        dataBaseSQL.estateDao().insertEstate(estate1);
     }
 
     private RealEstate generateEstateObject() {
@@ -589,8 +616,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), date, globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
                 , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
         estateNew.setId(estate.getId());
-        estateViewModel = new ViewModelProvider(this).get(EstateViewModel.class);
-        estateViewModel.UpdateThisData(estateNew);
+        dataBaseSQL.estateDao().upDateEstate(estateNew);
         return estateNew;
     }
 

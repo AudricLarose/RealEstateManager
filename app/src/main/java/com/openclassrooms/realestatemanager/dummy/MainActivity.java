@@ -23,17 +23,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
 import com.openclassrooms.realestatemanager.Api.DI;
-import com.openclassrooms.realestatemanager.Api.EstateViewModel;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.activity.MapsActivity;
 import com.openclassrooms.realestatemanager.R;
@@ -65,10 +65,10 @@ public class MainActivity extends AppCompatActivity {
     private Adaptateur adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean amIInEuro = true;
-    private EstateViewModel estateViewModel;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView textNotif;
     int countLoup=0;
+    private DataBaseSQL database;
 
     private static void buttonInternetInfo(Context context) {
         AlertDialog alertDialog = buttonInternetInfoDialog(context);
@@ -120,11 +120,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(R.string.Welcome);
+        initiateDataBaseSQL();
         detailsIfTablet();
         saveDataInSQLITE();
         takeDataInBDDIfInternetIsHere();
         deployementButtonAdd();
         deployementButtonMail();
+
         onSwipeToRefresh();
         Utils.internetOnVerify(this);
         Utils.internetIsOn(this);
@@ -132,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
         DeploytempHandler();
         deployementNotificationMail();
         askPermission();
+    }
+
+    private void initiateDataBaseSQL() {
+        database=DataBaseSQL.getInstance(this);
     }
 
     private void deployementButtonMail() {
@@ -169,9 +175,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
                 if (listTemp.size() == 0) {
-                    estateViewModel.deleteAlldata();
+                    database.estateDao().DeleteAllEstate();
                     for (int i = 0; i < realEstateList.size(); i++) {
-                        estateViewModel.InsertThisData(realEstateList.get(i));
+                        database.estateDao().insertEstate(realEstateList.get(i));
                     }
                 } else {
                     Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
@@ -195,8 +201,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveDataInSQLITE() {
-        estateViewModel = new ViewModelProvider(this).get(EstateViewModel.class);
-        estateViewModel.SelectAllThosedatas().observe(this, new Observer<List<RealEstate>>() {
+        DataBaseSQL database = DataBaseSQL.getInstance(this);
+        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstate();
+        datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstates) {
                 listRealEstate.clear();
@@ -252,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         listTemp.get(i).setTemp("False");
-                        estateViewModel.UpdateThisData(listTemp.get(i));
+                        database.estateDao().upDateEstate(listTemp.get(i));
                     }
                     Toast.makeText(this, R.string.sent, Toast.LENGTH_SHORT).show();
                     listTemp.clear();
