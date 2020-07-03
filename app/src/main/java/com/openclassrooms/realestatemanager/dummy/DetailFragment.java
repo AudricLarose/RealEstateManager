@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.dummy;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -105,7 +106,13 @@ public class DetailFragment extends Fragment {
     }
 
     private void deployRecyclerViewDetails(View container) {
-        adapter = new AdaptateurImage(estateGrabbed.getPhotosReal(), getContext(), estateGrabbed.getDescriptionImage());
+        if (estateGrabbed.getPhotosReal() != null && estateGrabbed.getPhotosReal().size() > 0) {
+            if (estateGrabbed.getLink() != null && estateGrabbed.getLink().size() > 0) {
+                adapter = new AdaptateurImage(estateGrabbed.getLink(), getContext(), estateGrabbed.getDescriptionImage());
+            } else {
+                adapter = new AdaptateurImage(estateGrabbed.getPhotosReal(), getContext(), estateGrabbed.getDescriptionImage());
+            }
+        }
         recyclerView = container.findViewById(R.id.RecycleDetails);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);

@@ -209,22 +209,26 @@ public class Utils {
     }
 
     public static List<RealEstate> sortedbyPriceDecroissant(List<RealEstate> listeRealEstate) {
-        Collections.sort(listeRealEstate, new Comparator<RealEstate>() {
-            @Override
-            public int compare(RealEstate o1, RealEstate o2) {
-                if (Integer.valueOf(o1.getPrix()) > Integer.valueOf(o2.getPrix())) {
-                    return -1;
-                } else {
-                    return +1;
+        try {
+            Collections.sort(listeRealEstate, new Comparator<RealEstate>() {
+                @Override
+                public int compare(RealEstate o1, RealEstate o2) {
+                    if (Integer.valueOf(o1.getPrix()) > Integer.valueOf(o2.getPrix())) {
+                        return -1;
+                    } else {
+                        return +1;
+                    }
                 }
-            }
 
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return listeRealEstate;
     }
 
     public static String linkBuilder(LatLng latLng) {
-        String linkTransformed = "https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C " + latLng.latitude + "," + latLng.longitude + "&key=" + "AIzaSyC_WkswyFXkxGjNsC4Ie_zoMbA5WuiRR68";
+        String linkTransformed = "https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&maptype=roadmap&markers=color:red%7Clabel:C%7C " + latLng.latitude + "," + latLng.longitude + "&key=" + "AIzaSyC_WkswyFXkxGjNsC4Ie_zoMbA5WuiRR68";
         return linkTransformed;
     }
 

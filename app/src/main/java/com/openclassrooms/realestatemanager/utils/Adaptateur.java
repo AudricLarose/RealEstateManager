@@ -35,7 +35,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
     public MainActivity mParentActivity;
     public RealEstate estate;
     public Boolean selected;
-    int selected_position = RecyclerView.NO_POSITION; // You have to set this globally in the Adapter class
+    int selected_position = 0; // You have to set this globally in the Adapter class
 
 
 
