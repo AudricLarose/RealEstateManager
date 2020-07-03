@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textNotif;
     int countLoup=0;
     private DataBaseSQL database;
+    int countLoop=0;
 
     private static void buttonInternetInfo(Context context) {
         AlertDialog alertDialog = buttonInternetInfoDialog(context);
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
                 if (listTemp.size() == 0) {
+                    updateBDDForFireB();
                     database.estateDao().DeleteAllEstate();
                     for (int i = 0; i < realEstateList.size(); i++) {
                         database.estateDao().insertEstate(realEstateList.get(i));
@@ -189,6 +191,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, R.string.nonew, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateBDDForFireB() {
+        for (int i = 0; i < listRealEstate.size() ; i++) {
+            Utils.upDateMyBDDPlease(listRealEstate.get(i), listRealEstate.get(i));
+            }
     }
 
     private void deployRecyclerView() {
@@ -206,10 +214,13 @@ public class MainActivity extends AppCompatActivity {
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstates) {
-                listRealEstate.clear();
-                listRealEstate.addAll(realEstates);
-                searchForNotif(realEstates);
-                deployRecyclerView();
+                if (countLoop==0) {
+                    listRealEstate.clear();
+                    listRealEstate.addAll(realEstates);
+                    searchForNotif(realEstates);
+                    deployRecyclerView();
+                    countLoop=countLoop+1;
+                }
             }
         });
     }

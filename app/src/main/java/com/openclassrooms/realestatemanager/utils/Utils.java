@@ -62,7 +62,6 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
 /**
  * Created by Philippe on 21/02/2018.
  */
-
 public class Utils {
 
     /**
@@ -188,7 +187,7 @@ public class Utils {
         return result;
     }
 
-    @SuppressWarnings("Deprecated")
+    @SuppressWarnings({"ALL", "deprecation"})
     private static int getResultIfVersionIsOlder(int result, ConnectivityManager cm) {
         if (cm != null) {
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

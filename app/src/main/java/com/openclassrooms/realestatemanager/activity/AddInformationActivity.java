@@ -461,12 +461,15 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         }
     }
     public String getRealPathFromURI(Uri contentUri) {
+        String res = null;
         String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()){;
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+        }
+        cursor.close();
+        return res;
     }
 
     private void initiateAndActivateCancelButton() {
@@ -519,9 +522,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             sendToFireStock(estate1, new SendCallBack() {
                 @Override
                 public void onFinish(RealEstate estateFireBase) {
+                    Toast.makeText(AddInformationActivity.this, R.string.filesuploads, Toast.LENGTH_SHORT).show();
                     knowIfTempOrNot(estateFireBase);
                     saveToRoom(estateFireBase);
-                    Toast.makeText(AddInformationActivity.this, R.string.filesuploads, Toast.LENGTH_SHORT).show();
                     finish();
                 }
 
@@ -594,16 +597,22 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             @Override
             public void onClick(View v) {
                 RealEstate estateForModifier = modifyEstate();
-                Utils.upDateMyBDDPlease(modifyEstate(), estate);
-                try {
-                    Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
-                        @Override
-                        public void onFinish(List<String> s) {
-                            modifyEstate().setLink(s);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (Utils.internetOnVerify(AddInformationActivity.this)) {
+                    Utils.upDateMyBDDPlease(modifyEstate(), estate);
+                    try {
+                        Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
+                            @Override
+                            public void onFinish(List<String> s) {
+                                modifyEstate().setLink(s);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(AddInformationActivity.this, "La Mise a jour se fera quand vous aurez une conexion internet", Toast.LENGTH_SHORT).show();
+                    dataBaseSQL=DataBaseSQL.getInstance(AddInformationActivity.this);
+                    dataBaseSQL.estateDao().upDateEstate(estateForModifier);
                 }
                 redirectToDetailsActivity(estateForModifier);
             }
@@ -616,6 +625,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), date, globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
                 , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
         estateNew.setId(estate.getId());
+
+
         dataBaseSQL.estateDao().upDateEstate(estateNew);
         return estateNew;
     }
@@ -626,6 +637,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         if (isEstateExist) {
             giveEstat2ViewsIfNotNull();
             replaceOkButtonByModifyButton();
+
         }
     }
 

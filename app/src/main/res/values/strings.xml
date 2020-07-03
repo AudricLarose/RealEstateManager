@@ -98,4 +98,5 @@
     <string name="Available">Disponible</string>
     <string name="selledstate">Vendu</string>
     <string name="filesuploads">Vos fichiers ont bien été sauvegardés</string>
+    <string name="udaptebdd">Vous devez avoir internet pour modifier votre BDD</string>
 </resources>
