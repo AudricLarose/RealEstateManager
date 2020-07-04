@@ -19,20 +19,22 @@
                 android:id="@+id/search_RelativePostal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="150dp"
                 tools:ignore="RtlHardcoded">
 
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/minprice"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="100dp"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="50dp"
                     android:inputType="number"
                     app:boxStrokeColor="@android:color/black"
                     app:endIconMode="clear_text"
+                    android:textSize="20dp"
+
                     app:mtf_backgroundColor="#bedac3"
                     app:mtf_cardCollapsedHeight="4dp"
                     app:mtf_image="@drawable/ic_map_black_24dp"
@@ -45,7 +47,8 @@
                         android:inputType="number"
                         android:textAlignment="center"
                         android:textColor="@android:color/black"
-                        android:textSize="15sp" />
+                        android:textSize="20dp"
+                        />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,16 +60,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp"
+                android:layout_marginRight="150dp"
                 tools:ignore="RtlHardcoded">
 
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/prixmax"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="100dp"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="50dp"
                     app:boxStrokeColor="@android:color/black"
                     app:endIconMode="clear_text"
                     app:mtf_backgroundColor="#bedac3"
@@ -75,9 +78,10 @@
                     app:mtf_labelColor="#bedac3">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="100dp"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prix_max"
+                        android:hint="@string/prix_max"                android:textSize="20dp"
+
                         android:inputType="number"
                         android:text=""
                         android:textColor="@android:color/black" />
@@ -91,16 +95,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativePostal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="150dp"
+                android:layout_marginBottom="50dp"
                 tools:ignore="RtlHardcoded">
 
                 <TextView
                     android:id="@+id/search_text_onthemarket"
-                    android:layout_marginLeft="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:textSize="20dp"
+
+                    android:layout_marginLeft="20dp"
                     android:text="@string/onmarketsince" />
 
                 <TextView
@@ -109,7 +115,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/search_text_onthemarket"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="10dp"                android:textSize="20dp"
+
                     android:text=" "
                     tools:ignore="HardcodedText,UnusedAttribute" />
 
@@ -137,14 +144,15 @@
 
             <Spinner
                 android:id="@+id/sellornot"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_width="200dp"                android:textSize="20dp"
+
+                android:layout_height="40dp"
                 android:layout_below="@id/search_RelativeVille"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp"
+                android:layout_marginRight="150dp"
                 android:background="@color/colorPrimary"
                 android:entries="@array/SellorNot"
-                tools:targetApi="o"></Spinner>
+                tools:targetApi="o"/>
 
             <RelativeLayout
                 android:id="@+id/search_RelativeSellDetails"
@@ -153,7 +161,7 @@
                 android:layout_below="@+id/sellornot"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="40dp"
-                android:layout_marginRight="50dp"
+                android:layout_marginRight="150dp"
                 android:visibility="visible"
                 tools:ignore="RtlHardcoded">
 
@@ -182,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeMaarket"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="150dp"
                 tools:ignore="RtlHardcoded">
 
 
@@ -201,11 +209,12 @@
                     app:mtf_labelColor="#bedac3">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="100sp"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
                         android:hint="@string/surface_min"
-                        android:inputType="number"
+                        android:inputType="number"                android:textSize="20dp"
+
                         android:maxLength="10"
                         android:text="" />
 
@@ -219,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeMaarket"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp"
+                android:layout_marginRight="100dp"
                 tools:ignore="RtlHardcoded">
 
 
@@ -241,10 +250,11 @@
                     app:mtf_labelColor="#bedac3">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="100dp"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
-                        android:inputType="number"
+                        android:inputType="number"                android:textSize="20dp"
+
                         android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -255,7 +265,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativePrice"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="150dp"
                 android:layout_marginBottom="50dp">
 
 
@@ -265,7 +275,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="50dp"
                     android:ems="2"
                     android:inputType="number"
                     app:boxStrokeColor="@android:color/black"
@@ -275,10 +285,11 @@
                     app:mtf_labelColor="#bedac3">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="80dp"
+                        android:layout_width="200dp"
                         android:layout_height="48dp"
-                        android:layout_marginBottom="20dp"
-                        android:hint="@string/piece"
+                        android:layout_marginBottom="50dp"
+                        android:hint="@string/piece"                android:textSize="20dp"
+
                         android:inputType="number"
                         android:maxLength="10"
                         android:text="" />
@@ -300,7 +311,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ChamberMin"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="80dp"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="0dp"
@@ -313,11 +324,12 @@
                     app:mtf_labelColor="#bedac3">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="80dp"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="50dp"
                         android:hint="@string/chambre"
-                        android:inputType="number"
+                        android:inputType="number"                android:textSize="20dp"
+
                         android:maxLength="10"
 
                         android:text="" />
@@ -327,11 +339,11 @@
 
             <RelativeLayout
                 android:id="@+id/search_RelativeSdb"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeSurface"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp"
+                android:layout_marginRight="100dp"
                 tools:ignore="RtlHardcoded">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -349,10 +361,11 @@
                     app:mtf_labelColor="#bedac3">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="80dp"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:hint="@string/sdb"
+                        android:layout_marginBottom="50dp"
+                        android:hint="@string/sdb"                android:textSize="20dp"
+
                         android:inputType="number"
                         android:maxLength="10"
                         android:text="" />
@@ -368,9 +381,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_RelativeSdb"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginHorizontal="100dp"
                 android:layout_marginBottom="20dp"
-                app:boxStrokeColor="@android:color/black"
+                app:boxStrokeColor="@android:color/black"                android:textSize="20dp"
+
                 app:endIconMode="clear_text"
                 app:mtf_backgroundColor="#bedac3"
                 app:mtf_cardCollapsedHeight="4dp"
@@ -381,7 +395,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:hint="@string/ville"
+                    android:hint="@string/ville"                android:textSize="20dp"
+
                     android:text="" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -393,8 +408,9 @@
                 android:layout_below="@+id/townSearch"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
-                android:textStyle="bold"
-                android:text="@string/proximity" />
+                android:text="@string/proximity"
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_ecole"
@@ -402,7 +418,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_text_proximité"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:text="@string/ecole"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
@@ -417,7 +433,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_ecole"
                 android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:text="@string/magasins"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
@@ -431,7 +447,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_magasin"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:text="@string/metro"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
@@ -446,7 +462,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_metro"
                 android:layout_centerInParent="true"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:text="@string/parc"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
@@ -461,8 +477,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_parc"
                 android:layout_alignParentRight="true"
+                android:layout_marginHorizontal="250dp"
                 android:layout_marginTop="0dp"
-                android:layout_marginHorizontal="100dp"
                 android:text="@string/bus"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
@@ -477,13 +493,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_bus"
                 android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/none"
                 android:textColor="@android:color/white"
                 android:theme="@style/Theme.MaterialComponents.DayNight"
                 app:chipBackgroundColor="@color/colorAccent"
                 app:chipCornerRadius="24dp"
-                android:layout_marginBottom="20dp"
                 tools:ignore="RtlHardcoded" />
 
             <TextView
@@ -491,11 +507,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nonenearbysearch"
-                android:textStyle="bold"
                 android:layout_marginLeft="20dp"
-
                 android:layout_marginBottom="20dp"
-                android:text="@string/type" />
+                android:text="@string/type"
+
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/search_check_appartement"
@@ -504,7 +521,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/type_bienSearch"
                 android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:layout_marginRight="70dp"
                 android:text="@string/appartement"
                 android:textColor="@android:color/white"
@@ -519,7 +536,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_appartement"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:layout_marginLeft="20dp"
                 android:text="@string/attic"
                 android:textColor="@android:color/white"
@@ -535,7 +552,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_attic"
                 android:layout_centerInParent="true"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:layout_marginLeft="100dp"
                 android:layout_marginRight="30dp"
                 android:text="@string/Loft"
@@ -552,7 +569,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_loft"
                 android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:layout_marginRight="70dp"
                 android:text="@string/House"
                 android:textColor="@android:color/white"
@@ -568,7 +585,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/search_check_house"
                 android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="250dp"
                 android:layout_marginRight="70dp"
                 android:layout_marginBottom="20dp"
                 android:text="@string/Other"
@@ -585,18 +602,20 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/search_other"
                 android:layout_marginBottom="20dp"
-                android:textStyle="bold"
-                android:text="Agent en charge :" />
+                android:text="Agent en charge :"
+                android:textSize="25dp"
+
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinnerAgent"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/textAgent"
-                android:layout_marginHorizontal="100dp"
+                android:layout_marginHorizontal="200dp"
+                android:layout_marginBottom="20dp"
                 android:background="@color/colorAccent"
                 android:entries="@array/Spinner_items3"
-                android:layout_marginBottom="20dp"
                 tools:targetApi="o">
 
             </Spinner>
@@ -608,17 +627,20 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/spinnerAgent"
                 android:layout_marginBottom="20dp"
-                android:text="@string/nbrphotomin" />
+
+                android:text="@string/nbrphotomin"
+                android:textSize="25dp" />
 
             <Spinner
                 android:id="@+id/spinnerphotonbr"
-                android:textColor="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/textPhotos"
-                android:layout_marginHorizontal="150dp"
+                android:layout_marginHorizontal="200dp"
                 android:background="@color/colorPrimary"
                 android:entries="@array/Spinner_photos"
+                android:textColor="@android:color/white"
+
                 tools:targetApi="o">
 
             </Spinner>

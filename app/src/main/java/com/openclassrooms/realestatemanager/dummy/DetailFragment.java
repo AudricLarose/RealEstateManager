@@ -256,10 +256,26 @@ public class DetailFragment extends Fragment {
 
     private void modifyThisEstate() {
         RealEstate estate = grabEstatFromMainActivity();
+        phoneVersionForModify(estate);
+        tabletVersionForModify();
+    }
+
+    private void phoneVersionForModify(RealEstate estate) {
         if (estate != null) {
             Intent intent = new Intent(getContext(), AddInformationActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("RealEstate", estate);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            getActivity().finish();
+        }
+    }
+
+    private void tabletVersionForModify() {
+        if (estateGrabbed != null) {
+            Intent intent = new Intent(getContext(), AddInformationActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("RealEstate", estateGrabbed);
             intent.putExtras(bundle);
             startActivity(intent);
             getActivity().finish();
