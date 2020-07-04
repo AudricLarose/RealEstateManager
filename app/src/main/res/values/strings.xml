@@ -28,7 +28,7 @@
     <string name="not_connecte">Vous n\'etes pas connectés , ainsi vos données seront envoyées a votre prochaine connexion a l\'Internet</string>
     <string name="appartement">Appartement</string>
     <string name="House">Maison</string>
-    <string name="attic">Grenier</string>
+    <string name="attic">Manoir</string>
     <string name="parking">Parking</string>
     <string name="villa">Villa</string>
     <string name="conexioGPStest">Vous devez activer votre connexion internet pour profiter de l\'application. Cependant vos informations sont sauvegarder sur votre téléphone et seront envoyées lorsque vous aurez de nouveau une connection</string>
@@ -93,10 +93,12 @@
     <string name="none">None</string>
     <string name="Loft">Loft</string>
     <string name="Appter">appartement</string>
-    <string name="Garage">Garage</string>
-    <string name="Other">Autres</string>
+    <string name="Garage">Manoir</string>
+    <string name="Other">Duplex</string>
     <string name="Available">Disponible</string>
     <string name="selledstate">Vendu</string>
     <string name="filesuploads">Vos fichiers ont bien été sauvegardés</string>
     <string name="providerinternet">Vous devez etre connecté a Internet pour profiter de la carte</string>
+    <string name="gpssetting">I set My GPS</string>
+    <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">Vous devez allumer votre option GPS pour beneficier de toutes les fonctionnalitées de la carte</string>
 </resources>

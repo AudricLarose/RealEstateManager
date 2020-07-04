@@ -171,7 +171,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
                 } else {
                     relativeLayoutSell.setVisibility(View.GONE);
-                    edit_ontheSell.setText(" ");
+                    edit_ontheSell.setText("date");
                 }
             }
         });

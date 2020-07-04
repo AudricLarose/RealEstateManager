@@ -17,6 +17,8 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -137,7 +139,8 @@ public int count=0;
 
     private static AlertDialog AlertGPS(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("You have to Set On Your GPS").setTitle("Alert GPS").setPositiveButton("J'active mon GPS", new DialogInterface.OnClickListener() {
+        final View view = LayoutInflater.from(context).inflate(R.layout.input_gps, null);
+        builder.setView(view).setPositiveButton(context.getString(R.string.gpssetting ), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));

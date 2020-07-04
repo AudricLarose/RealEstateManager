@@ -14,9 +14,18 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        release {
+            buildConfigField "boolean", "enableDebugLogging", "false"
+            buildConfigField "String", "API_KEY_PLACE", "\"AIzaSyC85iU9E8o4rOCwv2UurWP31fGXaTRcL8c\""
+            resValue "string", "build_type", "Release" }
+        debug {
+            buildConfigField "boolean", "enableDebugLogging", "true"
+            buildConfigField "String", "API_KEY_PLACE", "\"AIzaSyC85iU9E8o4rOCwv2UurWP31fGXaTRcL8c\""
+        }
+
     }
 }
 

@@ -79,7 +79,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         setTitle(R.string.Search);
-        resultResearchRealEstate.addAll(listRealEstate);
+        initialiseListRealEstate();
         actionfleche();
         deployRecyclerView();
         iniatiateAndActivateSwitch();
@@ -90,6 +90,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         deployRecyclerView();
         deployRelativeLayout();
         deployeSpinner();
+    }
+
+    private void initialiseListRealEstate() {
+        resultResearchRealEstate.clear();
+        resultResearchRealEstate.addAll(listRealEstate);
     }
 
 
@@ -575,7 +580,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         String townEntryByUser = globalResultEstate.get("town").toLowerCase();
         String townEstateList = listRealEstate.get(i).getTown().toLowerCase();
         if (townEntryByUser != null && !townEntryByUser.isEmpty()) {
-            if (!townEntryByUser.equals(townEstateList)) {
+            if (!townEntryByUser.contains(townEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }

@@ -46,7 +46,7 @@
     <string name="station">Station</string>
     <string name="station_bus_metro">Bus</string>
     <string name="local_photo">Photo local</string>
-    <string name="take_a_photo">Prendre photo</string>
+    <string name="take_a_photo">Camera</string>
     <string name="cancel">Annuler</string>
     <string name="modifier">Modifier</string>
     <string name="ok">Ok</string>
@@ -56,7 +56,7 @@
     <string name="venduornot">Vendu ?</string>
     <string name="appartement">Appartement</string>
     <string name="House">Maison</string>
-    <string name="attic">Grenier</string>
+    <string name="attic">Manoir</string>
     <string name="parking">Parking</string>
     <string name="villa">Villa</string>
     <string name="conexioGPStest">Vous devez activer votre connexion internet pour profiter de l\'application. Cependant vos informations sont sauvegarder sur votre téléphone et seront envoyées lorsque vous aurez de nouveau une connection</string>
@@ -73,9 +73,10 @@
     <string name="none">None</string>
     <string name="Loft">Loft</string>
     <string name="Appter">Appartement</string>
-    <string name="Garage">Garage</string>
-    <string name="Other">Others</string>
+    <string name="Garage">Manoir</string>
+    <string name="Other">Duplex</string>
     <string name="Available">Available</string>
     <string name="selledstate">Selled</string>
     <string name="filesuploads">Vos fichiers ont bien été sauvegardés</string>
+    <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">Vous devez allumer votre option GPS pour beneficier de toutes les fonctionnalitées de la carte</string>
 </resources>

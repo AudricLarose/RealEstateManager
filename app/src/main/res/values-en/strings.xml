@@ -6,9 +6,9 @@
     <string name="vous_devez">You Must fill all the filed</string>
     <string name="define_ins">Define Description</string>
     <string name="not_connecte">You Have to be connected,to reach all the option of the app</string>
-    <string name="appartement">Apartment</string>
+    <string name="appartement">Flat</string>
     <string name="House">House</string>
-    <string name="attic">Attic</string>
+    <string name="attic">PentHouse</string>
     <string name="parking">Parking</string>
     <string name="villa">Villa</string>
     <string name="conexioGPStest">You have to activate your internet device</string>
@@ -72,10 +72,11 @@
     <string name="reset">Reset</string>
     <string name="none">Aucun</string>
     <string name="Loft">Loft</string>
-    <string name="Appter">Apartment</string>
-    <string name="Garage">Garage</string>
-    <string name="Other">Others</string>
+    <string name="Appter">Flat</string>
+    <string name="Garage">Penthouse</string>
+    <string name="Other">Duplex</string>
     <string name="Available">Available</string>
     <string name="selledstate">Selled</string>
     <string name="filesuploads">Files have been Saved Successfully</string>
+    <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">You Have to set your gps to active the Map</string>
 </resources>
