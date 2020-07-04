@@ -42,7 +42,8 @@ public class RealEstate implements Serializable {
     private String url;
     private String inEuro;
     private String selled;
-    private String temp = "false";
+    private String tempInsert = "false";
+    private String tempUpdate = "false";
 
     @TypeConverters(Converters.class)
     private List<String> urlFireBase;
@@ -144,6 +145,14 @@ public class RealEstate implements Serializable {
 
     }
 
+    public String getTempUpdate() {
+        return tempUpdate;
+    }
+
+    public void setTempUpdate(String tempUpdate) {
+        this.tempUpdate = tempUpdate;
+    }
+
     public List<String> getLink() {
         return link;
     }
@@ -232,12 +241,12 @@ public class RealEstate implements Serializable {
         this.ischecked = ischecked;
     }
 
-    public String getTemp() {
-        return temp;
+    public String getTempInsert() {
+        return tempInsert;
     }
 
-    public void setTemp(String temp) {
-        this.temp = temp;
+    public void setTempInsert(String tempInsert) {
+        this.tempInsert = tempInsert;
     }
 
     public String getMarket() {

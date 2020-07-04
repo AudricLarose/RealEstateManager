@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.flags.Singletons;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
 import com.openclassrooms.realestatemanager.dummy.DetailFragment;
@@ -25,8 +23,6 @@ import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import static android.util.Half.NaN;
 
 
 public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
@@ -135,7 +131,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
 
     @SuppressLint("ResourceAsColor")
     private void verifyIfitisTemp(LeHolder holder) {
-        if (estate.getTemp()!=null && estate.getTemp().contains("true")) {
+        if (estate.getTempInsert()!=null && estate.getTempInsert().contains("true")) {
             holder.relativeLayout.setBackgroundColor(R.color.colorPrimary);
         }
    }

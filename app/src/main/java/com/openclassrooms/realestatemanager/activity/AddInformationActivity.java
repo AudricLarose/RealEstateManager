@@ -33,7 +33,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -77,7 +76,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private List<String> globalResult = new ArrayList<>();
     private ExtendedServiceEstate serviceEstate = DI.getService();
     private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
-    private List<RealEstate> tempList = serviceEstate.getTempList();
+    private List<RealEstate> tempListInsert = serviceEstate.getTempListInsert();
+    private List<RealEstate> tempListUpdate = serviceEstate.getTempListUpdate();
     private Uri imageURL;
     private Boolean isEstateExist;
     private AdaptateurImage adapter;
@@ -89,7 +89,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private boolean emptyField = true;
     public DataBaseSQL dataBaseSQL;
     public Uri imageUri;
-
+    private  List<Chip> ChipesContainer=new ArrayList<>();
     private List<String> listPhotoRealistetate = new ArrayList<>();
     private List<String> descritpionImage = new ArrayList<>();
     private boolean CameraActivate;
@@ -256,7 +256,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void deployeChipes() {
-        final List<Chip> ChipesContainer = initiateChipes();
+        ChipesContainer = initiateChipes();
         resultsValidatedByUser = activateChip(ChipesContainer);
     }
 
@@ -267,12 +267,16 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         CParc = findViewById(R.id.check_parc);
         Cbus = findViewById(R.id.check_bus);
         Cmetro = findViewById(R.id.check_metro);
-        ChipesContainer.add(Cecole);
-        ChipesContainer.add(Cmagasin);
-        ChipesContainer.add(CParc);
-        ChipesContainer.add(Cbus);
-        ChipesContainer.add(Cmetro);
+        addingContainer(ChipesContainer);
         return ChipesContainer;
+    }
+
+    private void addingContainer(List<Chip> chipesContainer) {
+        chipesContainer.add(Cecole);
+        chipesContainer.add(Cmagasin);
+        chipesContainer.add(CParc);
+        chipesContainer.add(Cbus);
+        chipesContainer.add(Cmetro);
     }
 
     private List<String> activateChip(final List<Chip> ChipesContainer) {
@@ -523,15 +527,14 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 @Override
                 public void onFinish(RealEstate estateFireBase) {
                     knowIfTempOrNot(estateFireBase);
-                    saveToRoom(estateFireBase);
-                    Toast.makeText(AddInformationActivity.this, R.string.filesuploads, Toast.LENGTH_SHORT).show();
+                    insertToRoom(estateFireBase);
                     finish();
                 }
 
                 @Override
                 public void onFail() {
                     knowIfTempOrNot(finalEstate);
-                    saveToRoom(finalEstate);
+                    insertToRoom(finalEstate);
                     finish();
                 }
             });
@@ -540,7 +543,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         }
     }
 
-    private void saveToRoom(RealEstate estate1) {
+    private void insertToRoom(RealEstate estate1) {
         dataBaseSQL.estateDao().insertEstate(estate1);
     }
 
@@ -573,10 +576,11 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private void knowIfTempOrNot(RealEstate estate) {
         if (Utils.internetOnVerify(this)) {
             Utils.sendItToMyBDDatRealEstate(estate);
-            estate.setTemp("false");
+            Toast.makeText(AddInformationActivity.this, R.string.filesuploads, Toast.LENGTH_SHORT).show();
+            estate.setTempInsert("false");
         } else {
             estate = saveInTempIfNoInternet(estate);
-            saveToRoom(estate);
+            insertToRoom(estate);
             finish();
         }
     }
@@ -584,44 +588,14 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private RealEstate saveInTempIfNoInternet(RealEstate estate) {
         if (!Utils.internetOnVerify(this)) {
             Toast.makeText(this, R.string.not_connecte, Toast.LENGTH_LONG).show();
-            tempList.add(estate);
+            tempListInsert.add(estate);
             progressBar.setVisibility(View.GONE);
-            estate.setTemp("true");
+            estate.setTempInsert("true");
         }
         return estate;
     }
 
-    private void initiateAndActivateModifyButton() {
-        btnModify = findViewById(R.id.btn_Modifier);
-        btnModify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RealEstate estateForModifier = modifyEstate();
-                Utils.upDateMyBDDPlease(modifyEstate(), estate);
-                try {
-                    Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
-                        @Override
-                        public void onFinish(List<String> s) {
-                            modifyEstate().setLink(s);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                redirectToDetailsActivity(estateForModifier);
-            }
-        });
-    }
 
-    private RealEstate modifyEstate() {
-        saveEntryEditText();
-        RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
-                globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), date, globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
-                , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
-        estateNew.setId(estate.getId());
-        dataBaseSQL.estateDao().upDateEstate(estateNew);
-        return estateNew;
-    }
 
 
     private void deployModificationAction() {
@@ -709,11 +683,79 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         eVille.getEditText().setText(estate.getTown());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<String> activateChipCase(final List<Chip> ChipesContainer) {
+        final List<String> resultList = new ArrayList<>();
+        for (int i = 0; i < ChipesContainer.size(); i++) {
+            final int finalI = i;
+            if (ChipesContainer.get(finalI).isChecked()) {
+                globalResultEstate.put(ChipesContainer.get(finalI).getText().toString(), String.valueOf(ChipesContainer.get(finalI).getText()));
+                resultList.add(String.valueOf(ChipesContainer.get(finalI).getText()));
+            } else if (!ChipesContainer.get(finalI).isChecked()) {
+                globalResultEstate.remove(ChipesContainer.get(finalI).getText().toString(), String.valueOf(ChipesContainer.get(finalI).getText()));
+                resultList.remove(String.valueOf(ChipesContainer.get(finalI).getText()));
+            }
+        }
+        return resultList;
+    }
     private void replaceOkButtonByModifyButton() {
         btnOk.setVisibility(View.GONE);
         btnModify.setVisibility(View.VISIBLE);
     }
 
+    private void initiateAndActivateModifyButton() {
+        btnModify = findViewById(R.id.btn_Modifier);
+        btnModify.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                RealEstate estateForModifier = modifyEstate();
+                if (Utils.internetOnVerify(AddInformationActivity.this)) {
+                    Utils.upDateMyBDDPlease(modifyEstate(), estate);
+                    try {
+                        Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
+                            @Override
+                            public void onFinish(List<String> s) {
+                                modifyEstate().setLink(s);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    saveInTempUpdateIfNoInternet(estateForModifier);
+                    updateitToRoom(estateForModifier);
+                }
+                redirectToDetailsActivity(estateForModifier);
+            }
+        });
+    }
+
+    private void updateitToRoom(RealEstate estateForModifier) {
+        dataBaseSQL= DataBaseSQL.getInstance(AddInformationActivity.this);
+        dataBaseSQL.estateDao().upDateEstate(estateForModifier);
+    }
+
+    private RealEstate saveInTempUpdateIfNoInternet(RealEstate estate) {
+        if (!Utils.internetOnVerify(this)) {
+            Toast.makeText(this, R.string.not_connecte, Toast.LENGTH_LONG).show();
+            tempListUpdate.add(estate);
+            estate.setTempUpdate("true");
+        }
+        return estate;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private RealEstate modifyEstate() {
+        saveEntryEditText();
+        resultsValidatedByUser=activateChipCase(ChipesContainer);
+        RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
+                globalResultEstate.get("Chambre"), globalResultEstate.get("Description"), eMarket.getText().toString(), globalResultEstate.get("Postal"), globalResultEstate.get("Piece")
+                , globalResultEstate.get("Prix"), globalResultEstate.get("SDB"), globalResultEstate.get("Surface"), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
+        estateNew.setId(estate.getId());
+        dataBaseSQL.estateDao().upDateEstate(estateNew);
+        return estateNew;
+    }
     private void deployRecyclerView() {
         adapter = new AdaptateurImage(listPhotoRealistetate, this, descritpionImage);
         recyclerView = findViewById(R.id.Recyclerviewphotos);

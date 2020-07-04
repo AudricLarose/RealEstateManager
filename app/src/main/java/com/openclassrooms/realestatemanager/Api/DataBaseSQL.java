@@ -14,7 +14,7 @@ import com.openclassrooms.realestatemanager.utils.EstateDao;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.openclassrooms.realestatemanager.utils.EstateDao_Impl;
 
-@Database(entities = {RealEstate.class}, version = 16, exportSchema = false )
+@Database(entities = {RealEstate.class}, version = 18, exportSchema = false )
 public abstract class DataBaseSQL extends RoomDatabase {
     private static  DataBaseSQL instance;
     public abstract EstateDao estateDao();

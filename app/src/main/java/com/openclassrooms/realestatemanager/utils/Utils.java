@@ -63,7 +63,7 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
  * Created by Philippe on 21/02/2018.
  */
 public class Utils {
-
+public int count=0;
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
@@ -215,33 +215,6 @@ public class Utils {
         }
     }
 
-    // Verify if user have internet on and display just a message
-    public static Boolean internetIsOn(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork == null) {
-            Toast.makeText(context, R.string.internetreform , Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
-    }
-
-    // Show Notification if GPS is off
-    private static void AlertInternetInactif(Context context) {
-        AlertDialog alertDialog = AlertInternet(context);
-        alertDialog.show();
-    }
-
-    private static AlertDialog AlertInternet(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Vous devez activer votre connexion internet pour profiter de l'application").setTitle("Alert Internet").setPositiveButton("J'ai bien activé ma connexion", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Utils.internetOnVerify(context);
-            }
-        });
-        return builder.create();
-    }
 
     public static List<RealEstate> sortedbyPriceCroissant(List<RealEstate> listeRealEstate) {
         Collections.sort(listeRealEstate, new Comparator<RealEstate>() {
@@ -317,24 +290,6 @@ public class Utils {
                 });
     }
 
-    public static void getNEarbyList(final RealEstate resultsBDD) {
-        ExtendedServiceEstate servicePlace = DI.getService();
-        final List<RealEstate> listeRealEstate = servicePlace.getRealEstateList();
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("estates")
-                .document(String.valueOf(resultsBDD.hashCode()))
-                .collection("Nearby").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        resultsBDD.getNearby().add(document.getString("nom"));
-                        resultsBDD.getNearby();
-                    }
-                }
-            }
-        });
-    }
 
     public static void sendItToMyBDDatRealEstate(RealEstate estate) {
         Map note = new HashMap();
@@ -436,35 +391,6 @@ public class Utils {
     public static void buttonBlocker(Button button){
         button.setEnabled(false);
         button.setBackgroundColor(R.color.colorPrimary);
-    }
-
-    public static void downLoadImages(final RealEstate estate, final Context context, final DownloadController downloadController) {
-        final StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference ref = mStorageRef.child("206614279");
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url = uri.toString();
-                downloadFile(context, String.valueOf(estate.hashCode()), ".jpeg", DIRECTORY_DOWNLOADS, url);
-                Toast.makeText(context, "Succes ! ", Toast.LENGTH_SHORT).show();
-                downloadController.onfInish(uri);
-            }
-        });
-
-    }
-
-    private static void downloadFile(Context context, String fileName, String fileExtension, String desintationDriectory, String url) {
-        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        Uri uri = Uri.parse(url);
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalFilesDir(context, desintationDriectory, fileName + fileExtension);
-        downloadManager.enqueue(request);
-
-    }
-
-    public interface DownloadController {
-        void onfInish(Uri uri);
     }
 
     public interface CallBackInterfaceForBDD {

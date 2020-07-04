@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private static RealEstate estate;
     private static String dateActuelle, date;
     List<TextInputLayout> editTextContainer = new ArrayList<>();
-    private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus, cNone, cAp, cAttic, cLoft, cHouse;
+    private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus, cNone, cAp, cAttic, cLoft, cHouse,cOthers;
     private TextInputLayout ePrixmin, eSurfaceMax, ePrixMax, eSurface, ePiece, eChambre, eSdb, eTown;
     private Switch search_switch_vendu;
     private TextView eMarket;
@@ -67,7 +67,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private RecyclerView recyclerView;
     private List<String> globaleResulforCompare = new ArrayList<>();
     private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
-    private List<String> resultsValidatedByUserForPhotos = new ArrayList<>();
+    private String resultsValidatedByUserForPhotos;
     private String resultsValidatedByUserForAgent;
     private String resultsValidatedByUserForSell;
     private List<String> resultsValidatedByUserForTypes;
@@ -313,7 +313,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         spinerPhoto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                resultsValidatedByUserForPhotos.add(adapterView.getSelectedItem().toString());
+                resultsValidatedByUserForPhotos=adapterView.getSelectedItem().toString();
             }
 
             @Override
@@ -378,10 +378,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         cAttic = findViewById(R.id.search_check_attic);
         cHouse = findViewById(R.id.search_check_house);
         cLoft = findViewById(R.id.search_check_loft);
+        cOthers = findViewById(R.id.search_other);
         ChipesContainer.add(cAp);
         ChipesContainer.add(cAttic);
         ChipesContainer.add(cHouse);
         ChipesContainer.add(cLoft);
+        ChipesContainer.add(cOthers);
         return ChipesContainer;
     }
 
@@ -483,12 +485,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void deleteNumberPhotosByIfResultMatch(int i) {
-        for (int j = 0; j < resultsValidatedByUserForPhotos.size(); j++) {
-            if (resultsValidatedByUserForPhotos.get(j) != null && !listRealEstate.isEmpty()) {
-                if (listRealEstate.get(i).getPhotosReal().size() < Integer.valueOf(resultsValidatedByUserForPhotos.get(j))) {
+            if (resultsValidatedByUserForPhotos!= null && !listRealEstate.isEmpty()) {
+                if (listRealEstate.get(i).getPhotosReal().size() < Integer.valueOf(resultsValidatedByUserForPhotos)) {
                     resultResearchRealEstate.remove(listRealEstate.get(i));
                 }
-            }
         }
     }
 

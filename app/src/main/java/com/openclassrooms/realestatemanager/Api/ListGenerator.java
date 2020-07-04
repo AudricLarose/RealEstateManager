@@ -20,8 +20,15 @@ public  abstract class ListGenerator {
     public static List<RealEstate> temp = Arrays.asList(
 
     );
+    public static List<RealEstate> tempUpdate = Arrays.asList(
+
+    );
     public static List<RealEstate> getTempList() {
         return new ArrayList<>(temp);
+    }
+
+    public static List<RealEstate> getTempListUpdate() {
+        return new ArrayList<>(tempUpdate);
     }
 }
 

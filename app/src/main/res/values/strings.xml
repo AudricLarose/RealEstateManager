@@ -98,4 +98,5 @@
     <string name="Available">Disponible</string>
     <string name="selledstate">Vendu</string>
     <string name="filesuploads">Vos fichiers ont bien été sauvegardés</string>
+    <string name="providerinternet">Vous devez etre connecté a Internet pour profiter de la carte</string>
 </resources>

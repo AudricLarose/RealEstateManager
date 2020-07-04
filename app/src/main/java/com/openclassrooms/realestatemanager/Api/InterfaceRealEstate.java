@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface InterfaceRealEstate {
     List<RealEstate> getRealEstateList();
-    List<RealEstate> getTempList();
+    List<RealEstate> getTempListInsert();
+
+    List<RealEstate> getTempListUpdate();
 }

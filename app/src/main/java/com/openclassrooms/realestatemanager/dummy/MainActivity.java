@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ExtendedServiceEstate serviceEstate = DI.getService();
     private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
-    private List<RealEstate> listTemp = serviceEstate.getTempList();
+    private List<RealEstate> listTemp = serviceEstate.getTempListInsert();
+    private List<RealEstate> listTempUpdate = serviceEstate.getTempListUpdate();
     private Adaptateur adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean amIInEuro = true;
@@ -126,11 +127,8 @@ public class MainActivity extends AppCompatActivity {
         takeDataInBDDIfInternetIsHere();
         deployementButtonAdd();
         deployementButtonMail();
-
         onSwipeToRefresh();
         Utils.internetOnVerify(this);
-        Utils.internetIsOn(this);
-//        Utils.GPSOnVerify(this);
         DeploytempHandler();
         deployementNotificationMail();
         askPermission();
@@ -171,24 +169,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void takeDataInBDDIfInternetIsHere() {
-        Utils.saveDataInBDD(new Utils.CallBackInterfaceForBDD() {
-            @Override
-            public void onFinish(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
-                if (listTemp.size() == 0) {
-                    database.estateDao().DeleteAllEstate();
-                    for (int i = 0; i < realEstateList.size(); i++) {
-                        database.estateDao().insertEstate(realEstateList.get(i));
+        if (Utils.internetOnVerify(this)) {
+            Utils.saveDataInBDD(new Utils.CallBackInterfaceForBDD() {
+                @Override
+                public void onFinish(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
+                    if (listTemp.size() == 0 || listTempUpdate.size()==0) {
+                        database.estateDao().DeleteAllEstate();
+                        for (int i = 0; i < realEstateList.size(); i++) {
+                            database.estateDao().insertEstate(realEstateList.get(i));
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onFail() {
-                Toast.makeText(MainActivity.this, R.string.nonew, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFail() {
+                    Toast.makeText(MainActivity.this, R.string.nonew, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void deployRecyclerView() {
@@ -219,10 +219,15 @@ public class MainActivity extends AppCompatActivity {
         if (countLoup==1) {
             listTemp.clear();
             for (int i = 0; i < realEstates.size(); i++) {
-                if (realEstates.get(i).getTemp().equals("true")) {
+                if (realEstates.get(i).getTempInsert().equals("true")) {
                     listTemp.add(realEstates.get(i));
                     majNotif();
                 }
+                if (realEstates.get(i).getTempUpdate().equals("true")) {
+                    listTempUpdate.add(realEstates.get(i));
+                    majNotif();
+                }
+
             }
         }
     }
@@ -237,10 +242,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void majNotif() {
-        textNotif.setText(String.valueOf(listTemp.size()));
+        textNotif.setText(String.valueOf(listTemp.size()+listTempUpdate.size()));
     }
 
     private void DeploytempHandler() {
+        sendTempInsertFileToFireB();
+        sendTempUpdateFileToFireB();
+    }
+
+    private void sendTempInsertFileToFireB() {
         if (listTemp.size() == 0) {
             Toast.makeText(this, R.string.aucunmail, Toast.LENGTH_SHORT).show();
         } else {
@@ -258,11 +268,42 @@ public class MainActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        listTemp.get(i).setTemp("False");
+                        listTemp.get(i).setTempInsert("False");
                         database.estateDao().upDateEstate(listTemp.get(i));
                     }
                     Toast.makeText(this, R.string.sent, Toast.LENGTH_SHORT).show();
                     listTemp.clear();
+                    majNotif();
+                }
+            } else {
+                Toast.makeText(this, R.string.ni_internet, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void sendTempUpdateFileToFireB() {
+        if (listTempUpdate.size() == 0) {
+            Toast.makeText(this, R.string.aucunmail, Toast.LENGTH_SHORT).show();
+        } else {
+            if (Utils.internetOnVerify(this)) {
+                if (listTempUpdate.size() > 0) {
+                    for (int i = 0; i < listTempUpdate.size(); i++) {
+                        Utils.upDateMyBDDPlease(listTempUpdate.get(i),listTempUpdate.get(i));
+//                        try {
+//                            Utils.uploadImage(listTempUpdate.get(i), this, new Utils.CallBackImage() {
+//                                @Override
+//                                public void onFinish(List<String> s) {
+//
+//                                }
+//                            });
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+                        listTempUpdate.get(i).setTempInsert("False");
+                        database.estateDao().upDateEstate(listTempUpdate.get(i));
+                    }
+                    Toast.makeText(this, R.string.sent, Toast.LENGTH_SHORT).show();
+                    listTempUpdate.clear();
                     majNotif();
                 }
             } else {
@@ -342,6 +383,8 @@ public class MainActivity extends AppCompatActivity {
                 if (Utils.internetOnVerify(MainActivity.this)) {
                     Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.providerinternet) , Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -377,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
             int converted = Utils.convertDollarToEuro(Integer.valueOf(listRealEstate.get(i).getPrix()));
             listRealEstate.get(i).setPrix(String.valueOf((converted)));
         }
-        saveDataInSQLITE();
+        deployRecyclerView();
     }
 
     private void convertEuroList() {
@@ -385,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
             int converted = Utils.convertEuroToDollar(Integer.valueOf(listRealEstate.get(i).getPrix()));
             listRealEstate.get(i).setPrix(String.valueOf((converted)));
         }
-        saveDataInSQLITE();
+        deployRecyclerView();
     }
 
     @Override

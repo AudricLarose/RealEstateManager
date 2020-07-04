@@ -7,7 +7,7 @@
     <string name="vous_devez">Vous devez remplir tous les champs</string>
     <string name="define_ins">Definir Description</string>
     <string name="not_connecte">Vous n\'etes pas connectés , ainsi vos données seront envoyées a votre prochaine connexion a l\'Internet</string>
-    <string name="sent">envoyé !</string>
+    <string name="sent">Envoyé !</string>
     <string name="internetreform">Vous devez avoir internet pour continuer</string>
     <string name="description">Description</string>
     <string name="surface">Surface</string>
@@ -26,11 +26,11 @@
     <string name="nonew">Aucune Données dans la Base De Données</string>
     <string name="vendu">Vendu</string>
     <string name="prix">Prix</string>
-    <string name="putdescription">Vous saisir votre description</string>
+    <string name="putdescription">Saisissez votre description</string>
     <string name="surface_min">Surface Min</string>
     <string name="piece">Piece</string>
     <string name="chambre">Chambre</string>
-    <string name="proximity">proximité</string>
+    <string name="proximity">Proximité</string>
     <string name="magasins">Magasins</string>
     <string name="metro">Station metro</string>
     <string name="parc">Parc</string>

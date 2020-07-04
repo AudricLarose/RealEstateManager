@@ -277,7 +277,7 @@ public class DetailFragment extends Fragment {
     }
 
     private void convertDollarEnEuro() {
-        int converted = Utils.convertDollarToEuro(Integer.valueOf(estateGrabbed.getPrix()));
+        int converted = Integer.parseInt(estateGrabbed.getPrix());
         priceChiffre.setText(converted + " Euros");
     }
 
