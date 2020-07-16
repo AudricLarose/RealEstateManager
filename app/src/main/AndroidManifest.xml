@@ -13,8 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -23,12 +21,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.PopupOverlay">
+        <activity android:name=".activity.ResultsActivity"></activity>
         <activity
             android:name=".dummy.MainActivity"
             android:label="@string/title_item_list"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -50,13 +50,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activity.MapsActivity" />
+        <activity
+            android:name=".activity.MapsActivity"
+            android:label="@string/map"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.AddInformationActivity" />
 
         <provider
             android:name=".utils.PersonContentProvider"
             android:authorities="com.openclassrooms.realestatemanager"
-            android:exported="true"/>
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -28,12 +29,15 @@ public class AdaptateurImage extends RecyclerView.Adapter<AdaptateurImage.LeHold
     static List<String> liste;
     Context context;
     public static List<String> listDescription= new ArrayList<>();
+    public static List<ImagesRealEstate> list= new ArrayList<>();
+    public String add;
 
-    public AdaptateurImage(List<String> liste, Context context, List<String> listDescription) {
+    public AdaptateurImage(List<String> liste, Context context, List<String> listDescription,String add) {
         this.liste = liste;
         notifyDataSetChanged();
         this.context= context;
         this.listDescription= listDescription;
+        this.add=add;
     }
 
     @NonNull
@@ -50,7 +54,9 @@ public class AdaptateurImage extends RecyclerView.Adapter<AdaptateurImage.LeHold
         holder.imageRealEstate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                erAseImage(context, estateImage,position);
+                if (Boolean.valueOf(add)) {
+                    erAseImage(context, estateImage,position);
+                }
             }
         });
          holder.details_description.setText(listDescription.get(position));
@@ -65,14 +71,13 @@ public class AdaptateurImage extends RecyclerView.Adapter<AdaptateurImage.LeHold
 
     private AlertDialog eraseImageAlertDIalg(final Context context, final String estateImage, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Souhaitez vous effacer l'image").setTitle("Effacer Image").setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        final View view = LayoutInflater.from(context).inflate(R.layout.input_erase, null);
+        builder.setView(view).setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 liste.remove(estateImage);
                 listDescription.remove(position);
                 notifyDataSetChanged();
-
-
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override

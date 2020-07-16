@@ -7,15 +7,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RecycleDetails"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/white" />
 
     <ScrollView
@@ -29,34 +25,27 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/RecycleDetails">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="600dp"
-                android:layout_marginHorizontal="20dp"
-                android:alpha="0.7"
-                android:background="@drawable/round_details"></RelativeLayout>
 
             <TextView
                 android:id="@+id/descirptionDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/description"
                 android:textColor="@android:color/black"
-                android:textSize="20dp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
 
 
             <TextView
                 android:id="@+id/descirptionInputDetails"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/descirptionDetails"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/description"
+                android:layout_marginBottom="16dp"
                 android:textColor="@android:color/black" />
 
             <RelativeLayout
@@ -64,25 +53,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/descirptionInputDetails"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="16dp">
 
                 <RelativeLayout
                     android:id="@+id/RelativeSurfaceDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp">
+                    android:layout_marginLeft="16dp">
 
                     <ImageView
                         android:id="@+id/icone_surface"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_zoom_out_map_black_24dp" />
 
                     <TextView
                         android:id="@+id/surfaceDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_surface"
                         android:text="@string/surface"
                         android:textColor="@android:color/black"
@@ -105,16 +94,16 @@
 
                     <ImageView
                         android:id="@+id/icone_money"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_attach_money_black_24dp" />
 
                     <TextView
                         android:id="@+id/PriceDetails"
-                        android:layout_width="100dp"
+                        android:layout_width="84dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_money"
                         android:text="@string/price"
                         android:textColor="@android:color/black"
@@ -135,26 +124,26 @@
                 android:id="@+id/Relativedetails2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+android:layout_marginTop="4dp"
                 android:layout_below="@+id/Relativedetails1">
 
                 <RelativeLayout
                     android:id="@+id/RelativeRoomDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp">
+                    android:layout_marginLeft="16dp">
 
                     <ImageView
                         android:id="@+id/icone_room"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_home_black_24dp" />
 
                     <TextView
                         android:id="@+id/RoomDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_room"
                         android:text="@string/rooms"
                         android:textColor="@android:color/black"
@@ -181,13 +170,13 @@
 
                     <ImageView
                         android:id="@+id/icone_type"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_type" />
 
                     <TextView
                         android:id="@+id/TypeDetails"
-                        android:layout_width="100dp"
+                        android:layout_width="84dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="9dp"
@@ -214,6 +203,8 @@
                 android:id="@+id/Relativedetails3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+
                 android:layout_below="@+id/Relativedetails2"
 >
 
@@ -221,12 +212,14 @@
                     android:id="@+id/RelativeBathroomDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp">
+                    android:layout_marginTop="16dp"
+
+                    android:layout_marginLeft="16dp">
 
                     <ImageView
                         android:id="@+id/icone_sdb"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_bathroom" />
 
                     <TextView
@@ -234,7 +227,7 @@
                         android:id="@+id/BathroomDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_sdb"
                         android:text="@string/sdb"
                         android:textColor="@android:color/black"
@@ -253,25 +246,25 @@
 
                 <RelativeLayout
                     android:id="@+id/RelativeRoomsDetails"
-                    android:layout_width="130dp"
+                    android:layout_width="108dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginBottom="20dp">
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp">
 
                     <ImageView
                         android:id="@+id/icone_bedroom"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_airline_seat_individual_suite_black_24dp" />
 
                     <TextView
                         android:id="@+id/RoomsDetails"
                         android:layout_width="250dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_bedroom"
-                        android:text="Bedrooms"
+                        android:text="@string/bedrooms"
                         android:textColor="@android:color/black"
                         android:textStyle="bold" />
 
@@ -290,20 +283,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/RelativeBathroomDetails"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="16dp"
+
+                    android:layout_marginLeft="16dp"
 >
 
                     <ImageView
                         android:id="@+id/icone_proximite"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_near_me_black_24dp" />
 
                     <TextView
                         android:id="@+id/NearbyDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_proximite"
                         android:text="@string/proximit"
                         android:textColor="@android:color/black"
@@ -323,13 +318,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/RelativeNearbyDetails"
-                    android:layout_marginLeft="50dp"
->
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    >
 
                     <ImageView
                         android:id="@+id/icone_agent"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:background="@drawable/ic_person_black_24dp" />
 
                     <TextView
@@ -337,7 +333,7 @@
                         android:id="@+id/agentDetailsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_agent"
                         android:text="@string/nom_agent"
                         android:textColor="@android:color/black"
@@ -360,7 +356,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="16dp"
 
                     >
 
@@ -372,9 +368,9 @@
 
                     <TextView
                         android:id="@+id/selledDetails"
-                        android:layout_width="90dp"
+                        android:layout_width="76dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toRightOf="@+id/icone_vendu"
                         android:text="@string/vendu_le"
                         android:textColor="@color/colorSecondary"
@@ -397,7 +393,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/Relativedetails3"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="16dp">
 
             </RelativeLayout>
 
@@ -406,24 +402,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/Relativedetails4"
-                android:layout_marginLeft="50dp">
+                android:layout_marginLeft="16dp">
 
                 <ImageView
                     android:id="@+id/icone_location"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:background="@drawable/ic_location_on_black_24dp" />
 
                 <TextView
                     android:id="@+id/locationDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_toRightOf="@+id/icone_location"
                     android:text="@string/location"
                     android:textColor="@android:color/black"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <TextView

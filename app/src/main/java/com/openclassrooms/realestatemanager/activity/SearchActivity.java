@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,16 +13,22 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
+import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
+import com.openclassrooms.realestatemanager.dummy.MainActivity;
 import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
@@ -30,6 +37,7 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,11 +49,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    private static final String TAG = "ShowResult";
-    private static final int IMAGE_REQUEST = 102;
-    private static final int REQUESTCODEGALLERY = 101;
-    private static boolean isItChecked = false;
-    private static RealEstate estate;
     private static String dateActuelle, date;
     List<TextInputLayout> editTextContainer = new ArrayList<>();
     private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus, cNone, cAp, cAttic, cLoft, cHouse,cOthers;
@@ -69,7 +72,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     private String resultsValidatedByUserForPhotos;
     private String resultsValidatedByUserForAgent;
-    private String resultsValidatedByUserForSell;
     private List<String> resultsValidatedByUserForTypes;
     private int positionSwitch;
 
@@ -81,13 +83,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         setTitle(R.string.Search);
         initialiseListRealEstate();
         actionfleche();
-        deployRecyclerView();
         iniatiateAndActivateSwitch();
         editTextContainer = initiateEditText();
         deployeChipes();
         deployButton();
         deploySwitch();
-        deployRecyclerView();
+       // deployRecyclerView();
         deployRelativeLayout();
         deployeSpinner();
     }
@@ -174,8 +175,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             }
         });
         resetEntry();
-
-
     }
 
     private void resetEntry() {
@@ -186,7 +185,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void reset() {
         resultResearchRealEstate.clear();
         resultResearchRealEstate.addAll(listRealEstate);
-        deployRecyclerView();
+        //deployRecyclerView();
     }
 
     private void initiateAndActivateOkButton() {
@@ -197,7 +196,32 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                 reset();
                 saveEntryEditText();
                 addGlobalResult();
-                compareListAll();
+                //compareListAll();
+                sendToSQLrequest();
+
+            }
+        });
+    }
+
+    private void sendToSQLrequest() {
+        Integer priceMinENtryByUserValue = null;
+        Integer priceMaxENtryByUserValue= null;
+        String priceMinENtryByUser = globalResultEstate.get("PrixMin");
+        String priceMaxENtryByUser = globalResultEstate.get("PrixMax");
+        if (!priceMinENtryByUser.isEmpty()){
+            priceMinENtryByUserValue = Integer.valueOf(priceMinENtryByUser);
+        }
+
+        if (!priceMaxENtryByUser.isEmpty()){
+            priceMaxENtryByUserValue = Integer.valueOf(priceMaxENtryByUser);
+        }
+        DataBaseSQL database = DataBaseSQL.getInstance(this);
+        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted("chj",null,null,null,null,
+                null,null,null,null,0);
+        datalist.observe(this, new Observer<List<RealEstate>>() {
+            @Override
+            public void onChanged(List<RealEstate> realEstateList) {
+                Toast.makeText(SearchActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -256,14 +280,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-
     private void deployeChipes() {
         final List<Chip> ChipesContainer = initiateChipesNearby();
         final List<Chip> ChipesContainer2 = initiateChipesType();
         resultsValidatedByUserForNearBy = activateChip(ChipesContainer);
         resultsValidatedByUserForTypes = activateChip(ChipesContainer2);
     }
-
 
     private void deployeSpinner() {
         initiateSpinner();
@@ -277,7 +299,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         spinnersell.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                resultsValidatedByUserForSell = adapterView.getSelectedItem().toString();
+              adapterView.getSelectedItem();
                 switch (i) {
                     case 0:
                         positionSwitch = 0;
@@ -328,11 +350,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void putDataOnSpinnerSell() {
-        List<String> categories = new ArrayList<String>();
-        categories.add(getString(R.string.both));
-        categories.add(getString(R.string.Available));
-        categories.add(getString(R.string.selledstate));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        String[] spinnerCAseType;
+        spinnerCAseType=getResources().getStringArray(R.array.SellorNot);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerCAseType);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnersell.setAdapter(dataAdapter);
     }
@@ -419,24 +439,34 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void compareListAll() {
         for (int i = 0; i < listRealEstate.size(); i++) {
-            deleteSDBIfResultMatch(i);
-            deletePieceIfResultMatch(i);
-            deleteChambreIfResultMatch(i);
-            deletePriceMinIfResultMatch(i);
-            deletePriceMaxIfResultMatch(i);
-            deleteSurfaceMinIfResultMatch(i);
-            deleteSurfaceMaxIfResultMatch(i);
+       //     deleteSDBIfResultMatch(i);
+       //     deletePieceIfResultMatch(i);
+       //     deleteChambreIfResultMatch(i);
+       //     deletePriceMinIfResultMatch(i);
+       //     deletePriceMaxIfResultMatch(i);
+       //     deleteSurfaceMinIfResultMatch(i);
+       //     deleteSurfaceMaxIfResultMatch(i);
             deleteNumberPhotosByIfResultMatch(i);
             deleteNearByIfResultMatch(i);
+            deleteTypeByIfResultMatch(i);
             deleteDateEntryIfResultMatch(i);
             deleteDateSelledIfResultMatch(i);
-            deleteTypeByIfResultMatch(i);
             deleteifsimplyselled(i);
             deleteifsimplyNotselled(i);
-            deleteAgentByIfResultMatch(i);
-            deleteTownIfResultMatch(i);
+       //     deleteAgentByIfResultMatch(i);
+       //     deleteTownIfResultMatch(i);
         }
-        deployRecyclerView();
+
+        //deployRecyclerView();
+        goToNextResultActivity();
+    }
+
+    private void goToNextResultActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("RealEstate", (Serializable) resultResearchRealEstate);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void deleteDateEntryIfResultMatch(int i) {
@@ -466,8 +496,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-    private void deleteNearByIfResultMatch(int i) {
 
+    private void deleteNearByIfResultMatch(int i) {
         if (resultsValidatedByUserForNearBy != null && resultsValidatedByUserForNearBy.size() != 0 && !listRealEstate.isEmpty()) {
             if (!listRealEstate.get(i).getNearby().containsAll(resultsValidatedByUserForNearBy)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
@@ -478,7 +508,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                 }
             }
         }
-
     }
 
     private void deleteTypeByIfResultMatch(int i) {
@@ -507,9 +536,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deletePriceMinIfResultMatch(int i) {
         String priceMaxEntryByUser = globalResultEstate.get("PrixMax");
-        String priceOfMyList = listRealEstate.get(i).getPrix();
+        int priceOfMyList = listRealEstate.get(i).getPrix();
         if ((priceMaxEntryByUser != null && !priceMaxEntryByUser.isEmpty())) {
-            if ((Integer.valueOf(priceMaxEntryByUser) < Integer.valueOf(priceOfMyList))) {
+            if ((Integer.valueOf(priceMaxEntryByUser) < priceOfMyList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -518,9 +547,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void deletePriceMaxIfResultMatch(int i) {
 
         String priceMinENtryByUser = globalResultEstate.get("PrixMin");
-        String priceEstateList = listRealEstate.get(i).getPrix();
+        int priceEstateList = listRealEstate.get(i).getPrix();
         if ((priceMinENtryByUser != null && !priceMinENtryByUser.isEmpty())) {
-            if ((Integer.valueOf(priceMinENtryByUser) > Integer.valueOf(priceEstateList))) {
+            if ((Integer.valueOf(priceMinENtryByUser) > priceEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -528,9 +557,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteSurfaceMaxIfResultMatch(int i) {
         String surfaceMaxEntryByUSer = globalResultEstate.get("SurfaceMax");
-        String surfaceEstateList = listRealEstate.get(i).getSurface();
+        int surfaceEstateList = listRealEstate.get(i).getSurface();
         if ((surfaceMaxEntryByUSer != null && !surfaceMaxEntryByUSer.isEmpty())) {
-            if ((Integer.valueOf(surfaceMaxEntryByUSer) < Integer.valueOf(surfaceEstateList))) {
+            if ((Integer.valueOf(surfaceMaxEntryByUSer) < surfaceEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -538,9 +567,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteSurfaceMinIfResultMatch(int i) {
         String surfaceMinEntryByUser = globalResultEstate.get("SurfaceMin");
-        String surfaceEstateList = listRealEstate.get(i).getSurface();
+        int surfaceEstateList = listRealEstate.get(i).getSurface();
         if ((surfaceMinEntryByUser != null && !surfaceMinEntryByUser.isEmpty())) {
-            if ((Integer.valueOf(surfaceMinEntryByUser) > Integer.valueOf(surfaceEstateList))) {
+            if ((Integer.valueOf(surfaceMinEntryByUser) > surfaceEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -548,9 +577,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteChambreIfResultMatch(int i) {
         String chambreEntryByUser = globalResultEstate.get("Chambre");
-        String chambreEstateList = listRealEstate.get(i).getChambre();
+        int chambreEstateList = listRealEstate.get(i).getChambre();
         if (chambreEntryByUser != null && !chambreEntryByUser.isEmpty()) {
-            if ((Integer.valueOf(chambreEntryByUser) >= Integer.valueOf(chambreEstateList))) {
+            if ((Integer.valueOf(chambreEntryByUser) >= chambreEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -558,9 +587,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deletePieceIfResultMatch(int i) {
         String pieceEntryByUser = globalResultEstate.get("Piece");
-        String pieceEstateList = listRealEstate.get(i).getPiece();
+        int pieceEstateList = listRealEstate.get(i).getPiece();
         if (pieceEntryByUser != null && !pieceEntryByUser.isEmpty()) {
-            if (Integer.valueOf(pieceEntryByUser) >= Integer.valueOf(pieceEstateList)) {
+            if (Integer.valueOf(pieceEntryByUser) >= pieceEstateList) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -568,9 +597,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteSDBIfResultMatch(int i) {
         String sdbEntryByUser = globalResultEstate.get("SDB");
-        String sdbEstateList = listRealEstate.get(i).getSdb();
+        int sdbEstateList = listRealEstate.get(i).getSdb();
         if (sdbEntryByUser != null && !sdbEntryByUser.isEmpty()) {
-            if (Integer.valueOf(sdbEntryByUser) >= Integer.valueOf(sdbEstateList)) {
+            if (Integer.valueOf(sdbEntryByUser) >= sdbEstateList) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -631,6 +660,5 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         eSdb.getEditText().setText(savedInstanceState.getString("sdb"));
         eSurface.getEditText().setText(savedInstanceState.getString("surfacemin"));
         eSurfaceMax.getEditText().setText(savedInstanceState.getString("surfacemax"));
-
     }
 }

@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.utils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,12 +29,10 @@ import androidx.annotation.RequiresApi;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -43,6 +40,8 @@ import com.google.firebase.storage.UploadTask;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
+import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 
 import java.io.IOException;
@@ -59,13 +58,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
-
 /**
  * Created by Philippe on 21/02/2018.
  */
 public class Utils {
-public int count=0;
+    public int count = 0;
+
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
@@ -140,7 +138,7 @@ public int count=0;
     private static AlertDialog AlertGPS(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final View view = LayoutInflater.from(context).inflate(R.layout.input_gps, null);
-        builder.setView(view).setPositiveButton(context.getString(R.string.gpssetting ), new DialogInterface.OnClickListener() {
+        builder.setView(view).setPositiveButton(context.getString(R.string.gpssetting), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
@@ -162,7 +160,7 @@ public int count=0;
 
     @IntRange(from = 0, to = 3)
     public static int getConnectionType(Context context) {
-        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        int result = 0;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             result = getResultIfVersionIsNewer(result, cm);
@@ -210,8 +208,8 @@ public int count=0;
 
     // Verify if user have Internet is on and stop if not
     public static boolean internetOnVerify(Context context) {
-        int connection =getConnectionType(context);
-        if (connection==1 || connection==2){
+        int connection = getConnectionType(context);
+        if (connection == 1 || connection == 2) {
             return true;
         } else {
             return false;
@@ -264,15 +262,13 @@ public int count=0;
             List<Address> addressList = geocoder.getFromLocationName(adress, 1);
             if (addressList != null && addressList.size() > 0) {
                 retroAction.onSuccess(addressList);
-            } else {
-                retroAction.onEchec();
             }
         } catch (IOException e) {
-            retroAction.onCrash();
+            e.printStackTrace();
         }
     }
 
-    public static void saveDataInBDD(final CallBackInterfaceForBDD callBackInterfaceForBDD) {
+    public static void takeDataInBDD(final CallBackInterfaceForBDD callBackInterfaceForBDD) {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<RealEstate> listeRealEstate = servicePlace.getRealEstateList();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -281,9 +277,9 @@ public int count=0;
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         List<RealEstate> resultsBDD = null;
-                        if (queryDocumentSnapshots != null) {
+                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
                             resultsBDD = queryDocumentSnapshots.toObjects(RealEstate.class);
-                            callBackInterfaceForBDD.onFinish(resultsBDD, e);
+                            callBackInterfaceForBDD.onFinishEstate(resultsBDD, e);
 
                         } else {
                             callBackInterfaceForBDD.onFail();
@@ -292,7 +288,45 @@ public int count=0;
                     }
                 });
     }
+    public static void takeDataImageInBDD(final CallBackInterfaceForBDDImage callBackInterfaceForBDD) {
+        ExtendedServiceEstate servicePlace = DI.getService();
+        final List<ImagesRealEstate> listeRealEstate = servicePlace.getImageRealEstates();
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("imageEstate")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        List<ImagesRealEstate> resultsBDD = null;
+                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
+                            resultsBDD = queryDocumentSnapshots.toObjects(ImagesRealEstate.class);
+                            callBackInterfaceForBDD.onFinishImage(resultsBDD, e);
+                        } else {
+                            callBackInterfaceForBDD.onFail();
 
+                        }
+                    }
+                });
+    }
+    public static void takeDataNEarbyInBDD(final CallBackInterfaceForBDDNearbu callBackInterfaceForBDD) {
+        ExtendedServiceEstate servicePlace = DI.getService();
+        final List<NearbyEstate> listeRealEstate = servicePlace.getNearbyEstates();
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("nearbyestates")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        List<NearbyEstate> resultsBDD = null;
+                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
+                            resultsBDD = queryDocumentSnapshots.toObjects(NearbyEstate.class);
+                            callBackInterfaceForBDD.onFinishNearby(resultsBDD, e);
+
+                        } else {
+                            callBackInterfaceForBDD.onFail();
+
+                        }
+                    }
+                });
+    }
 
     public static void sendItToMyBDDatRealEstate(RealEstate estate) {
         Map note = new HashMap();
@@ -353,15 +387,52 @@ public int count=0;
         firebaseFirestore.collection("realestates").document(String.valueOf(estate.getId())).update(note);
     }
 
-    public interface CallBackImage{
-        void onFinish(List<String> s);
+    public static void sendMyBDDImagePlease(ImagesRealEstate imagesRealEstate) {
+        Map note = new HashMap();
+        note.put("id", imagesRealEstate.getId());
+        note.put("descriptionImage", imagesRealEstate.getDescriptionImage());
+        note.put("idEstate", imagesRealEstate.getIdEstate());
+        note.put("linkFb", imagesRealEstate.getLinkFb());
+        note.put("image", imagesRealEstate.getImage());
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("imageEstate").document(String.valueOf(imagesRealEstate.getId())).set(note);
     }
+
+    public static void upDateMyBDDImagePlease(ImagesRealEstate imagesRealEstate) {
+        Map note = new HashMap();
+        note.put("id", imagesRealEstate.getId());
+        note.put("descriptionImage", imagesRealEstate.getDescriptionImage());
+        note.put("idEstate", imagesRealEstate.getIdEstate());
+        note.put("linkFb", imagesRealEstate.getLinkFb());
+        note.put("image", imagesRealEstate.getImage());
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("imageEstate").document(String.valueOf(imagesRealEstate.getId())).update(note);
+    }
+
+    public static void sendMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
+        Map note = new HashMap();
+        note.put("id", nearbyEstate.getId());
+        note.put("idEstate", nearbyEstate.getIdEstate());
+        note.put("nearby", nearbyEstate.getNearby());
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("imageEstate").document(String.valueOf(nearbyEstate.getId())).set(note);
+    }
+
+    public static void upDateMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
+        Map note = new HashMap();
+        note.put("id", nearbyEstate.getId());
+        note.put("idEstate", nearbyEstate.getIdEstate());
+        note.put("nearby", nearbyEstate.getNearby());
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("imageEstate").document(String.valueOf(nearbyEstate.getId())).update(note);
+    }
+
     public static List<String> uploadImage(final RealEstate estate, final Context context, final CallBackImage callBackImage) throws Exception {
         final List<String> urlList = new ArrayList<>();
         final int[] count = {1};
         for (int i = 0; i < estate.getPhotosReal().size(); i++) {
             final String[] url = {""};
-            final StorageReference mStorageRef = FirebaseStorage.getInstance().getReference(String.valueOf(estate.hashCode())).child(""+i);
+            final StorageReference mStorageRef = FirebaseStorage.getInstance().getReference(String.valueOf(estate.hashCode())).child("" + i);
             UploadTask uploadTask = mStorageRef.putFile(Uri.parse(estate.getPhotosReal().get(i)));
             Task<Uri> task = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -379,10 +450,10 @@ public int count=0;
                         url[0] = task.getResult().toString();
                         urlList.add(url[0]);
                     }
-                    if (count[0] == estate.getPhotosReal().size()){
+                    if (count[0] == estate.getPhotosReal().size()) {
                         callBackImage.onFinish(urlList);
                     } else {
-                        count[0] = count[0] +1;
+                        count[0] = count[0] + 1;
                     }
                 }
             });
@@ -391,17 +462,28 @@ public int count=0;
     }
 
     @SuppressLint("ResourceAsColor")
-    public static void buttonBlocker(Button button){
+    public static void buttonBlocker(Button button) {
         button.setEnabled(false);
         button.setBackgroundColor(R.color.colorPrimary);
     }
 
-    public interface CallBackInterfaceForBDD {
-        void onFinish(List<RealEstate> realEstateList, FirebaseFirestoreException e);
-
-        void onFail();
+    public interface CallBackImage {
+        void onFinish(List<String> s);
     }
 
+    public interface CallBackInterfaceForBDD {
+        void onFinishEstate(List<RealEstate> realEstateList, FirebaseFirestoreException e);
+        void onFail();
+    }
+    public interface CallBackInterfaceForBDDImage {
+        void onFinishImage(List<ImagesRealEstate> imagesRealEstateList, FirebaseFirestoreException e);
+        void onFail();
+    }
+    public interface CallBackInterfaceForBDDNearbu {
+
+        void onFinishNearby(List<NearbyEstate> nearbyEstateList, FirebaseFirestoreException e);
+        void onFail();
+    }
 
     public interface GPSCallBAck {
         void onRetrieve();
@@ -409,10 +491,6 @@ public int count=0;
 
     public interface AdressGenerators {
         void onSuccess(List<Address> addressList);
-
-        void onEchec();
-
-        void onCrash();
     }
 }
 

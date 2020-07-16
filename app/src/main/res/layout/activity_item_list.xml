@@ -25,9 +25,9 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_marginTop="50dp"
+        android:layout_height="wrap_content"
 
-        android:layout_height="wrap_content">
+        android:layout_marginTop="50dp">
 
         <FrameLayout
             android:id="@+id/frameLayout"
@@ -54,6 +54,7 @@
         app:fab_shadowColor="@color/colorAccent"
         app:srcCompat="@drawable/ic_add_circle_white_24dp"
         tools:ignore="VectorDrawableCompat" />
+
     <TextView
         android:id="@+id/cart_badge"
         android:layout_width="20dp"
@@ -68,6 +69,21 @@
         app:layout_anchorGravity="bottom" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttoncancelactivitymain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="#00EE0101"
+        android:visibility="gone"
+        app:backgroundTint="@android:color/transparent"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccent"
+        app:fab_shadowColor="@color/colorAccent"
+        app:srcCompat="@drawable/ic_clear_black_24dp"
+        tools:ignore="PrivateResource,VectorDrawableCompat" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/noInternet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,7 +96,6 @@
         app:fab_shadowColor="@android:color/holo_orange_dark"
         app:srcCompat="@drawable/ic_markunread_mailbox_black_24dp"
         tools:ignore="VectorDrawableCompat" />
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

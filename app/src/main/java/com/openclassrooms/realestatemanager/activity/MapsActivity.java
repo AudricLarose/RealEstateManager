@@ -15,9 +15,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -35,37 +36,44 @@ import com.google.android.gms.tasks.Task;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static FusedLocationProviderClient fusedLocationProviderClient;
     private Button btnLocaliser;
     private List<String> globalResult = new ArrayList<>();
     private ExtendedServiceEstate serviceEstate = DI.getService();
     private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         deployOnMapReady();
+        androidx.appcompat.widget.Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMap);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getString(R.string.map));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 
     private void deployOnMapReady() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -134,13 +142,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -184,14 +185,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onSuccess(List<Address> addressList) {
                     searchAndPlacePlaces(Map, addressList, estate);
                 }
-
-                @Override
-                public void onEchec() {
-                }
-
-                @Override
-                public void onCrash() {
-                }
             });
         }
     }
@@ -206,14 +199,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(latLngRealestate)
                         .title(estate.getAdresse()));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLngRealestate));
-                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
-                    public void onInfoWindowClick(Marker marker) {
+                    public boolean onMarkerClick(Marker marker) {
                         Intent intent = new Intent(MapsActivity.this, ItemDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("RealEstate", estate);
                         intent.putExtras(bundle);
                         startActivity(intent);
+                        finish();
+                        return true;
                     }
                 });
             }

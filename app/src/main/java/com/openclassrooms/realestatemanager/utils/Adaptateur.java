@@ -71,13 +71,13 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
         holder.type.setText(estate.getType());
         if (Boolean.valueOf(estate.getInEuro())) {
             try {
-                holder.prix.setText(Utils.getEuroFormat(Integer.parseInt(estate.getPrix())));
+                holder.prix.setText(Utils.getEuroFormat(estate.getPrix()));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                holder.prix.setText(Utils.getDollarFormat(Integer.parseInt(estate.getPrix())));
+                holder.prix.setText(Utils.getDollarFormat(estate.getPrix()));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }

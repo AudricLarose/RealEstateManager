@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="Spinner_items">
+        <item>Appartement</item>
+        <item>Maison</item>
+        <item>Loft</item>
+        <item>Garage</item>
+        <item>Autres</item>
+    </string-array>
+    <string-array name="Spinner_photos">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="SellorNot">
+        <item>Les Deux</item>
+        <item>Disponible</item>
+        <item>Vendu</item>
+    </string-array>
+
     <string name="app_name">Real Estate Manager</string>
     <string name="modify">Modifier</string>
     <string name="ajouter">Ajouter</string>
@@ -16,7 +35,7 @@
     <string name="type">Type</string>
     <string name="sdb">SDB</string>
     <string name="bedrooms">Chambre</string>
-    <string name="proximit">Proximity</string>
+    <string name="proximit">Proximité</string>
     <string name="nom_agent">Nom agent</string>
     <string name="location">Location</string>
     <string name="pays">Pays</string>
@@ -79,4 +98,6 @@
     <string name="selledstate">Selled</string>
     <string name="filesuploads">Vos fichiers ont bien été sauvegardés</string>
     <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">Vous devez allumer votre option GPS pour beneficier de toutes les fonctionnalitées de la carte</string>
+    <string name="gpssetting">GPS Activé !</string>
+    <string name="map">Carte</string>
 </resources>
