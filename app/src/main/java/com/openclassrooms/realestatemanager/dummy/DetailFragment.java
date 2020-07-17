@@ -28,6 +28,7 @@ import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
 import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
+import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.openclassrooms.realestatemanager.utils.AdaptateurImage;
 import com.openclassrooms.realestatemanager.utils.Utils;
@@ -60,6 +61,7 @@ public class DetailFragment extends Fragment {
     private ImageView mImageView;
     private Boolean modePhone;
     private RelativeLayout relativeLayout;
+    private DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(getContext());
 
     public DetailFragment() {
     }
@@ -130,11 +132,7 @@ public class DetailFragment extends Fragment {
 
     private void deployRecyclerViewDetails(View container) {
         if (listImage.size() > 0 && listDescription.size() > 0) {
-            if (estateGrabbed.getLink() != null && estateGrabbed.getLink().size() > 0) {
-                adapter = new AdaptateurImage(estateGrabbed.getLink(), getContext(), estateGrabbed.getDescriptionImage(), "false");
-            } else {
-                adapter = new AdaptateurImage(listImage, getContext(), listDescription, "false");
-            }
+            adapter = new AdaptateurImage(listImage, getContext(), listDescription, "false");
         }
         recyclerView = container.findViewById(R.id.RecycleDetails);
         recyclerView.setHasFixedSize(true);
@@ -191,11 +189,21 @@ public class DetailFragment extends Fragment {
         roomChiffre.setText(String.valueOf(estateGrabbed.getPiece()));
         typeCHiffre.setText(estateGrabbed.getType());
         bathroomchiffre.setText(String.valueOf(estateGrabbed.getSdb()));
-        if (estateGrabbed.getNearby() != null) {
-            String nearby = estateGrabbed.getNearby().toString();
-            String nearbyNew = nearby.replace("[", "");
-            String nearbyChiffreNew = nearbyNew.replace("]", "");
-            nearbyChiffre.setText(nearbyChiffreNew);
+        if (dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estateGrabbed.getId())!= null) {
+            dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estateGrabbed.getId()).observe(getViewLifecycleOwner(), new Observer<List<NearbyEstate>>() {
+                @Override
+                public void onChanged(List<NearbyEstate> nearbyEstateList) {
+                    List <String> nearby = new ArrayList<>();
+                    for (int i = 0; i < nearbyEstateList.size() ; i++) {
+                        nearby.add( nearbyEstateList.get(i).getNearby());
+                    }
+                    String nearbylistline=nearby.toString();
+                    String nearbyNew = nearbylistline.replace("[", "");
+                    String nearbyChiffreNew = nearbyNew.replace("]", "");
+                    nearbyChiffre.setText(nearbyChiffreNew);
+                }
+            });
+
         }
         chamber.setText(String.valueOf(estateGrabbed.getChambre()));
         description.setText(estateGrabbed.getDescription());

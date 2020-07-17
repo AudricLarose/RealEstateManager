@@ -31,6 +31,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,7 +47,6 @@ import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.openclassrooms.realestatemanager.utils.AdaptateurImage;
 import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
-import com.openclassrooms.realestatemanager.utils.EstateDao;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.text.DateFormat;
@@ -95,7 +95,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private List<String> listPhotoRealistetate = new ArrayList<>();
     private List<String> descritpionImage = new ArrayList<>();
     private boolean CameraActivate;
+    private List<String> link=new ArrayList<>();
     private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -438,7 +440,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                         getContentResolver(), imageUri);
                 String imageurl = getRealPathFromURI(imageUri);
                 listPhotoRealistetate.add(imageUri.toString());
-              //  putImagesInBDD(imageUri);
+                //  putImagesInBDD(imageUri);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -453,7 +455,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void putImagesInBDD(Uri selectedImage) {
-        ImagesRealEstate imagesRealEstate=new ImagesRealEstate(estate.hashCode(),globalResultEstate.get("Description"),selectedImage.toString(),"fi");
+        ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.hashCode(), globalResultEstate.get("Description"), selectedImage.toString(), "fi");
         dataBaseSQL.imageDao().insertEstate(imagesRealEstate);
     }
 
@@ -545,31 +547,30 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private void insertCHildToRoom(RealEstate estate1) {
         for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-            ImagesRealEstate imagesRealEstate=new ImagesRealEstate(estate1.getId(),globalResultEstate.get("Description"),listPhotoRealistetate.get(i),"fi");
+            ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate1.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), "fi");
             dataBaseSQL.imageDao().insertEstate(imagesRealEstate);
         }
-        for (int i = 0; i <resultsValidatedByUser.size(); i++) {
-            NearbyEstate imagesRealEstate=new NearbyEstate(estate1.getId(),resultsValidatedByUser.get(i));
+        for (int i = 0; i < resultsValidatedByUser.size(); i++) {
+            NearbyEstate imagesRealEstate = new NearbyEstate(estate1.getId(), resultsValidatedByUser.get(i));
             dataBaseSQL.nearbyDao().insertNearby(imagesRealEstate);
         }
     }
 
     private RealEstate generateEstateObject() {
-        estate = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
-                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), globalResultEstate.get("date"),Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
-                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
+        estate = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), globalResultEstate.get("Adresse"),
+                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), globalResultEstate.get("date"), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
+                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url);
         estate.setId(estate.hashCode());
-
         return estate;
     }
 
     private void sendToFireStock(final RealEstate estate1, final SendCallBack sendCallBack) {
         try {
             progressBar.setVisibility(View.VISIBLE);
-            List<String> url = Utils.uploadImage(estate1, this, new Utils.CallBackImage() {
+            List<String> url = Utils.uploadImage(estate1,listPhotoRealistetate, this, new Utils.CallBackImage() {
                 @Override
                 public void onFinish(List<String> s) {
-                    estate1.setLink(s);
+                    link.addAll(s);
                     progressBar.setVisibility(View.INVISIBLE);
                     sendCallBack.onFinish(estate1);
                 }
@@ -585,11 +586,11 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         if (Utils.internetOnVerify(this)) {
             Utils.sendItToMyBDDatRealEstate(estate);
             for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-                ImagesRealEstate imagesRealEstate=new ImagesRealEstate(estate.getId(),globalResultEstate.get("Description"),listPhotoRealistetate.get(i),"fi");
+                ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), link.get(i));
                 Utils.sendMyBDDImagePlease(imagesRealEstate);
             }
             for (int i = 0; i < resultsValidatedByUser.size(); i++) {
-                NearbyEstate nearbyEstate=new NearbyEstate(estate.getId(),resultsValidatedByUser.get(i));
+                NearbyEstate nearbyEstate = new NearbyEstate(estate.getId(), resultsValidatedByUser.get(i));
                 Utils.sendMyBDDNearbyPlease(nearbyEstate);
             }
             Toast.makeText(AddInformationActivity.this, R.string.filesuploads, Toast.LENGTH_SHORT).show();
@@ -630,9 +631,16 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void photoCAse() {
-        if (estate.getPhotosReal().size() > 0) {
-            listPhotoRealistetate.addAll(estate.getPhotosReal());
-            descritpionImage.addAll(estate.getDescriptionImage());
+        if (dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()) != null) {
+            dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+                @Override
+                public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
+                    for (int i = 0; i < imagesRealEstateList.size(); i++) {
+                        listPhotoRealistetate.add(imagesRealEstateList.get(i).getImage());
+                        descritpionImage.add(imagesRealEstateList.get(i).getDescriptionImage());
+                    }
+                }
+            });
         }
     }
 
@@ -647,8 +655,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private void ChipCase() {
         List<Chip> checkForPosition = initiateChipes();
         for (int i = 0; i < checkForPosition.size(); i++) {
-            if (estate.getNearby() != null && estate.getNearby().size() > 0) {
-                if (estate.getNearby().contains(checkForPosition.get(i).getText().toString())) {
+            if (dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estate.getId()).getValue() != null && dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estate.getId()).getValue().size() > 0) {
+                if (dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estate.getId()).getValue().contains(checkForPosition.get(i).getText().toString())) {
                     checkForPosition.get(i).setChecked(true);
                 }
             }
@@ -676,16 +684,16 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void editTextCase() {
-        eAdress.getEditText().setText(estate.getAdresse());
-        eChambre.getEditText().setText(estate.getChambre());
+            eAdress.getEditText().setText(estate.getAdresse());
+        eChambre.getEditText().setText(String.valueOf(estate.getChambre()));
         eDescr.getEditText().setText(estate.getDescription());
         eMarket.setText(estate.getMarket());
         edit_ontheSell.setText(estate.getSelled());
-        ePiece.getEditText().setText(estate.getPiece());
-        ePostal.getEditText().setText(estate.getPostal());
-        ePrix.getEditText().setText(estate.getPrix());
-        eSdb.getEditText().setText(estate.getSdb());
-        eSurface.getEditText().setText(estate.getSurface());
+        ePiece.getEditText().setText(String.valueOf(estate.getPiece()));
+        ePostal.getEditText().setText(String.valueOf(estate.getPostal()));
+        ePrix.getEditText().setText(String.valueOf(estate.getPrix()));
+        eSdb.getEditText().setText(String.valueOf(estate.getSdb()));
+        eSurface.getEditText().setText(String.valueOf(estate.getSurface()));
         eVille.getEditText().setText(estate.getTown());
     }
 
@@ -719,18 +727,18 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 if (Utils.internetOnVerify(AddInformationActivity.this)) {
                     Utils.upDateMyBDDPlease(modifyEstate(), estate);
                     for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-                        ImagesRealEstate imagesRealEstate=new ImagesRealEstate(estate.getId(),globalResultEstate.get("Description"),listPhotoRealistetate.get(i),"fi");
+                        ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), "fi");
                         Utils.upDateMyBDDImagePlease(imagesRealEstate);
                     }
                     for (int i = 0; i < resultsValidatedByUser.size(); i++) {
-                        NearbyEstate nearbyEstate=new NearbyEstate(estate.getId(),resultsValidatedByUser.get(i));
+                        NearbyEstate nearbyEstate = new NearbyEstate(estate.getId(), resultsValidatedByUser.get(i));
                         Utils.upDateMyBDDNearbyPlease(nearbyEstate);
                     }
                     try {
-                        Utils.uploadImage(modifyEstate(), AddInformationActivity.this, new Utils.CallBackImage() {
+                        Utils.uploadImage(modifyEstate(),listPhotoRealistetate, AddInformationActivity.this, new Utils.CallBackImage() {
                             @Override
                             public void onFinish(List<String> s) {
-                                modifyEstate().setLink(s);
+                                link.addAll(s);
                             }
                         });
                     } catch (Exception e) {
@@ -757,9 +765,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private RealEstate modifyEstate() {
         saveEntryEditText();
         resultsValidatedByUser = activateChipCase(ChipesContainer);
-        RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), resultsValidatedByUser, globalResultEstate.get("Adresse"),
-                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), globalResultEstate.get("date"),Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
-                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url, listPhotoRealistetate, descritpionImage);
+        RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), globalResultEstate.get("Adresse"),
+                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), globalResultEstate.get("date"), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
+                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url);
         estateNew.setId(estate.getId());
         updateSQLite(estateNew);
         return estateNew;
@@ -770,13 +778,13 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         dataBaseSQL.estateDao().upDateEstate(estateNew);
         dataBaseSQL.imageDao().DeletePArticularEstatesGroup(estateNew.getId());
         for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-            ImagesRealEstate imagesRealEstate=new ImagesRealEstate(estateNew.getId(),globalResultEstate.get("Description"),listPhotoRealistetate.get(i),"fi");
+            ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estateNew.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), "fi");
             dataBaseSQL.imageDao().insertEstate(imagesRealEstate);
         }
         dataBaseSQL.nearbyDao().deleteNearby(estateNew.getId());
 
-        for (int i = 0; i <resultsValidatedByUser.size(); i++) {
-            NearbyEstate imagesRealEstate=new NearbyEstate(estateNew.getId(),resultsValidatedByUser.get(i));
+        for (int i = 0; i < resultsValidatedByUser.size(); i++) {
+            NearbyEstate imagesRealEstate = new NearbyEstate(estateNew.getId(), resultsValidatedByUser.get(i));
             dataBaseSQL.nearbyDao().insertNearby(imagesRealEstate);
         }
     }

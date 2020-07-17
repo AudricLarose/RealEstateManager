@@ -39,7 +39,7 @@
                 android:layout_marginBottom="30dp"
                 android:textAlignment="center"
                 app:counterEnabled="true"
-                
+
                 app:counterMaxLength="100"
                 app:mtf_backgroundColor="@android:color/black"
                 app:mtf_cardCollapsedHeight="4dp"
@@ -159,8 +159,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sur_le_march_depuis"
-                        android:textSize="20sp"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/edit_onthemarket"
@@ -183,20 +183,21 @@
                         android:background="@drawable/button"
                         android:text="@string/date" />
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    >
+                    android:layout_weight="2">
+
                     <Switch
                         android:id="@+id/switch_vendu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/ornot"
                         android:layout_marginLeft="16dp"
-                        android:textSize="20sp"
+                        android:text="@string/ornot"
+                        android:textColor="@android:color/black"
 
-                        android:textColor="@android:color/black" />
+                        android:textSize="20sp" />
 
                     <RelativeLayout
                         android:id="@+id/RelativeSell"
@@ -450,15 +451,16 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
-                android:textSize="20sp"
                 android:text="@string/nom_agent"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
 
             <Spinner
                 android:id="@+id/nom_agent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_nom_agent"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="32dp"
@@ -474,9 +476,9 @@
                 android:layout_below="@+id/nom_agent"
                 android:layout_marginLeft="32dp"
                 android:layout_marginBottom="16dp"
-                android:textSize="20sp"
                 android:text="@string/description"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edit_descript"
@@ -511,8 +513,8 @@
                 android:layout_marginLeft="32dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/proximit"
-                android:textSize="20sp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
 
             <RelativeLayout
 
@@ -529,7 +531,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+
                     android:text="@string/ecole"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -541,9 +545,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-
                     android:layout_toRightOf="@+id/check_ecole"
                     android:text="@string/magasins"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -555,9 +559,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-
                     android:layout_toRightOf="@+id/check_magasin"
+
                     android:text="@string/station"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -571,6 +576,8 @@
                     android:layout_marginLeft="16dp"
                     android:layout_toRightOf="@+id/check_metro"
                     android:text="@string/parc"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
                     app:chipBackgroundColor="@color/colorPrimary"
@@ -584,6 +591,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_toRightOf="@+id/check_parc"
                     android:text="@string/station_bus_metro"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
 
                     android:textColor="@android:color/white"
                     android:theme="@style/Theme.MaterialComponents.DayNight"
@@ -619,10 +627,10 @@
                 android:id="@+id/LIneaRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="4"
+                android:layout_below="@+id/btn_local_photo"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:layout_below="@+id/btn_local_photo">
+                android:weightSum="4">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/Recyclerviewphotos"

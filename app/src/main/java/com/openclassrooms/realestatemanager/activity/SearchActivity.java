@@ -74,6 +74,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private String resultsValidatedByUserForAgent;
     private List<String> resultsValidatedByUserForTypes;
     private int positionSwitch;
+    Integer priceMinENtryByUserValue = null;
+    Integer priceMaxENtryByUserValue= null;
+    Integer surfaceMaxENtryByUserValue= null;
+    Integer surfaceMinENtryByUserValue= null;
+    Integer chambreENtryByUserValue= null;
+    Integer pieceENtryByUserValue= null;
+    Integer SDBENtryByUserValue= null;
+    String townENtryByUserValue= null;
 
 
     @Override
@@ -107,15 +115,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     public boolean onSupportNavigateUp() {
         finish();
         return super.onSupportNavigateUp();
-    }
-
-    private void deployRecyclerView() {
-        adapter = new Adaptateur(resultResearchRealEstate, false, null);
-        recyclerView = findViewById(R.id.search_RecyclerSearch);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(SearchActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
     }
 
     private void deployRelativeLayout() {
@@ -204,20 +203,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void sendToSQLrequest() {
-        Integer priceMinENtryByUserValue = null;
-        Integer priceMaxENtryByUserValue= null;
-        String priceMinENtryByUser = globalResultEstate.get("PrixMin");
-        String priceMaxENtryByUser = globalResultEstate.get("PrixMax");
-        if (!priceMinENtryByUser.isEmpty()){
-            priceMinENtryByUserValue = Integer.valueOf(priceMinENtryByUser);
-        }
 
-        if (!priceMaxENtryByUser.isEmpty()){
-            priceMaxENtryByUserValue = Integer.valueOf(priceMaxENtryByUser);
-        }
+        nulifyvalues();
         DataBaseSQL database = DataBaseSQL.getInstance(this);
-        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted("chj",null,null,null,null,
-                null,null,null,null,0);
+        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue,priceMinENtryByUserValue,priceMaxENtryByUserValue,surfaceMaxENtryByUserValue,surfaceMinENtryByUserValue,
+                chambreENtryByUserValue,pieceENtryByUserValue,SDBENtryByUserValue,null,0);
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
@@ -225,6 +215,46 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
             }
         });
+    }
+
+    private void nulifyvalues() {
+
+        String priceMinENtryByUser = globalResultEstate.get("PrixMin");
+        String priceMaxENtryByUser = globalResultEstate.get("PrixMax");
+        String surfaceMaxENtryByUser = globalResultEstate.get("SurfaceMax");
+        String surfaceMinENtryByUser = globalResultEstate.get("SurfaceMin");
+        String chambreENtryByUser = globalResultEstate.get("Chambre");
+        String pieceENtryByUser = globalResultEstate.get("Piece");
+        String SDBENtryByUser = globalResultEstate.get("SDB");
+        String townENtryByUser = globalResultEstate.get("town");
+        if (!priceMinENtryByUser.isEmpty()){
+            priceMinENtryByUserValue = Integer.valueOf(priceMinENtryByUser);
+        }
+
+        if (!priceMaxENtryByUser.isEmpty()){
+            priceMaxENtryByUserValue = Integer.valueOf(priceMaxENtryByUser);
+        }
+        if (!surfaceMaxENtryByUser.isEmpty()){
+            surfaceMaxENtryByUserValue = Integer.valueOf(surfaceMaxENtryByUser);
+        }
+
+        if (!surfaceMinENtryByUser.isEmpty()){
+            surfaceMinENtryByUserValue = Integer.valueOf(surfaceMinENtryByUser);
+        }
+        if (!chambreENtryByUser.isEmpty()){
+            chambreENtryByUserValue = Integer.valueOf(chambreENtryByUser);
+        }
+
+        if (!pieceENtryByUser.isEmpty()){
+            pieceENtryByUserValue = Integer.valueOf(pieceENtryByUser);
+        }
+        if (!SDBENtryByUser.isEmpty()){
+            SDBENtryByUserValue = Integer.valueOf(SDBENtryByUser);
+        }
+
+        if (!townENtryByUser.isEmpty()){
+            townENtryByUserValue = townENtryByUser;
+        }
     }
 
     private void iniatiateAndActivateSwitch() {
@@ -446,8 +476,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
        //     deletePriceMaxIfResultMatch(i);
        //     deleteSurfaceMinIfResultMatch(i);
        //     deleteSurfaceMaxIfResultMatch(i);
-            deleteNumberPhotosByIfResultMatch(i);
-            deleteNearByIfResultMatch(i);
+      //      deleteNumberPhotosByIfResultMatch(i);
+      //      deleteNearByIfResultMatch(i);
             deleteTypeByIfResultMatch(i);
             deleteDateEntryIfResultMatch(i);
             deleteDateSelledIfResultMatch(i);
@@ -497,18 +527,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
 
-    private void deleteNearByIfResultMatch(int i) {
-        if (resultsValidatedByUserForNearBy != null && resultsValidatedByUserForNearBy.size() != 0 && !listRealEstate.isEmpty()) {
-            if (!listRealEstate.get(i).getNearby().containsAll(resultsValidatedByUserForNearBy)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-            if (cNone.isChecked()) {
-                if (listRealEstate.get(i).getNearby().size() == 0) {
-                    resultResearchRealEstate.remove(listRealEstate.get(i));
-                }
-            }
-        }
-    }
 
     private void deleteTypeByIfResultMatch(int i) {
         if (resultsValidatedByUserForTypes != null && resultsValidatedByUserForTypes.size() != 0 && !listRealEstate.isEmpty()) {
@@ -518,13 +536,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-    private void deleteNumberPhotosByIfResultMatch(int i) {
-            if (resultsValidatedByUserForPhotos!= null && !listRealEstate.isEmpty()) {
-                if (listRealEstate.get(i).getPhotosReal().size() < Integer.valueOf(resultsValidatedByUserForPhotos)) {
-                    resultResearchRealEstate.remove(listRealEstate.get(i));
-                }
-        }
-    }
 
     private void deleteAgentByIfResultMatch(int i) {
         if (resultsValidatedByUserForAgent != null && !listRealEstate.isEmpty()) {

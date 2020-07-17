@@ -38,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.openclassrooms.realestatemanager.Api.DI;
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
@@ -272,7 +273,7 @@ public class Utils {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<RealEstate> listeRealEstate = servicePlace.getRealEstateList();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestates")
+        firebaseFirestore.collection("realestate")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -349,13 +350,9 @@ public class Utils {
         note.put("url", estate.getUrl());
         note.put("inEuro", estate.getInEuro());
         note.put("selled", estate.getSelled());
-        note.put("nearby", estate.getNearby());
-        note.put("photosReal", estate.getPhotosReal());
-        note.put("descriptionImage", estate.getDescriptionImage());
-        note.put("link", estate.getLink());
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestates").document(String.valueOf(estate.hashCode())).set(note);
+        firebaseFirestore.collection("realestate").document(String.valueOf(estate.hashCode())).set(note);
     }
 
     public static void upDateMyBDDPlease(RealEstate estate, RealEstate realEstate) {
@@ -379,12 +376,8 @@ public class Utils {
         note.put("url", estate.getUrl());
         note.put("inEuro", estate.getInEuro());
         note.put("selled", estate.getSelled());
-        note.put("nearby", estate.getNearby());
-        note.put("photosReal", estate.getPhotosReal());
-        note.put("descriptionImage", estate.getDescriptionImage());
-        note.put("link", estate.getLink());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestates").document(String.valueOf(estate.getId())).update(note);
+        firebaseFirestore.collection("realestate").document(String.valueOf(estate.getId())).update(note);
     }
 
     public static void sendMyBDDImagePlease(ImagesRealEstate imagesRealEstate) {
@@ -415,7 +408,7 @@ public class Utils {
         note.put("idEstate", nearbyEstate.getIdEstate());
         note.put("nearby", nearbyEstate.getNearby());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate").document(String.valueOf(nearbyEstate.getId())).set(note);
+        firebaseFirestore.collection("nearbyestates").document(String.valueOf(nearbyEstate.getId())).set(note);
     }
 
     public static void upDateMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
@@ -424,16 +417,17 @@ public class Utils {
         note.put("idEstate", nearbyEstate.getIdEstate());
         note.put("nearby", nearbyEstate.getNearby());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate").document(String.valueOf(nearbyEstate.getId())).update(note);
+        firebaseFirestore.collection("nearbyestates").document(String.valueOf(nearbyEstate.getId())).update(note);
     }
 
-    public static List<String> uploadImage(final RealEstate estate, final Context context, final CallBackImage callBackImage) throws Exception {
+    public static List<String> uploadImage(final RealEstate estate, final List<String> imagesRealEstateList, final Context context, final CallBackImage callBackImage) throws Exception {
         final List<String> urlList = new ArrayList<>();
+        final DataBaseSQL dataBaseSQL= DataBaseSQL.getInstance(context);
         final int[] count = {1};
-        for (int i = 0; i < estate.getPhotosReal().size(); i++) {
+        for (int i = 0; i < imagesRealEstateList.size(); i++) {
             final String[] url = {""};
             final StorageReference mStorageRef = FirebaseStorage.getInstance().getReference(String.valueOf(estate.hashCode())).child("" + i);
-            UploadTask uploadTask = mStorageRef.putFile(Uri.parse(estate.getPhotosReal().get(i)));
+            UploadTask uploadTask = mStorageRef.putFile(Uri.parse(imagesRealEstateList.get(i)));
             Task<Uri> task = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -445,12 +439,11 @@ public class Utils {
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-
                     if (task.isSuccessful()) {
                         url[0] = task.getResult().toString();
                         urlList.add(url[0]);
                     }
-                    if (count[0] == estate.getPhotosReal().size()) {
+                    if (count[0] == imagesRealEstateList.size()) {
                         callBackImage.onFinish(urlList);
                     } else {
                         count[0] = count[0] + 1;

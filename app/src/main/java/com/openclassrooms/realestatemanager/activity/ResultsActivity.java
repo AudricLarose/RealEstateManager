@@ -48,7 +48,7 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     private void deployRecyclerView() {
-        Adaptateur adapter = new Adaptateur(resultResearchRealEstate, false, null);
+        Adaptateur adapter = new Adaptateur(resultResearchRealEstate, false, null,this);
         RecyclerView recyclerView = findViewById(R.id.result_RecyclerSearch);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ResultsActivity.this);

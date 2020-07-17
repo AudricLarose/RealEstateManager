@@ -1,10 +1,12 @@
 package com.openclassrooms.realestatemanager.utils;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
 import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
 import com.openclassrooms.realestatemanager.dummy.DetailFragment;
 import com.openclassrooms.realestatemanager.dummy.MainActivity;
+import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
+import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +37,9 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
     public Boolean mTwoPane;
     public MainActivity mParentActivity;
     public RealEstate estate;
+    public Context context;
+    DataBaseSQL dataBaseSQL;
+
     int selected_position = RecyclerView.NO_POSITION; // You have to set this globally in the Adapter class
 
     private void goToItemDetailsActivity(View view, RealEstate estate1) {
@@ -43,10 +53,11 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
     }
 
 
-    public Adaptateur(List<RealEstate> liste, Boolean mTwoPane, MainActivity mParentActivity) {
+    public Adaptateur(List<RealEstate> liste, Boolean mTwoPane, MainActivity mParentActivity , Context context) {
         this.liste = liste;
         this.mTwoPane = mTwoPane;
         this.mParentActivity = mParentActivity;
+        this.context=context;
         notifyDataSetChanged();
     }
 
@@ -77,7 +88,9 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             }
         } else {
             try {
-                holder.prix.setText(Utils.getDollarFormat(estate.getPrix()));
+                if (estate.getPrix()!=null) {
+                    holder.prix.setText(Utils.getDollarFormat(estate.getPrix()));
+                }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -100,13 +113,27 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
         verifyIfitisTemp(holder);
     }
 
-    private void imageHandling(@NonNull LeHolder holder) {
-        if (estate.getPhotosReal() != null && estate.getPhotosReal().size() > 0) {
-            if (estate.getLink() != null && estate.getLink().size() > 0) {
-                Picasso.get().load(estate.getLink().get(0)).into(holder.imageRealestate);
-            } else {
-                Picasso.get().load(Uri.parse(estate.getPhotosReal().get(0))).into(holder.imageRealestate);
-            }
+    private void imageHandling(@NonNull final LeHolder holder) {
+          DataBaseSQL dataBaseSQL= DataBaseSQL.getInstance(mParentActivity);
+          dataBaseSQL.nearbyDao().selectAllImage().observe(mParentActivity, new Observer<List<NearbyEstate>>() {
+              @Override
+              public void onChanged(List<NearbyEstate> nearbyEstateList) {
+                  nearbyEstateList.get(0);
+              }
+          });
+        if (dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId())!=null ) {
+
+            dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()).observe(mParentActivity, new Observer<List<ImagesRealEstate>>() {
+                @Override
+                public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
+                    if (imagesRealEstateList.size() > 0 && imagesRealEstateList.get(0).getLinkFb() != null  && !imagesRealEstateList.get(0).getLinkFb().contains("fi")) {
+                        Picasso.get().load(imagesRealEstateList.get(0).getLinkFb()).into(holder.imageRealestate);
+                    } else if (imagesRealEstateList.size() > 0){
+                        Picasso.get().load(Uri.parse(imagesRealEstateList.get(0).getImage())).into(holder.imageRealestate);
+                    }
+                }
+            });
+
         }
     }
 
@@ -142,7 +169,6 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
                 holder.selled.setText(" Disponible !");
             } else {
                 holder.selled.setText(" Vendu !");
-
             }
         }
     }

@@ -33,9 +33,6 @@ public class RealEstate implements Serializable {
     private String market;
     private Integer prix;
 
-    @TypeConverters(Converters.class)
-    private List<String> photosReal;
-
     private String ischecked;
     private Double lattitude;
     private Double longitude;
@@ -49,14 +46,13 @@ public class RealEstate implements Serializable {
     public RealEstate() {
     }
 
-    public RealEstate(String inEuro, String ischecked, String type, String nomAgent, List<String> nearby, String adresse, Integer chambre, String description, String market, Integer postal, Integer piece, Integer prix, Integer sdb, Integer surface, String town, String selled, Double latitude, Double longitude, String url, List<String> photosReal, List<String> descriptionImage) {
+    public RealEstate(String inEuro, String ischecked, String type, String nomAgent, String adresse, Integer chambre, String description, String market, Integer postal, Integer piece, Integer prix, Integer sdb, Integer surface, String town, String selled, Double latitude, Double longitude, String url) {
         this.type = type;
         this.adresse = adresse;
         this.postal = postal;
         this.town = town;
         this.description = description;
         this.nomAgent = nomAgent;
-        this.nearby = nearby;
         this.chambre = chambre;
         this.piece = piece;
         this.sdb = sdb;
@@ -67,10 +63,8 @@ public class RealEstate implements Serializable {
         this.lattitude = latitude;
         this.longitude = longitude;
         this.url = url;
-        this.photosReal = photosReal;
         this.inEuro = inEuro;
         this.selled = selled;
-        this.descriptionImage = descriptionImage;
     }
 
     public static RealEstate fromContentValues(ContentValues contentValues) {
@@ -93,9 +87,6 @@ public class RealEstate implements Serializable {
         if (contentValues.containsKey("nomAgent")) {
             estate.setNomAgent(contentValues.getAsString("nomAgent"));
         }
-        if (contentValues.containsKey("nearby")) {
-            estate.setNearby(Collections.singletonList(contentValues.getAsString("nearby")));
-        }
         if (contentValues.containsKey("chambre")) {
             estate.setChambre(contentValues.getAsInteger("chambre"));
         }
@@ -116,9 +107,6 @@ public class RealEstate implements Serializable {
         }
         if (contentValues.containsKey("prix")) {
             estate.setPrix(contentValues.getAsInteger("prix"));
-        }
-        if (contentValues.containsKey("photosReal")) {
-            estate.setPhotosReal(Collections.singletonList(contentValues.getAsString("photosReal")));
         }
         if (contentValues.containsKey("ischecked")) {
             estate.setIschecked((contentValues.getAsString("ischecked")));
@@ -156,13 +144,6 @@ public class RealEstate implements Serializable {
         this.selled = selled;
     }
 
-    public List<String> getPhotosReal() {
-        return photosReal;
-    }
-
-    public void setPhotosReal(List<String> photosReal) {
-        this.photosReal = photosReal;
-    }
 
     public String getInEuro() {
         return inEuro;
@@ -282,14 +263,6 @@ public class RealEstate implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<String> getNearby() {
-        return nearby;
-    }
-
-    public void setNearby(List<String> nearby) {
-        this.nearby = nearby;
     }
 
     public Integer getChambre() {

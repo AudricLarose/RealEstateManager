@@ -30,7 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
-import com.openclassrooms.realestatemanager.Api.NearbyDao;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
 import com.openclassrooms.realestatemanager.activity.MapsActivity;
@@ -66,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
     private List<RealEstate> listTemp = serviceEstate.getTempListInsert();
     private List<RealEstate> listTempUpdate = serviceEstate.getTempListUpdate();
+    private List<ImagesRealEstate> imagesRealEstateListes= serviceEstate.getImageRealEstates();
     private Adaptateur adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean amIInEuro = true;
@@ -114,14 +114,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testResultSqlRequet() {
-        List<String> listTest= new ArrayList<>();
+        List<String> listTest = new ArrayList<>();
         DataBaseSQL database = DataBaseSQL.getInstance(this);
-        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null,null,null,null,
-                null,null,null,null,null,0);
+        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
+                null, null, null, null, null, 0);
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
-                Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -130,16 +130,15 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void resultsActivityIfEstateExist() {
         List<RealEstate> realEstateList = grabEstatFromSearchActivity();
-        if (realEstateList!=null && realEstateList.size() > 0) {
-            Toast.makeText(this, ""+realEstateList.size(), Toast.LENGTH_SHORT).show();
-            adapter = new Adaptateur(Utils.sortedbyPriceDecroissant(realEstateList), mTwoPane, this);
+        if (realEstateList != null && realEstateList.size() > 0) {
+            Toast.makeText(this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+            adapter = new Adaptateur(Utils.sortedbyPriceDecroissant(realEstateList), mTwoPane, this, this);
             recyclerView = findViewById(R.id.RecyclerviewEstate);
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(MainActivity.this);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
             initiateButtonCAncel().setVisibility(View.VISIBLE);
-
         } else {
             NoExistingEstateAction();
         }
@@ -147,16 +146,18 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void NoExistingEstateAction() {
-        saveDataInSQLITE();
+        takeDataInBDDIfInternetIsHere();
         takeImageInSQLITE();
         DeploytempHandler();
-//        takeDataInBDDIfInternetIsHere();
         deployementButtonAdd();
         deployementButtonMail();
         onSwipeToRefresh();
         Utils.internetOnVerify(this);
         deployementNotificationMail();
         askPermission();
+        saveDataInSQLITE();
+        deployRecyclerView();
+
     }
 
     private void initiateDataBaseSQL() {
@@ -204,52 +205,76 @@ public class MainActivity extends AppCompatActivity {
 
     private void takeDataInBDDIfInternetIsHere() {
         if (Utils.internetOnVerify(this)) {
-            Utils.takeDataInBDD(new CallBackInterfaceForBDD() {
-                @Override
-                public void onFinishEstate(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
-                    if (listTemp.size() == 0 || listTempUpdate.size() == 0 && realEstateList.size() > 0) {
-                        database.nearbyDao().DeleteAllNearby();
-                        database.imageDao().DeleteAllEstate();
-                        database.estateDao().DeleteAllEstate();
-
-                        for (int i = 0; i < realEstateList.size(); i++) {
-                            database.estateDao().insertEstate(realEstateList.get(i));
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFail() {
-                    Toast.makeText(MainActivity.this, R.string.nonew, Toast.LENGTH_SHORT).show();
-                }
-            });
-            Utils.takeDataInBDD(new CallBackInterfaceForBDD() {
-                @Override
-                public void onFinishEstate(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
-                    if (listTemp.size() == 0 || listTempUpdate.size() == 0 && realEstateList.size() > 0) {
-                        database.imageDao().DeleteAllEstate();
-                        database.estateDao().DeleteAllEstate();
-
-                        for (int i = 0; i < realEstateList.size(); i++) {
-                            database.estateDao().insertEstate(realEstateList.get(i));
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFail() {
-                    Toast.makeText(MainActivity.this, R.string.nonew, Toast.LENGTH_SHORT).show();
-                }
-            });
+            takeDataForEstates();
+            takeDataForNearby();
+            takeDataForImage();
         }
     }
 
+    private void takeDataForNearby() {
+        Utils.takeDataNEarbyInBDD(new Utils.CallBackInterfaceForBDDNearbu() {
+            @Override
+            public void onFinishNearby(List<NearbyEstate> nearbyEstateList, FirebaseFirestoreException e) {
+                if (listTemp.size() == 0 || listTempUpdate.size() == 0 && nearbyEstateList.size() > 0) {
+                    database.nearbyDao().DeleteAllNearby();
+                    for (int i = 0; i < nearbyEstateList.size(); i++) {
+                        database.nearbyDao().insertNearby(nearbyEstateList.get(i));
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFail() {
+
+            }
+        });
+    }
+
+    private void takeDataForImage() {
+        Utils.takeDataImageInBDD(new Utils.CallBackInterfaceForBDDImage() {
+            @Override
+            public void onFinishImage(List<ImagesRealEstate> imagesRealEstateList, FirebaseFirestoreException e) {
+                if (listTemp.size() == 0 || listTempUpdate.size() == 0 && imagesRealEstateList.size() > 0) {
+                    database.imageDao().DeleteAllEstate();
+                    for (int i = 0; i < imagesRealEstateList.size(); i++) {
+                        database.imageDao().insertEstate(imagesRealEstateList.get(i));
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFail() {
+            }
+        });
+    }
+
+    private void takeDataForEstates() {
+        Utils.takeDataInBDD(new CallBackInterfaceForBDD() {
+            @Override
+            public void onFinishEstate(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
+                if (listTemp.size() == 0 || listTempUpdate.size() == 0 && realEstateList.size() > 0) {
+                    database.estateDao().DeleteAllEstate();
+                    for (int i = 0; i < realEstateList.size(); i++) {
+                        database.estateDao().insertEstate(realEstateList.get(i));
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFail() {
+                Toast.makeText(MainActivity.this, R.string.nonew, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void deployRecyclerView() {
-        adapter = new Adaptateur(Utils.sortedbyPriceDecroissant(listRealEstate), mTwoPane, this);
+        adapter = new Adaptateur(Utils.sortedbyPriceDecroissant(listRealEstate), mTwoPane, this, this);
         recyclerView = findViewById(R.id.RecyclerviewEstate);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(MainActivity.this);
@@ -275,19 +300,11 @@ public class MainActivity extends AppCompatActivity {
         DataBaseSQL database = DataBaseSQL.getInstance(this);
         LiveData<List<ImagesRealEstate>> datalist = database.imageDao().selectAllImage();
         LiveData<List<NearbyEstate>> datalist3 = database.nearbyDao().selectAllImage();
-        LiveData<List<ImagesRealEstate>> datalist2 = database.imageDao().selectAllImageDeuxFois(3);
         datalist.observe(this, new Observer<List<ImagesRealEstate>>() {
             @Override
             public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
                 if (imagesRealEstates.size() > 0) {
-//                    Toast.makeText(MainActivity.this, ""+imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        datalist2.observe(this, new Observer<List<ImagesRealEstate>>() {
-            @Override
-            public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
-                if (imagesRealEstates.size() > 0) {
+                     Toast.makeText(MainActivity.this, "images "+imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -295,12 +312,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<NearbyEstate> nearbyEstates) {
                 if (nearbyEstates.size() > 0) {
-//                    Toast.makeText(MainActivity.this, ""+nearbyEstates.size(), Toast.LENGTH_SHORT).show();
+         //           Toast.makeText(MainActivity.this, "nearby precise" + nearbyEstates.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-
 
 
     private void searchForNotif(List<RealEstate> realEstates) {
@@ -331,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void majNotif() {
-        if (textNotif!=null) {
+        if (textNotif != null) {
             textNotif.setText(String.valueOf(listTemp.size() + listTempUpdate.size()));
         }
     }
@@ -347,19 +363,32 @@ public class MainActivity extends AppCompatActivity {
         } else {
             if (Utils.internetOnVerify(this)) {
                 if (listTemp.size() > 0) {
-
+                    final DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(this);
                     for (int i = 0; i < listTemp.size(); i++) {
                         Utils.sendItToMyBDDatRealEstate(listTemp.get(i));
-                        try {
-                            Utils.uploadImage(listTemp.get(i), this, new Utils.CallBackImage() {
-                                @Override
-                                public void onFinish(List<String> s) {
-
+                        final int finalI = i;
+                        send2nearby(dataBaseSQL, i, finalI);
+                        send2Image(dataBaseSQL, i, finalI);
+                        final List<String> photos= new ArrayList<>();
+                        final int finalI1 = i;
+                        dataBaseSQL.imageDao().selectAllImageDeuxFois(listTemp.get(i).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+                            @Override
+                            public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
+                                for (int j = 0; j < imagesRealEstateList.size(); j++) {
+                                    photos.add(imagesRealEstateList.get(finalI1).getImage());
                                 }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                                try {
+                                    Utils.uploadImage(listTemp.get(finalI1),photos, MainActivity.this, new Utils.CallBackImage() {
+                                        @Override
+                                        public void onFinish(List<String> s) {
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
                         listTemp.get(i).setTempInsert("False");
                         database.estateDao().upDateEstate(listTemp.get(i));
                     }
@@ -374,6 +403,28 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.ni_internet, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void send2Image(DataBaseSQL dataBaseSQL, int i, final int finalI) {
+        dataBaseSQL.imageDao().selectAllImageDeuxFois(listTemp.get(i).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+            @Override
+            public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
+                for (int j = 0; j < imagesRealEstateList.size(); j++) {
+                    Utils.sendMyBDDImagePlease(imagesRealEstateList.get(finalI));
+                }
+            }
+        });
+    }
+
+    private void send2nearby(DataBaseSQL dataBaseSQL, int i, final int finalI) {
+        dataBaseSQL.nearbyDao().selectAllImageDeuxFois(listTemp.get(i).getId()).observe(this, new Observer<List<NearbyEstate>>() {
+            @Override
+            public void onChanged(List<NearbyEstate> nearbyEstateList) {
+                for (int j = 0; j < nearbyEstateList.size(); j++) {
+                    Utils.sendMyBDDNearbyPlease(nearbyEstateList.get(finalI));
+                }
+            }
+        });
     }
 
     private void sendTempUpdateFileToFireB() {
@@ -402,6 +453,7 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = true;
         }
     }
+
     private void deployementButtonCancel() {
         final ImageButton cancelButton = initiateButtonCAncel();
         activateButtonCancel(cancelButton);
@@ -463,12 +515,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.subcroissant:
                 List<RealEstate> realEstateListcroissant = Utils.sortedbyPriceCroissant(listRealEstate);
-                adapter = new Adaptateur(realEstateListcroissant, mTwoPane, this);
+                adapter = new Adaptateur(realEstateListcroissant, mTwoPane, this, this);
                 recyclerView.setAdapter(adapter);
                 return true;
             case R.id.subDecroissant:
                 List<RealEstate> realEstateListdecroissant = Utils.sortedbyPriceDecroissant(listRealEstate);
-                adapter = new Adaptateur(realEstateListdecroissant, mTwoPane, this);
+                adapter = new Adaptateur(realEstateListdecroissant, mTwoPane, this, this);
                 recyclerView.setAdapter(adapter);
                 return true;
             default:
@@ -539,10 +591,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //no();
+        SQLITactionSettings();
     }
 
-    private void no() {
+    private void SQLITactionSettings() {
         takeDataInBDDIfInternetIsHere();
         saveDataInSQLITE();
         takeImageInSQLITE();
