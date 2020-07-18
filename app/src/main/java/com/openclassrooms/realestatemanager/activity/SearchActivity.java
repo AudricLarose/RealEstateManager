@@ -207,7 +207,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         nulifyvalues();
         DataBaseSQL database = DataBaseSQL.getInstance(this);
         LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue,priceMinENtryByUserValue,priceMaxENtryByUserValue,surfaceMaxENtryByUserValue,surfaceMinENtryByUserValue,
-                chambreENtryByUserValue,pieceENtryByUserValue,SDBENtryByUserValue,null,0);
+                chambreENtryByUserValue,pieceENtryByUserValue,SDBENtryByUserValue,0,null,null);
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {

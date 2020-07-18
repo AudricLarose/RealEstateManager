@@ -117,11 +117,11 @@ public class MainActivity extends AppCompatActivity {
         List<String> listTest = new ArrayList<>();
         DataBaseSQL database = DataBaseSQL.getInstance(this);
         LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
-                null, null, null, null, null, 0);
+                null, null, null, null, 0,null,null);
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
-                //   Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
                 if (imagesRealEstates.size() > 0) {
-                     Toast.makeText(MainActivity.this, "images "+imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
+            //         Toast.makeText(MainActivity.this, "images "+imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
