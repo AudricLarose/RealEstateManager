@@ -47,13 +47,30 @@ public abstract class EstateDao {
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
             "AND (bdd.selled like COALESCE(:binear, selled ))"
     )
+
     public abstract LiveData<List<RealEstate>> selectAllEstateSorted(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                      Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear);
-
     @Query("SELECT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
-            "where (type IN (:listType))")
+            "where  (bdd.town like COALESCE(:town, town))" +
+            "AND (bdd.prix BETWEEN COALESCE(:minPrice, 0) AND COALESCE(:maxPrice, 100000000000))" +
+            "AND (bdd.surface BETWEEN COALESCE(:minSurface, 0) AND COALESCE(:maxSurface, 10000000))" +
+            "AND (bdd.chambre >= COALESCE(:minNbRoom, 0)) " +
+            "AND (bdd.piece >= COALESCE(:minNbBedrooms, 0)) " +
+            "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
+            "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
+            "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
+            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            liste1+2
+    )
+
+    public abstract LiveData<List<RealEstate>> selectAllEstateSorted(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
+                                                                     Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear);
+    @Query("SELECT * FROM bdd " +
+            "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
+            " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
+
     public abstract LiveData<List<RealEstate>> selectIfSelectTypeIsZero(String listType);
 
     @Query("SELECT * FROM bdd " +
