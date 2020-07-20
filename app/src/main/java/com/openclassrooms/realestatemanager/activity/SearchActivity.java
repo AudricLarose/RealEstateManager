@@ -154,7 +154,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         globalResultEstate.put("PrixMax", ePrixMax.getEditText().getText().toString());
         globalResultEstate.put("SDB", eSdb.getEditText().getText().toString());
         globalResultEstate.put("SurfaceMin", eSurface.getEditText().getText().toString());
-        globalResultEstate.put("SurfaceMAx", eSurfaceMax.getEditText().getText().toString());
+        globalResultEstate.put("SurfaceMax", eSurfaceMax.getEditText().getText().toString());
         globalResultEstate.put("town", eTown.getEditText().getText().toString());
     }
 
@@ -184,7 +184,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void reset() {
         resultResearchRealEstate.clear();
         resultResearchRealEstate.addAll(listRealEstate);
-        //deployRecyclerView();
     }
 
     private void initiateAndActivateOkButton() {
@@ -205,13 +204,19 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void sendToSQLrequest() {
 
         nulifyvalues();
+        edit_ontheSell.getText();
+        eMarket.getText();
         DataBaseSQL database = DataBaseSQL.getInstance(this);
-        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue,priceMinENtryByUserValue,priceMaxENtryByUserValue,surfaceMaxENtryByUserValue,surfaceMinENtryByUserValue,
-                chambreENtryByUserValue,pieceENtryByUserValue,SDBENtryByUserValue,0,null,null);
+        LiveData<List<RealEstate>> datalist = null;
+        datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue,priceMinENtryByUserValue,priceMaxENtryByUserValue,surfaceMaxENtryByUserValue,surfaceMinENtryByUserValue,
+                    chambreENtryByUserValue,pieceENtryByUserValue,SDBENtryByUserValue,0,null,null);
+
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
                 Toast.makeText(SearchActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                goToNextResultActivity(realEstateList);
+
 
             }
         });
@@ -488,13 +493,13 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
 
         //deployRecyclerView();
-        goToNextResultActivity();
+        //goToNextResultActivity(resultResearchRealEstates);
     }
 
-    private void goToNextResultActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void goToNextResultActivity(List<RealEstate> resultResearchRealEstates) {
+        Intent intent = new Intent(this, ResultsActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("RealEstate", (Serializable) resultResearchRealEstate);
+        bundle.putSerializable("RealEstate", (Serializable) resultResearchRealEstates);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -514,7 +519,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteDateSelledIfResultMatch(int i) {
         try {
-
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date dateEntryByUSer = sdf.parse(edit_ontheSell.getText().toString().replace("/", "-"));
             Date dateRealEstate = sdf.parse(listRealEstate.get(i).getSelled().replace("/", "-"));
@@ -671,5 +675,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         eSdb.getEditText().setText(savedInstanceState.getString("sdb"));
         eSurface.getEditText().setText(savedInstanceState.getString("surfacemin"));
         eSurfaceMax.getEditText().setText(savedInstanceState.getString("surfacemax"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reset();
     }
 }

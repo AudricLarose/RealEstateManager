@@ -41,7 +41,10 @@ import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.utils.Utils.CallBackInterfaceForBDD;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -118,12 +121,37 @@ public class MainActivity extends AppCompatActivity {
         DataBaseSQL database = DataBaseSQL.getInstance(this);
         LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
                 null, null, null, null, 0,null,null);
+      //  caseIfListsAreEmpty();
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
                 Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void caseIfListsAreEmpty() {
+        DataBaseSQL database = DataBaseSQL.getInstance(this);
+        List<String> nearby= new ArrayList<>();
+        String type= null;
+        if (nearby.isEmpty()){
+            if (type.isEmpty() || type==null){
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
+                        null, null, null, null, 0,null,null);
+                try {
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/10");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        }
     }
 
 

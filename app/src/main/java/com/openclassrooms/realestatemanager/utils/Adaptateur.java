@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -115,25 +116,18 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
 
     private void imageHandling(@NonNull final LeHolder holder) {
           DataBaseSQL dataBaseSQL= DataBaseSQL.getInstance(mParentActivity);
-          dataBaseSQL.nearbyDao().selectAllImage().observe(mParentActivity, new Observer<List<NearbyEstate>>() {
-              @Override
-              public void onChanged(List<NearbyEstate> nearbyEstateList) {
-                  nearbyEstateList.get(0);
-              }
-          });
         if (dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId())!=null ) {
 
-            dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()).observe(mParentActivity, new Observer<List<ImagesRealEstate>>() {
+            dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()).observe((LifecycleOwner) context, new Observer<List<ImagesRealEstate>>() {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
-                    if (imagesRealEstateList.size() > 0 && imagesRealEstateList.get(0).getLinkFb() != null  && !imagesRealEstateList.get(0).getLinkFb().contains("fi")) {
+                    if (imagesRealEstateList.size() > 0 && imagesRealEstateList.get(0).getLinkFb() != null  && !imagesRealEstateList.get(0).getLinkFb().contains("notlinked")) {
                         Picasso.get().load(imagesRealEstateList.get(0).getLinkFb()).into(holder.imageRealestate);
                     } else if (imagesRealEstateList.size() > 0){
                         Picasso.get().load(Uri.parse(imagesRealEstateList.get(0).getImage())).into(holder.imageRealestate);
                     }
                 }
             });
-
         }
     }
 
