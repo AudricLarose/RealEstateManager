@@ -63,7 +63,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private static final int REQUESTCODEGALLERY = 101;
     private static boolean isItChecked = false;
     private static RealEstate estate;
-    private static String dateActuelle;
     public DataBaseSQL dataBaseSQL;
     public Uri imageUri;
     List<MaterialTextField> editTextContainer = new ArrayList<>();
@@ -83,13 +82,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private List<RealEstate> tempListUpdate = serviceEstate.getTempListUpdate();
     private List<ImagesRealEstate> imagesRealEstateList = serviceEstate.getImageRealEstates();
     private Uri imageURL;
-    private Boolean isEstateExist;
-    private AdaptateurImage adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView recyclerView;
     private Double lattitudeRealEState;
     private Double longitudeRealEState;
-    private String url, date;
+    private String url;
     private boolean emptyField = true;
     private List<Chip> ChipesContainer = new ArrayList<>();
     private List<String> listPhotoRealistetate = new ArrayList<>();
@@ -97,6 +92,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private boolean CameraActivate;
     private List<String> link = new ArrayList<>();
     private ProgressBar progressBar;
+
+    public AddInformationActivity() {
+    }
 
 
     @Override
@@ -181,7 +179,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private void initiateSpinner() {
         spinnerChoicce = findViewById(R.id.type_bien);
-        // putDataOnTheSpinner();
         spinnerNom = findViewById(R.id.nom_agent);
     }
 
@@ -312,8 +309,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, day);
-        dateActuelle = DateFormat.getDateInstance().format(c.getTime());
-        date = Utils.getDateFormat(AddInformationActivity.this, c);
+        String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
+        String date = Utils.getDateFormat(AddInformationActivity.this, c);
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);
@@ -440,8 +437,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                         getContentResolver(), imageUri);
                 String imageurl = getRealPathFromURI(imageUri);
                 listPhotoRealistetate.add(imageUri.toString());
-                //  putImagesInBDD(imageUri);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -449,8 +444,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         if ((requestCode == REQUESTCODEGALLERY) && (resultCode == RESULT_OK)) {
             Uri selectedImage = data.getData();
             listPhotoRealistetate.add(selectedImage.toString());
-
-            //putImagesInBDD(selectedImage);
         }
     }
 
@@ -618,7 +611,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
 
     private void deployModificationAction() {
-        isEstateExist = verifyEstateExistAlreadyForModify();
+        Boolean isEstateExist = verifyEstateExistAlreadyForModify();
         if (isEstateExist) {
             giveEstat2ViewsIfNotNull();
             replaceOkButtonByModifyButton();
@@ -789,7 +782,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             dataBaseSQL.imageDao().insertEstate(imagesRealEstate);
         }
         dataBaseSQL.nearbyDao().deleteNearby(estateNew.getId());
-
         for (int i = 0; i < resultsValidatedByUser.size(); i++) {
             NearbyEstate nearbyEstate = new NearbyEstate(estateNew.getId(), resultsValidatedByUser.get(i));
             nearbyEstate.setId(nearbyEstate.hashCode());
@@ -798,10 +790,10 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void deployRecyclerView() {
-        adapter = new AdaptateurImage(listPhotoRealistetate, this, descritpionImage, "true");
-        recyclerView = findViewById(R.id.Recyclerviewphotos);
+        AdaptateurImage adapter = new AdaptateurImage(listPhotoRealistetate, this, descritpionImage, "true");
+        RecyclerView recyclerView = findViewById(R.id.Recyclerviewphotos);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(AddInformationActivity.this, RecyclerView.HORIZONTAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AddInformationActivity.this, RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
@@ -889,7 +881,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     public interface SendCallBack {
         void onFinish(RealEstate estateFireBase);
-
         void onFail();
     }
 }
