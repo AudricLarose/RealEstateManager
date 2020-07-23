@@ -96,7 +96,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         deployeChipes();
         deployButton();
         deploySwitch();
-       // deployRecyclerView();
+        // deployRecyclerView();
         deployRelativeLayout();
         deployeSpinner();
     }
@@ -208,20 +208,72 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         eMarket.getText();
         DataBaseSQL database = DataBaseSQL.getInstance(this);
         LiveData<List<RealEstate>> datalist = null;
-        datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue,priceMinENtryByUserValue,priceMaxENtryByUserValue,surfaceMaxENtryByUserValue,surfaceMinENtryByUserValue,
-                    chambreENtryByUserValue,pieceENtryByUserValue,SDBENtryByUserValue,0,null,null);
-
-        datalist.observe(this, new Observer<List<RealEstate>>() {
-            @Override
-            public void onChanged(List<RealEstate> realEstateList) {
-                Toast.makeText(SearchActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
-                goToNextResultActivity(realEstateList);
-
-
-            }
-        });
     }
+    private void caseIfListsAreEmpty() {
+        DataBaseSQL database = DataBaseSQL.getInstance(this);
+        List<String> nearby= new ArrayList<>();
+        List<String> type= new ArrayList<>();
+        String datef="";
+        if (datef.trim().isEmpty()){
+            datef=null;
+        }
 
+        if (nearby.isEmpty()){
+            if (type.isEmpty()){
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
+                        null, null, null, null, 0,null,null,"01/01/10",datef);
+
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(SearchActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                        goToNextResultActivity(realEstateList);
+
+                    }
+                });
+
+            } else {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(null, null, null, null,
+                        null, null, null, null, 0,null,null,"01/01/10",type,datef);
+
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(SearchActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                        goToNextResultActivity(realEstateList);
+
+                    }
+                });
+            }
+        } else {
+            if (type.isEmpty()){
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(null, null, null, null,
+                        null, null, null, null, 0,null,null,"01/01/10",nearby,datef);
+
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(SearchActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                        goToNextResultActivity(realEstateList);
+
+                    }
+                });
+
+            } else {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(null, null, null, null,
+                        null, null, null, null, 0,null,null,"01/01/10",type,nearby,datef);
+
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(SearchActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                        goToNextResultActivity(realEstateList);
+
+                    }
+                });
+            }
+        }
+    }
     private void nulifyvalues() {
 
         String priceMinENtryByUser = globalResultEstate.get("PrixMin");
@@ -334,7 +386,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         spinnersell.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-              adapterView.getSelectedItem();
+                adapterView.getSelectedItem();
                 switch (i) {
                     case 0:
                         positionSwitch = 0;
@@ -474,22 +526,22 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void compareListAll() {
         for (int i = 0; i < listRealEstate.size(); i++) {
-       //     deleteSDBIfResultMatch(i);
-       //     deletePieceIfResultMatch(i);
-       //     deleteChambreIfResultMatch(i);
-       //     deletePriceMinIfResultMatch(i);
-       //     deletePriceMaxIfResultMatch(i);
-       //     deleteSurfaceMinIfResultMatch(i);
-       //     deleteSurfaceMaxIfResultMatch(i);
-      //      deleteNumberPhotosByIfResultMatch(i);
-      //      deleteNearByIfResultMatch(i);
+            //     deleteSDBIfResultMatch(i);
+            //     deletePieceIfResultMatch(i);
+            //     deleteChambreIfResultMatch(i);
+            //     deletePriceMinIfResultMatch(i);
+            //     deletePriceMaxIfResultMatch(i);
+            //     deleteSurfaceMinIfResultMatch(i);
+            //     deleteSurfaceMaxIfResultMatch(i);
+            //      deleteNumberPhotosByIfResultMatch(i);
+            //      deleteNearByIfResultMatch(i);
             deleteTypeByIfResultMatch(i);
             deleteDateEntryIfResultMatch(i);
             deleteDateSelledIfResultMatch(i);
             deleteifsimplyselled(i);
             deleteifsimplyNotselled(i);
-       //     deleteAgentByIfResultMatch(i);
-       //     deleteTownIfResultMatch(i);
+            //     deleteAgentByIfResultMatch(i);
+            //     deleteTownIfResultMatch(i);
         }
 
         //deployRecyclerView();

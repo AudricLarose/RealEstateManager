@@ -119,30 +119,22 @@ public class MainActivity extends AppCompatActivity {
     private void testResultSqlRequet() {
         List<String> listTest = new ArrayList<>();
         DataBaseSQL database = DataBaseSQL.getInstance(this);
-        LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
-                null, null, null, null, 0,null,null);
-      //  caseIfListsAreEmpty();
-        datalist.observe(this, new Observer<List<RealEstate>>() {
-            @Override
-            public void onChanged(List<RealEstate> realEstateList) {
-                Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        caseIfListsAreEmpty();
     }
 
     private void caseIfListsAreEmpty() {
         DataBaseSQL database = DataBaseSQL.getInstance(this);
         List<String> nearby= new ArrayList<>();
-        String type= null;
+        List<String> type= new ArrayList<>();
+        String datef="";
+        if (datef.trim().isEmpty()){
+            datef=null;
+        }
         if (nearby.isEmpty()){
-            if (type.isEmpty() || type==null){
+            if (type.isEmpty()){
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
-                        null, null, null, null, 0,null,null);
-                try {
-                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/10");
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                        null, null, null, null, 0,null,null,"01/01/10",datef);
+
                 datalist.observe(this, new Observer<List<RealEstate>>() {
                     @Override
                     public void onChanged(List<RealEstate> realEstateList) {
@@ -150,6 +142,39 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+            } else {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(null, null, null, null,
+                        null, null, null, null, 0,null,null,"01/01/10",type,datef);
+
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        } else {
+            if (type.isEmpty()){
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(null, null, null, null,
+                        null, null, null, null, 0,null,null,"01/01/10",nearby,datef);
+
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } else {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(null, null, null, null,
+                        null, null, null, null, 0,null,null,"01/01/10",type,nearby,datef);
+
+                datalist.observe(this, new Observer<List<RealEstate>>() {
+                    @Override
+                    public void onChanged(List<RealEstate> realEstateList) {
+                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
@@ -332,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
                 if (imagesRealEstates.size() > 0) {
-            //         Toast.makeText(MainActivity.this, "images "+imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
+                    //         Toast.makeText(MainActivity.this, "images "+imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -340,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<NearbyEstate> nearbyEstates) {
                 if (nearbyEstates.size() > 0) {
-         //           Toast.makeText(MainActivity.this, "nearby precise" + nearbyEstates.size(), Toast.LENGTH_SHORT).show();
+                    //           Toast.makeText(MainActivity.this, "nearby precise" + nearbyEstates.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

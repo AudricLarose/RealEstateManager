@@ -45,11 +45,13 @@ public abstract class EstateDao {
             "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.selled like COALESCE(:binear, selled ))"
+            "AND (bdd.selled like COALESCE(:binear, selled ))"+
+            "AND strftime('%s', market) >= strftime('%s', :date)"+
+            "AND strftime('%s', selled) >= strftime('%s', :datef)"
     )
 
     public abstract LiveData<List<RealEstate>> selectAllEstateSorted(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
-                                                                     Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear);
+                                                                     Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String date,String datef);
     @Query("SELECT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
@@ -62,44 +64,61 @@ public abstract class EstateDao {
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
             "AND (bdd.selled like COALESCE(:binear, selled ))" +
-            liste1+2
+            "AND strftime('%s', market) >= strftime('%s', :start_date)"+
+            "AND (nearby IN (:listnearby))" +
+            "AND strftime('%s', selled) >= strftime('%s', :datef)"
+
     )
 
-    public abstract LiveData<List<RealEstate>> selectAllEstateSorted(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
-                                                                     Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear);
+    public abstract LiveData<List<RealEstate>> selectAllEstateSortedListNEarby(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
+                                                                               Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear,String start_date,List<String> listnearby,String datef);
+
     @Query("SELECT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
+            "where  (bdd.town like COALESCE(:town, town))" +
+            "AND (bdd.prix BETWEEN COALESCE(:minPrice, 0) AND COALESCE(:maxPrice, 100000000000))" +
+            "AND (bdd.surface BETWEEN COALESCE(:minSurface, 0) AND COALESCE(:maxSurface, 10000000))" +
+            "AND (bdd.chambre >= COALESCE(:minNbRoom, 0)) " +
+            "AND (bdd.piece >= COALESCE(:minNbBedrooms, 0)) " +
+            "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
+            "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
+            "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
+            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            "AND strftime('%s', market) >= strftime('%s', :start_date)"+
+            "AND (nearby IN (:listType))" +
+            "AND strftime('%s', selled) >= strftime('%s', :datef)"
 
-    public abstract LiveData<List<RealEstate>> selectIfSelectTypeIsZero(String listType);
+    )
+
+    public abstract LiveData<List<RealEstate>> selectAllEstateSortedListType(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
+                                                                             Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear,String start_date,List<String> listType,String datef);
+
+    @Query("SELECT * FROM bdd " +
+            "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
+            " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
+            "where  (bdd.town like COALESCE(:town, town))" +
+            "AND (bdd.prix BETWEEN COALESCE(:minPrice, 0) AND COALESCE(:maxPrice, 100000000000))" +
+            "AND (bdd.surface BETWEEN COALESCE(:minSurface, 0) AND COALESCE(:maxSurface, 10000000))" +
+            "AND (bdd.chambre >= COALESCE(:minNbRoom, 0)) " +
+            "AND (bdd.piece >= COALESCE(:minNbBedrooms, 0)) " +
+            "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
+            "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
+            "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
+            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            "AND strftime('%s', market) >= strftime('%s', :start_date)"+
+            "AND (type IN (:listType))" +
+            "AND (nearby IN (:listNearby))" +
+            "AND strftime('%s', selled) >= strftime('%s', :datef)"
+
+    )
+
+    public abstract LiveData<List<RealEstate>> selectAllEstateSortedListTypeNEarbyToo(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
+                                                                                      Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear,String start_date,List<String> listType, List<String> listNearby,String datef);
 
     @Query("SELECT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where (nearby IN (:listnearby))")
     public abstract LiveData<List<RealEstate>> selectIfSelectNearbyIsZero(List<String> listnearby);
-
-    @Transaction
-    public void SelectlistNearbyIsNotEmptyCase(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
-                                             Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear,List<String> listnearby) {
-        // Anything inside this method runs in a single transaction.
-       // selectAllEstateSorted(town, minPrice, maxPrice, minSurface, maxSurface,minNbRoom, minNbBedrooms, minNbBathrooms,count,agentName, binear);
-        selectIfSelectNearbyIsZero(listnearby);
-    }
-    @Transaction
-    public void SelectlistNearbyIsNotEmptyCaseAndTypeToo(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
-                                               Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear,List<String> listnearby,String listType) {
-        // Anything inside this method runs in a single transaction.
-     //   selectAllEstateSorted(town, minPrice, maxPrice, minSurface, maxSurface,minNbRoom, minNbBedrooms, minNbBathrooms,count,agentName, binear);
-        selectIfSelectNearbyIsZero(listnearby);
-        selectIfSelectTypeIsZero(listType);
-    }
-    @Transaction
-    public void SelectlistTypeNotEmpty(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
-                                               Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear,String listType) {
-        // Anything inside this method runs in a single transaction.
-     //   selectAllEstateSorted(town, minPrice, maxPrice, minSurface, maxSurface,minNbRoom, minNbBedrooms, minNbBathrooms,count,agentName, binear);
-        selectIfSelectTypeIsZero(listType);
-    }
-
 }
