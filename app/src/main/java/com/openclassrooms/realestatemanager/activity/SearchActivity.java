@@ -49,15 +49,16 @@ import java.util.List;
 import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    private static String dateActuelle, date;
     List<TextInputLayout> editTextContainer = new ArrayList<>();
-    private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus, cNone, cAp, cAttic, cLoft, cHouse,cOthers;
+    private Chip Cecole;
+    private Chip Cmagasin;
+    private Chip Cmetro;
+    private Chip CParc;
+    private Chip Cbus;
+    private Chip cNone;
     private TextInputLayout ePrixmin, eSurfaceMax, ePrixMax, eSurface, ePiece, eChambre, eSdb, eTown;
-    private Switch search_switch_vendu;
     private TextView eMarket;
     private Spinner spinerPhoto, spinnerAgent, spinnersell;
-    private Switch switchVendu;
-    private Button btnOk, btnReset, btnDate, btnDateSell;
     private List<String> resultsValidatedByUserForNearBy = new ArrayList<>();
     private List<String> globalResult = new ArrayList<>();
     private ExtendedServiceEstate serviceEstate = DI.getService();
@@ -96,7 +97,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         deployeChipes();
         deployButton();
         deploySwitch();
-        // deployRecyclerView();
         deployRelativeLayout();
         deployeSpinner();
     }
@@ -122,7 +122,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void deploySwitch() {
-        search_switch_vendu = findViewById(R.id.search_switch_vendu);
+        Switch search_switch_vendu = findViewById(R.id.search_switch_vendu);
     }
 
     private List<TextInputLayout> initiateEditText() {
@@ -166,7 +166,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void initiateAndActivateResetButton() {
-        btnReset = findViewById(R.id.search_btn_Reset);
+        Button btnReset = findViewById(R.id.search_btn_Reset);
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,16 +187,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void initiateAndActivateOkButton() {
-        btnOk = findViewById(R.id.search_btn_ok);
+        Button btnOk = findViewById(R.id.search_btn_ok);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 reset();
                 saveEntryEditText();
                 addGlobalResult();
-                //compareListAll();
                 sendToSQLrequest();
-
             }
         });
     }
@@ -315,7 +313,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void iniatiateAndActivateSwitch() {
-        switchVendu = findViewById(R.id.search_switch_vendu);
+        Switch switchVendu = findViewById(R.id.search_switch_vendu);
         switchVendu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -329,7 +327,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void initiateAndActivateDateButton() {
-        btnDate = findViewById(R.id.search_btn_date);
+        Button btnDate = findViewById(R.id.search_btn_date);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -340,7 +338,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void initiateAndActivateDateSellButton() {
-        btnDateSell = findViewById(R.id.search_btn_date_Sell);
+        Button btnDateSell = findViewById(R.id.search_btn_date_Sell);
         btnDateSell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,8 +354,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, day);
-        dateActuelle = DateFormat.getDateInstance().format(c.getTime());
-        date = Utils.getDateFormat(SearchActivity.this, c);
+        String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
+        String date = Utils.getDateFormat(SearchActivity.this, c);
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);
@@ -486,11 +484,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private List<Chip> initiateChipesType() {
         final List<Chip> ChipesContainer = new ArrayList<>();
-        cAp = findViewById(R.id.search_check_appartement);
-        cAttic = findViewById(R.id.search_check_attic);
-        cHouse = findViewById(R.id.search_check_house);
-        cLoft = findViewById(R.id.search_check_loft);
-        cOthers = findViewById(R.id.search_other);
+        Chip cAp = findViewById(R.id.search_check_appartement);
+        Chip cAttic = findViewById(R.id.search_check_attic);
+        Chip cHouse = findViewById(R.id.search_check_house);
+        Chip cLoft = findViewById(R.id.search_check_loft);
+        Chip cOthers = findViewById(R.id.search_other);
         ChipesContainer.add(cAp);
         ChipesContainer.add(cAttic);
         ChipesContainer.add(cHouse);
