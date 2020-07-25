@@ -50,6 +50,7 @@ import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -310,7 +311,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, day);
         String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
-        String date = Utils.getDateFormat(AddInformationActivity.this, c);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String date = formatter.format(c.getTime());
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);

@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         if (nearby.isEmpty()){
             if (type.isEmpty()){
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
-                        null, null, null, null, 0,null,null,"01/01/10",datef);
+                        null, null, null, null, 0,null,null,"2019-01-10");
 
                 datalist.observe(this, new Observer<List<RealEstate>>() {
                     @Override
@@ -259,15 +259,13 @@ public class MainActivity extends AppCompatActivity {
     private void takeDataInBDDIfInternetIsHere() {
         if (Utils.internetOnVerify(this)) {
             takeDataForEstates();
-            takeDataForNearby();
-            takeDataForImage();
         }
     }
 
     private void takeDataForNearby() {
         Utils.takeDataNEarbyInBDD(new Utils.CallBackInterfaceForBDDNearbu() {
             @Override
-            public void onFinishNearby(List<NearbyEstate> nearbyEstateList, FirebaseFirestoreException e) {
+            public void onFinishNearby(final List<NearbyEstate> nearbyEstateList, FirebaseFirestoreException e) {
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && nearbyEstateList.size() > 0) {
                     database.nearbyDao().DeleteAllNearby();
                     for (int i = 0; i < nearbyEstateList.size(); i++) {
@@ -309,11 +307,14 @@ public class MainActivity extends AppCompatActivity {
         Utils.takeDataInBDD(new CallBackInterfaceForBDD() {
             @Override
             public void onFinishEstate(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
+
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && realEstateList.size() > 0) {
                     database.estateDao().DeleteAllEstate();
                     for (int i = 0; i < realEstateList.size(); i++) {
                         database.estateDao().insertEstate(realEstateList.get(i));
                     }
+                    takeDataForNearby();
+                    takeDataForImage();
                 } else {
                     Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
                 }
@@ -365,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<NearbyEstate> nearbyEstates) {
                 if (nearbyEstates.size() > 0) {
-                    //           Toast.makeText(MainActivity.this, "nearby precise" + nearbyEstates.size(), Toast.LENGTH_SHORT).show();
+                    //           Toast. (MainActivity.this, "nearby precise" + nearbyEstates.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

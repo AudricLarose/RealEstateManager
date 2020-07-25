@@ -273,7 +273,7 @@ public class Utils {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<RealEstate> listeRealEstate = servicePlace.getRealEstateList();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestate")
+        firebaseFirestore.collection("realestate1")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -293,7 +293,7 @@ public class Utils {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<ImagesRealEstate> listeRealEstate = servicePlace.getImageRealEstates();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate")
+        firebaseFirestore.collection("imageEstate1")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -312,19 +312,19 @@ public class Utils {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<NearbyEstate> listeRealEstate = servicePlace.getNearbyEstates();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates")
+        firebaseFirestore.collection("nearbyestates2")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         List<NearbyEstate> resultsBDD = null;
-                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
-                            resultsBDD = queryDocumentSnapshots.toObjects(NearbyEstate.class);
-                            callBackInterfaceForBDD.onFinishNearby(resultsBDD, e);
+                            if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
+                                resultsBDD = queryDocumentSnapshots.toObjects(NearbyEstate.class);
+                                callBackInterfaceForBDD.onFinishNearby(resultsBDD, e);
 
-                        } else {
-                            callBackInterfaceForBDD.onFail();
+                            } else {
+                                callBackInterfaceForBDD.onFail();
 
-                        }
+                            }
                     }
                 });
     }
@@ -352,7 +352,7 @@ public class Utils {
         note.put("selled", estate.getSelled());
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestate").document(String.valueOf(estate.hashCode())).set(note);
+        firebaseFirestore.collection("realestate1").document(String.valueOf(estate.hashCode())).set(note);
     }
 
     public static void upDateMyBDDPlease(RealEstate estate, RealEstate realEstate) {
@@ -377,7 +377,7 @@ public class Utils {
         note.put("inEuro", estate.getInEuro());
         note.put("selled", estate.getSelled());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestate").document(String.valueOf(estate.getId())).update(note);
+        firebaseFirestore.collection("realestate1").document(String.valueOf(estate.getId())).update(note);
     }
 
     public static void sendMyBDDImagePlease(ImagesRealEstate imagesRealEstate) {
@@ -388,7 +388,7 @@ public class Utils {
         note.put("linkFb", imagesRealEstate.getLinkFb());
         note.put("image", imagesRealEstate.getImage());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate").document(String.valueOf(imagesRealEstate.getId())).set(note);
+        firebaseFirestore.collection("imageEstate1").document(String.valueOf(imagesRealEstate.getId())).set(note);
     }
 
     public static void upDateMyBDDImagePlease(ImagesRealEstate imagesRealEstate) {
@@ -399,7 +399,7 @@ public class Utils {
         note.put("linkFb", imagesRealEstate.getLinkFb());
         note.put("image", imagesRealEstate.getImage());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate").document(String.valueOf(imagesRealEstate.getId())).update(note);
+        firebaseFirestore.collection("imageEstate1").document(String.valueOf(imagesRealEstate.getId())).update(note);
     }
 
     public static void sendMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
@@ -408,7 +408,7 @@ public class Utils {
         note.put("idEstate", nearbyEstate.getIdEstate());
         note.put("nearby", nearbyEstate.getNearby());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates").document(String.valueOf(nearbyEstate.getId())).set(note);
+        firebaseFirestore.collection("nearbyestates2").document(String.valueOf(nearbyEstate.getId())).set(note);
     }
 
     public static void upDateMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
@@ -417,7 +417,7 @@ public class Utils {
         note.put("idEstate", nearbyEstate.getIdEstate());
         note.put("nearby", nearbyEstate.getNearby());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates").document(String.valueOf(nearbyEstate.getId())).update(note);
+        firebaseFirestore.collection("nearbyestates2").document(String.valueOf(nearbyEstate.getId())).update(note);
     }
 
     public static List<String> uploadImage(final RealEstate estate, final List<String> imagesRealEstateList, final Context context, final CallBackImage callBackImage) throws Exception {

@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.Api;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -19,7 +20,7 @@ public interface NearbyDao {
     @Query("SELECT * FROM bddNearby WHERE idEstate = :itemid")
     LiveData<List<NearbyEstate>> selectAllImageDeuxFois(int itemid);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertNearby(NearbyEstate task);
 
     @Update

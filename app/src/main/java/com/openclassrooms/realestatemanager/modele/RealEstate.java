@@ -9,6 +9,7 @@ import androidx.room.TypeConverters;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Entity(tableName = "bdd")
