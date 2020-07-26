@@ -740,6 +740,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                             @Override
                             public void onFinish(List<String> s) {
                                 link.addAll(s);
+                                redirectToDetailsActivity(modifyEstate());
                             }
                         });
                     } catch (Exception e) {
@@ -748,8 +749,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 } else {
                     saveInTempUpdateIfNoInternet(estateForModifier);
                     updateSQLite(estateForModifier);
+                    redirectToDetailsActivity(modifyEstate());
                 }
-                redirectToDetailsActivity(estateForModifier);
             }
         });
     }

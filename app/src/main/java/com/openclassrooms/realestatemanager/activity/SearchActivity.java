@@ -50,6 +50,7 @@ import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     List<TextInputLayout> editTextContainer = new ArrayList<>();
+    private Boolean binear;
     private Chip Cecole;
     private Chip Cmagasin;
     private Chip Cmetro;
@@ -217,8 +218,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
         if (nearby.isEmpty()) {
             if (type.isEmpty()) {
-                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
-                        null, null, null, null, 0, null, null, eMarket.getText().toString());
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, 0, null, binear.toString(), eMarket.getText().toString());
 
                 resultResearchSQL(datalist);
 
@@ -254,6 +255,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                         @Override
                         public void onChanged(List<RealEstate> realEstates) {
                             goToNextResultActivity(realEstates);
+
                         }
                     });
 
@@ -274,34 +276,64 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         String pieceENtryByUser = globalResultEstate.get("Piece");
         String SDBENtryByUser = globalResultEstate.get("SDB");
         String townENtryByUser = globalResultEstate.get("town");
+        Boolean binear = false;
+
         if (!priceMinENtryByUser.isEmpty()) {
             priceMinENtryByUserValue = Integer.valueOf(priceMinENtryByUser);
+        } else {
+            priceMinENtryByUserValue = null;
         }
 
         if (!priceMaxENtryByUser.isEmpty()) {
             priceMaxENtryByUserValue = Integer.valueOf(priceMaxENtryByUser);
+        } else {
+            priceMaxENtryByUserValue = null;
         }
+
         if (!surfaceMaxENtryByUser.isEmpty()) {
             surfaceMaxENtryByUserValue = Integer.valueOf(surfaceMaxENtryByUser);
+        } else {
+            surfaceMaxENtryByUserValue = null;
         }
 
         if (!surfaceMinENtryByUser.isEmpty()) {
             surfaceMinENtryByUserValue = Integer.valueOf(surfaceMinENtryByUser);
+        } else {
+            surfaceMinENtryByUserValue = null;
         }
+
         if (!chambreENtryByUser.isEmpty()) {
             chambreENtryByUserValue = Integer.valueOf(chambreENtryByUser);
+        } else {
+            chambreENtryByUserValue = null;
         }
 
         if (!pieceENtryByUser.isEmpty()) {
             pieceENtryByUserValue = Integer.valueOf(pieceENtryByUser);
+        } else {
+            pieceENtryByUserValue = null;
         }
+
         if (!SDBENtryByUser.isEmpty()) {
             SDBENtryByUserValue = Integer.valueOf(SDBENtryByUser);
+        } else {
+            SDBENtryByUserValue = null;
         }
+
 
         if (!townENtryByUser.isEmpty()) {
             townENtryByUserValue = townENtryByUser;
+        } else {
+            townENtryByUserValue = null;
         }
+
+        if (positionSwitch == 2) {
+            binear = true;
+        }
+        if (positionSwitch == 3) {
+            binear = false;
+        }
+
     }
 
     private void iniatiateAndActivateSwitch() {
