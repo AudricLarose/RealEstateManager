@@ -340,6 +340,7 @@
                 tools:ignore="RtlHardcoded">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginTop="16dp"
                     android:id="@+id/sdbmin"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -631,7 +632,7 @@
 
             <Spinner
                 android:id="@+id/spinnerphotonbr"
-                android:layout_width="match_parent"
+                android:layout_width="64dp"
                 android:layout_height="52dp"
                 android:layout_below="@+id/textPhotos"
                 android:layout_marginBottom="16dp"

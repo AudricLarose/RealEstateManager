@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RealEstateManager.iml" filepath="$PROJECT_DIR$/RealEstateManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/RealEstateManager-app.iml" filepath="$PROJECT_DIR$/app/RealEstateManager-app.iml" group="RealEstateManager/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RealEstatesMan.iml" filepath="$PROJECT_DIR$/.idea/modules/RealEstatesMan.iml" group="RealEstatesMan" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstatesMan-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstatesMan-app.iml" group="RealEstatesMan/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/p7_github0-RealEstateManager.iml" filepath="$PROJECT_DIR$/p7_github0-RealEstateManager.iml" group="RealEstateManager" />
     </modules>

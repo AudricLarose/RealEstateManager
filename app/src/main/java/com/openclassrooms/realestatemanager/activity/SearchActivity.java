@@ -101,6 +101,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         deploySwitch();
         deployRelativeLayout();
         deployeSpinner();
+        addTimebyDefault();
+
+    }
+
+    private void deployDAteMarket() {
+        if (eMarket.getText().toString().isEmpty()){
+            addTimebyDefault();
+        }
     }
 
     private void initialiseListRealEstate() {
@@ -175,7 +183,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                 reset();
             }
         });
-        resetEntry();
     }
 
     private void resetEntry() {
@@ -202,38 +209,51 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void sendToSQLrequest() {
-
         nulifyvalues();
-        edit_ontheSell.getText();
-        eMarket.getText();
+        edit_ontheSell.setText("");
         DataBaseSQL database = DataBaseSQL.getInstance(this);
-        LiveData<List<RealEstate>> datalist = null;
+        caseIfListsAreEmpty();
     }
 
+    private void addTimebyDefault() {
+        if (eMarket.getText().toString().trim().isEmpty() || eMarket.getText().toString().contains("date")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String date = formatter.format(Calendar.getInstance().getTimeInMillis());
+            eMarket.setText(date);
+        }
+
+    }
+
+
     private void caseIfListsAreEmpty() {
-        List<String> nearby = new ArrayList<>();
         List<String> type = new ArrayList<>();
         String datef = edit_ontheSell.getText().toString();
+        String choice=null;
+        if (binear != null) {
+             choice = binear.toString();
+        } else {
+            choice = null;
+        }
 
 
-        if (nearby.isEmpty()) {
-            if (type.isEmpty()) {
+        if (resultsValidatedByUserForNearBy.isEmpty()) {
+            if (resultsValidatedByUserForTypes.isEmpty()) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString());
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarket.getText().toString());
                 resultResearchSQL(datalist);
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString(),type, datef);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarket.getText().toString(), resultsValidatedByUserForTypes);
                 resultResearchSQL(datalist);
             }
         } else {
-            if (type.isEmpty()) {
+            if (resultsValidatedByUserForTypes.isEmpty()) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString(), nearby, datef);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarket.getText().toString(), resultsValidatedByUserForNearBy);
                 resultResearchSQL(datalist);
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString(), type, nearby, datef);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice   , eMarket.getText().toString(), resultsValidatedByUserForTypes, resultsValidatedByUserForNearBy);
                 resultResearchSQL(datalist);
             }
         }
@@ -243,7 +263,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
-                if (edit_ontheSell.getText() != null && !edit_ontheSell.getText().toString().trim().isEmpty()) {
+                if (edit_ontheSell.getText() != null && !edit_ontheSell.getText().toString().trim().isEmpty() && !edit_ontheSell.getText().toString().equals("Date")) {
                     LiveData<List<RealEstate>> realEstateListReal = database.estateDao().selectAllEstateSortediselled(edit_ontheSell.getText().toString());
                     realEstateListReal.observe(SearchActivity.this, new Observer<List<RealEstate>>() {
                         @Override
@@ -268,7 +288,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         String pieceENtryByUser = globalResultEstate.get("Piece");
         String SDBENtryByUser = globalResultEstate.get("SDB");
         String townENtryByUser = globalResultEstate.get("town");
-        Boolean binear = false;
+        binear = null;
 
         if (!priceMinENtryByUser.isEmpty()) {
             priceMinENtryByUserValue = Integer.valueOf(priceMinENtryByUser);
@@ -310,6 +330,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             SDBENtryByUserValue = Integer.valueOf(SDBENtryByUser);
         } else {
             SDBENtryByUserValue = null;
+        }
+
+        if (resultsValidatedByUserForAgent.isEmpty()) {
+            resultsValidatedByUserForAgent = null;
         }
 
 

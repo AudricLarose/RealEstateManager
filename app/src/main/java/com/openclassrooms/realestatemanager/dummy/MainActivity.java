@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (nearby.isEmpty()){
             if (type.isEmpty()){
-                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, null, null, null,
-                        null, null, null, null, 0,null,null,"2019-01-10");
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, 1, null, null,
+                        null, null, null, null, 0,null,"false","2019-01-10");
 
                 datalist.observe(this, new Observer<List<RealEstate>>() {
                     @Override
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(null, null, null, null,
-                        null, null, null, null, 0,null,null,"01/01/10",type,datef);
+                        null, null, null, null, 0,null,null,"01/01/10",type);
 
                 datalist.observe(this, new Observer<List<RealEstate>>() {
                     @Override
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             if (type.isEmpty()){
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(null, null, null, null,
-                        null, null, null, null, 0,null,null,"01/01/10",nearby,datef);
+                        null, null, null, null, 0,null,null,"01/01/10",nearby);
 
                 datalist.observe(this, new Observer<List<RealEstate>>() {
                     @Override
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(null, null, null, null,
-                        null, null, null, null, 0,null,null,"01/01/10",type,nearby,datef);
+                        null, null, null, null, 0,null,null,"01/01/10",type,nearby);
 
                 datalist.observe(this, new Observer<List<RealEstate>>() {
                     @Override
