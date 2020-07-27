@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.Api;
 
+import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
+import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 
 import java.util.ArrayList;
@@ -29,6 +31,19 @@ public  abstract class ListGenerator {
 
     public static List<RealEstate> getTempListUpdate() {
         return new ArrayList<>(tempUpdate);
+    }
+
+    public static List<ImagesRealEstate> imagesRealEstates = Arrays.asList(
+
+    );
+    public static List<ImagesRealEstate> getImagesRealEstates() {
+        return new ArrayList<>(imagesRealEstates);
+    }
+    public static List<NearbyEstate> nearbyRealEstates = Arrays.asList(
+
+    );
+    public static List<NearbyEstate> getNearbyRealEstates() {
+        return new ArrayList<>(nearbyRealEstates);
     }
 }
 

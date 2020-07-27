@@ -14,27 +14,452 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:id="@+id/LinprixMinMax"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="32dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
 
-            <RelativeLayout
-                android:id="@+id/search_RelativePostal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="150dp"
-                tools:ignore="RtlHardcoded">
+                <RelativeLayout
+                    android:id="@+id/search_RelativePostal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    tools:ignore="RtlHardcoded">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/minprice"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="20dp"
+                        android:inputType="number"
+                        app:boxStrokeColor="@android:color/black"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="9"
+                        app:endIconMode="clear_text"
+                        app:mtf_backgroundColor="#bedac3"
+                        app:mtf_cardCollapsedHeight="4dp"
+                        app:mtf_image="@drawable/ic_map_black_24dp"
+                        app:mtf_labelColor="#bedac3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/prix_min"
+                            android:inputType="number"
+                            android:maxLength="9"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativeVille"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@+id/search_RelativePostal"
+                    android:layout_weight="2"
+                    tools:ignore="RtlHardcoded">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/prixmax"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        app:boxStrokeColor="@android:color/black"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="9"
+                        app:endIconMode="clear_text"
+                        app:mtf_backgroundColor="#bedac3"
+                        app:mtf_cardCollapsedHeight="4dp"
+                        app:mtf_image="@drawable/ic_map_black_24dp"
+                        app:mtf_labelColor="#bedac3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/prix_max"
+                            android:inputType="number"
+                            android:maxLength="9"
+                            android:text=""
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinMarket"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/LinprixMinMax"
+                android:layout_marginHorizontal="32dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativeMaarket"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+
+                    android:layout_toRightOf="@id/search_RelativeVille"
+                    android:layout_weight="2"
+                    tools:ignore="RtlHardcoded">
+
+                    <TextView
+                        android:id="@+id/search_text_onthemarket"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="20dp"
+                        android:text="@string/onmarketsince"
+
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:id="@+id/search_edit_onthemarket"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/search_text_onthemarket"
+
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginVertical="10dp"
+                        android:text=" "
+                        android:textSize="25sp"
+                        tools:ignore="HardcodedText,UnusedAttribute" />
+
+                    <Button
+                        android:id="@+id/search_btn_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/search_edit_onthemarket"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/date"
+
+                        android:textSize="25sp"
+                        tools:ignore="UnusedAttribute" />
+                </RelativeLayout>
+
+                <Switch
+                    android:id="@+id/search_switch_vendu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/search_RelativeVille"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="50dp"
+                    android:text="@string/venduornot"
+                    android:visibility="gone"
+                    tools:ignore="RtlHardcoded" />
+
+                <Spinner
+                    android:id="@+id/sellornot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="50dp"
+                    android:background="@color/colorPrimary"
+                    android:entries="@array/SellorNot"
+                    tools:targetApi="o" />
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativeSellDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sellornot"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="50dp"
+
+                    android:layout_weight="2"
+                    android:visibility="visible"
+                    tools:ignore="RtlHardcoded">
+
+                    <TextView
+                        android:id="@+id/search_edit_ontheSell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/date"
+                        android:textColor="@android:color/black"
+                        android:textSize="25dp"
+                        tools:targetApi="o" />
+
+                    <Button
+                        android:id="@+id/search_btn_date_Sell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/search_edit_ontheSell"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/date"
+                        android:textSize="25sp"
+                        tools:targetApi="o" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinPriceSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/LinMarket"
+                android:layout_marginHorizontal="32dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativePrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_RelativeMaarket"
+                    android:layout_weight="2"
+                    tools:ignore="RtlHardcoded">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/surfacemin"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        app:boxStrokeColor="@android:color/black"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="4"
+                        app:endIconMode="clear_text"
+                        app:mtf_backgroundColor="#bedac3"
+                        app:mtf_cardCollapsedHeight="4dp"
+                        app:mtf_image="@drawable/ic_map_black_24dp"
+                        app:mtf_labelColor="#bedac3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:hint="@string/surface_min"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:text=""
+
+                            android:textSize="25sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativeSurface"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_RelativeMaarket"
+                    android:layout_marginLeft="32dp"
+                    android:layout_toRightOf="@+id/search_RelativePrice"
+
+                    android:layout_weight="2"
+                    tools:ignore="RtlHardcoded">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/surfacemax"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:ems="4"
+                        android:hint="@string/surface_max"
+                        android:inputType="number"
+                        app:boxStrokeColor="@android:color/black"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="4"
+                        app:endIconMode="clear_text"
+                        app:mtf_backgroundColor="#bedac3"
+                        app:mtf_cardCollapsedHeight="4dp"
+                        app:mtf_image="@drawable/ic_map_black_24dp"
+                        app:mtf_labelColor="#bedac3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:text=""
+
+                            android:textSize="25sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinPiece"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/LinPriceSearch"
+                android:layout_marginHorizontal="32dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativePiece"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_RelativePrice"
+                    android:layout_marginBottom="24dp"
+                    android:layout_weight="2">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/piecemin"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:ems="2"
+                        android:inputType="number"
+                        app:boxStrokeColor="@android:color/black"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="2"
+                        app:mtf_backgroundColor="#bedac3"
+                        app:mtf_cardCollapsedHeight="4dp"
+                        app:mtf_image="@drawable/ic_map_black_24dp"
+                        app:mtf_labelColor="#bedac3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/piece"
+                            android:inputType="number"
+                            android:maxLength="2"
+
+                            android:text=""
+                            android:textSize="25sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativeChambre"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_RelativeSurface"
+                    android:layout_marginLeft="32dp"
+                    android:layout_toRightOf="@+id/search_RelativePiece"
+                    android:layout_weight="2"
+                    tools:ignore="RtlHardcoded">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ChamberMin"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:ems="2"
+                        android:text=""
+                        app:boxStrokeColor="@android:color/black"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="2"
+                        app:mtf_backgroundColor="#bedac3"
+                        app:mtf_cardCollapsedHeight="4dp"
+                        app:mtf_image="@drawable/ic_map_black_24dp"
+                        app:mtf_labelColor="#bedac3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:hint="@string/chambre"
+                            android:inputType="number"
+                            android:maxLength="2"
+
+                            android:text=""
+
+                            android:textSize="25sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linSDB"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/LinPiece"
+                android:layout_marginHorizontal="32dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <RelativeLayout
+                    android:id="@+id/search_RelativeSdb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_RelativeSurface"
+                    android:layout_toRightOf="@+id/search_RelativeChambre"
+                    tools:ignore="RtlHardcoded">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/sdbmin"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:ems="2"
+                        android:inputType="textPersonName"
+                        app:boxStrokeColor="@android:color/black"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="2"
+                        app:mtf_backgroundColor="#bedac3"
+                        app:mtf_cardCollapsedHeight="4dp"
+                        app:mtf_image="@drawable/ic_map_black_24dp"
+                        app:mtf_labelColor="#bedac3">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:hint="@string/sdb"
+                            android:inputType="number"
+                            android:maxLength="2"
+
+                            android:text=""
+                            android:textSize="25sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </RelativeLayout>
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/minprice"
+                    android:id="@+id/townSearch"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="50dp"
-                    android:inputType="number"
+                    android:layout_below="@+id/search_RelativeSurface"
+                    android:layout_marginBottom="20dp"
+                    android:layout_toRightOf="@+id/search_RelativeSdb"
                     app:boxStrokeColor="@android:color/black"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
                     app:endIconMode="clear_text"
-                    android:textSize="20dp"
-
                     app:mtf_backgroundColor="#bedac3"
                     app:mtf_cardCollapsedHeight="4dp"
                     app:mtf_image="@drawable/ic_map_black_24dp"
@@ -43,568 +468,274 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prix_min"
-                        android:inputType="number"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20dp"
-                        />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativeVille"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="150dp"
-                tools:ignore="RtlHardcoded">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/prixmax"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="50dp"
-                    app:boxStrokeColor="@android:color/black"
-                    app:endIconMode="clear_text"
-                    app:mtf_backgroundColor="#bedac3"
-                    app:mtf_cardCollapsedHeight="4dp"
-                    app:mtf_image="@drawable/ic_map_black_24dp"
-                    app:mtf_labelColor="#bedac3">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prix_max"                android:textSize="20dp"
-
-                        android:inputType="number"
-                        android:text=""
-                        android:textColor="@android:color/black" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativeMaarket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativePostal"
-                android:layout_marginLeft="150dp"
-                android:layout_marginBottom="50dp"
-                tools:ignore="RtlHardcoded">
-
-                <TextView
-                    android:id="@+id/search_text_onthemarket"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:textSize="20dp"
-
-                    android:layout_marginLeft="20dp"
-                    android:text="@string/onmarketsince" />
-
-                <TextView
-                    android:id="@+id/search_edit_onthemarket"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/search_text_onthemarket"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="10dp"                android:textSize="20dp"
-
-                    android:text=" "
-                    tools:ignore="HardcodedText,UnusedAttribute" />
-
-                <Button
-                    android:id="@+id/search_btn_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/search_edit_onthemarket"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="10dp"
-                    android:text="@string/date"
-                    tools:ignore="UnusedAttribute" />
-            </RelativeLayout>
-
-            <Switch
-                android:id="@+id/search_switch_vendu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/search_RelativeVille"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp"
-                android:text="@string/venduornot"
-                android:visibility="gone"
-                tools:ignore="RtlHardcoded" />
-
-            <Spinner
-                android:id="@+id/sellornot"
-                android:layout_width="200dp"                android:textSize="20dp"
-
-                android:layout_height="40dp"
-                android:layout_below="@id/search_RelativeVille"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="150dp"
-                android:background="@color/colorPrimary"
-                android:entries="@array/SellorNot"
-                tools:targetApi="o"/>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativeSellDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/sellornot"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="150dp"
-                android:visibility="visible"
-                tools:ignore="RtlHardcoded">
-
-                <TextView
-                    android:id="@+id/search_edit_ontheSell"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/date"
-                    android:textColor="@android:color/black"
-                    tools:targetApi="o" />
-
-                <Button
-                    android:id="@+id/search_btn_date_Sell"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/search_edit_ontheSell"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/date"
-                    tools:targetApi="o" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativePrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativeMaarket"
-                android:layout_marginLeft="150dp"
-                tools:ignore="RtlHardcoded">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/surfacemin"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
-                    app:boxStrokeColor="@android:color/black"
-                    app:endIconMode="clear_text"
-                    app:mtf_backgroundColor="#bedac3"
-                    app:mtf_cardCollapsedHeight="4dp"
-                    app:mtf_image="@drawable/ic_map_black_24dp"
-                    app:mtf_labelColor="#bedac3">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:hint="@string/surface_min"
-                        android:inputType="number"                android:textSize="20dp"
-
-                        android:maxLength="10"
+                        android:hint="@string/ville"
+                        android:maxLength="30"
                         android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativeSurface"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativeMaarket"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="100dp"
-                tools:ignore="RtlHardcoded">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/surfacemax"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
-                    android:ems="4"
-                    android:hint="@string/surface_max"
-                    android:inputType="number"
-                    app:boxStrokeColor="@android:color/black"
-                    app:endIconMode="clear_text"
-                    app:mtf_backgroundColor="#bedac3"
-                    app:mtf_cardCollapsedHeight="4dp"
-                    app:mtf_image="@drawable/ic_map_black_24dp"
-                    app:mtf_labelColor="#bedac3">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:inputType="number"                android:textSize="20dp"
-
-                        android:text="" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativePiece"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativePrice"
-                android:layout_marginLeft="150dp"
-                android:layout_marginBottom="50dp">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/piecemin"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="50dp"
-                    android:ems="2"
-                    android:inputType="number"
-                    app:boxStrokeColor="@android:color/black"
-                    app:mtf_backgroundColor="#bedac3"
-                    app:mtf_cardCollapsedHeight="4dp"
-                    app:mtf_image="@drawable/ic_map_black_24dp"
-                    app:mtf_labelColor="#bedac3">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="200dp"
-                        android:layout_height="48dp"
-                        android:layout_marginBottom="50dp"
-                        android:hint="@string/piece"                android:textSize="20dp"
-
-                        android:inputType="number"
-                        android:maxLength="10"
-                        android:text="" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativeChambre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativeSurface"
-                android:layout_marginLeft="40dp"
-                android:layout_toRightOf="@+id/search_RelativePiece"
-                tools:ignore="RtlHardcoded">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/ChamberMin"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="0dp"
-                    android:ems="2"
-                    android:text=""
-                    app:boxStrokeColor="@android:color/black"
-                    app:mtf_backgroundColor="#bedac3"
-                    app:mtf_cardCollapsedHeight="4dp"
-                    app:mtf_image="@drawable/ic_map_black_24dp"
-                    app:mtf_labelColor="#bedac3">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="50dp"
-                        android:hint="@string/chambre"
-                        android:inputType="number"                android:textSize="20dp"
-
-                        android:maxLength="10"
-
-                        android:text="" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_RelativeSdb"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativeSurface"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="100dp"
-                tools:ignore="RtlHardcoded">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/sdbmin"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:ems="2"
-                    android:inputType="textPersonName"
-                    app:boxStrokeColor="@android:color/black"
-                    app:mtf_backgroundColor="#bedac3"
-                    app:mtf_cardCollapsedHeight="4dp"
-                    app:mtf_image="@drawable/ic_map_black_24dp"
-                    app:mtf_labelColor="#bedac3">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="50dp"
-                        android:hint="@string/sdb"                android:textSize="20dp"
-
-                        android:inputType="number"
-                        android:maxLength="10"
-                        android:text="" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </RelativeLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/townSearch"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RelativeSdb"
-                android:layout_marginHorizontal="100dp"
-                android:layout_marginBottom="20dp"
-                app:boxStrokeColor="@android:color/black"                android:textSize="20dp"
-
-                app:endIconMode="clear_text"
-                app:mtf_backgroundColor="#bedac3"
-                app:mtf_cardCollapsedHeight="4dp"
-                app:mtf_image="@drawable/ic_map_black_24dp"
-                app:mtf_labelColor="#bedac3">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:hint="@string/ville"                android:textSize="20dp"
-
-                    android:text="" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/search_text_proximité"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/townSearch"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/linSDB"
+                android:layout_marginLeft="32dp"
+                android:layout_marginBottom="32dp"
                 android:text="@string/proximity"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_ecole"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
+            <HorizontalScrollView
+                android:id="@+id/search_check_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_text_proximité"
-                android:layout_marginHorizontal="250dp"
-                android:text="@string/ecole"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorAccent"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                android:layout_below="@id/search_text_proximité"
+                android:fillViewport="true"
+                android:measureAllChildren="false"
+                android:scrollbars="none">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_magasin"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_ecole"
-                android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="250dp"
-                android:text="@string/magasins"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorAccent"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                <RelativeLayout
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_metro"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_magasin"
-                android:layout_marginHorizontal="250dp"
-                android:text="@string/metro"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorAccent"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                    android:id="@+id/relativeCBox1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="32dp">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_parc"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_metro"
-                android:layout_centerInParent="true"
-                android:layout_marginHorizontal="250dp"
-                android:text="@string/parc"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorAccent"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                    <LinearLayout
+                        android:id="@+id/checkLinprox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="6">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_bus"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_parc"
-                android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="250dp"
-                android:layout_marginTop="0dp"
-                android:text="@string/bus"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorAccent"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_ecole"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/ecole"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorAccent"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/nonenearbysearch"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_bus"
-                android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="250dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/none"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorAccent"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_magasin"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/search_check_ecole"
+                            android:layout_weight="1"
+                            android:text="@string/magasins"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorAccent"
+                            app:chipCornerRadius="24dp"
+
+                            tools:ignore="RtlHardcoded" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_metro"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/search_check_magasin"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:text="@string/metro"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorAccent"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_parc"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/search_check_metro"
+                            android:layout_weight="1"
+                            android:text="@string/parc"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorAccent"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_bus"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/search_check_parc"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:text="@string/bus"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorAccent"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/nonenearbysearch"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="32dp"
+                            android:layout_toRightOf="@+id/search_check_bus"
+                            android:layout_weight="1"
+                            android:text="@string/none"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorAccent"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/type_bienSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/nonenearbysearch"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/search_check_scroll"
+                android:layout_marginLeft="32dp"
+                android:layout_marginBottom="32dp"
                 android:text="@string/type"
+                android:textSize="25sp"
 
-                android:textSize="25dp"
                 android:textStyle="bold" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_appartement"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
+            <HorizontalScrollView
+                android:id="@+id/search_check_scroll2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/type_bienSearch"
-                android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="250dp"
-                android:layout_marginRight="70dp"
-                android:text="@string/appartement"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                android:layout_below="@id/type_bienSearch"
+                android:fillViewport="true"
+                android:measureAllChildren="false"
+                android:scrollbars="none">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_attic"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_appartement"
-                android:layout_marginHorizontal="250dp"
-                android:layout_marginLeft="20dp"
-                android:text="@string/attic"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                <RelativeLayout
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_loft"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_attic"
-                android:layout_centerInParent="true"
-                android:layout_marginHorizontal="250dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginRight="30dp"
-                android:text="@string/Loft"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                    android:id="@+id/relativeCBox2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/type_bienSearch"
+                    android:layout_marginHorizontal="32dp">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_check_house"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_loft"
-                android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="250dp"
-                android:layout_marginRight="70dp"
-                android:text="@string/House"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                    <LinearLayout
+                        android:id="@+id/checkLin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="5">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/search_other"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/search_check_house"
-                android:layout_alignParentRight="true"
-                android:layout_marginHorizontal="250dp"
-                android:layout_marginRight="70dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/Other"
-                android:textColor="@android:color/white"
-                android:theme="@style/Theme.MaterialComponents.DayNight"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="24dp"
-                tools:ignore="RtlHardcoded" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_appartement"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:layout_weight="1"
+                            android:text="@string/appartement"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorPrimary"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
 
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_attic"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:layout_toRightOf="@+id/search_check_appartement"
+                            android:layout_weight="1"
+                            android:text="@string/attic"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorPrimary"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_loft"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/search_check_attic"
+                            android:layout_weight="1"
+                            android:text="@string/Loft"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorPrimary"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_check_house"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:layout_toRightOf="@+id/search_check_loft"
+                            android:layout_weight="1"
+                            android:text="@string/House"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorPrimary"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/search_other"
+                            style="@style/Widget.MaterialComponents.Chip.Entry"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="64dp"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:padding="20dp"
+                            android:layout_weight="1"
+                            android:text="@string/Other"
+                            android:textColor="@android:color/white"
+                            android:theme="@style/Theme.MaterialComponents.DayNight"
+                            app:chipBackgroundColor="@color/colorPrimary"
+                            app:chipCornerRadius="24dp"
+                            tools:ignore="RtlHardcoded" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/textAgent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/search_other"
+                android:layout_below="@id/search_check_scroll2"
+                android:layout_marginLeft="64dp"
                 android:layout_marginBottom="20dp"
                 android:text="Agent en charge :"
-                android:textSize="25dp"
 
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <Spinner
@@ -615,7 +746,7 @@
                 android:layout_marginHorizontal="200dp"
                 android:layout_marginBottom="20dp"
                 android:background="@color/colorAccent"
-                android:entries="@array/Spinner_items3"
+                android:entries="@array/Spinner_agentFull"
                 tools:targetApi="o">
 
             </Spinner>
@@ -626,50 +757,48 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/spinnerAgent"
+                android:layout_marginLeft="64dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
-
                 android:text="@string/nbrphotomin"
                 android:textSize="25dp" />
 
             <Spinner
                 android:id="@+id/spinnerphotonbr"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:layout_below="@+id/textPhotos"
-                android:layout_marginHorizontal="200dp"
+                android:layout_below="@+id/spinnerAgent"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30sp"
+                android:layout_toRightOf="@+id/textPhotos"
                 android:background="@color/colorPrimary"
                 android:entries="@array/Spinner_photos"
                 android:textColor="@android:color/white"
-
                 tools:targetApi="o">
 
             </Spinner>
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/search_RecyclerSearch"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_below="@+id/spinnerphotonbr"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@android:color/darker_gray" />
 
             <Button
                 android:id="@+id/search_btn_Reset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RecyclerSearch"
+                android:layout_below="@+id/spinnerphotonbr"
+                android:layout_marginLeft="64dp"
+                android:text="@string/reset"
 
-                android:text="@string/reset" />
+                android:textSize="25sp" />
 
             <Button
                 android:id="@+id/search_btn_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/search_RecyclerSearch"
+                android:layout_below="@+id/spinnerphotonbr"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="64dp"
+
                 android:text="@string/ok"
+                android:textSize="25sp"
                 tools:ignore="RtlHardcoded" />
 
         </RelativeLayout>

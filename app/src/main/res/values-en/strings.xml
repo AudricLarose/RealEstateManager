@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="Spinner_items">
+        <item>Flat</item>
+        <item>Home</item>
+        <item>Loft</item>
+        <item>Garage</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="Spinner_photos">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="SellorNot">
+        <item>Both</item>
+        <item>Available</item>
+        <item>Selled</item>
+    </string-array>
+
     <string name="app_name">Real Estate Manager</string>
     <string name="modify">Modify</string>
     <string name="ajouter">Add</string>
@@ -79,4 +99,6 @@
     <string name="selledstate">Selled</string>
     <string name="filesuploads">Files have been Saved Successfully</string>
     <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">You Have to set your gps to active the Map</string>
+    <string name="gpssetting">I set My GPS</string>
+    <string name="map">Map</string>
 </resources>

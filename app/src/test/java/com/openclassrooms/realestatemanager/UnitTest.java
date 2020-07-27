@@ -46,7 +46,7 @@ import static org.robolectric.Shadows.shadowOf;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleUnitTest {
+public class UnitTest {
     // DATA SET FOR TEST
     private static long USER_ID = 1;
     List<String> resultsValidatedByUser = new ArrayList<>();

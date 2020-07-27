@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.dummy;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,19 +16,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.openclassrooms.realestatemanager.utils.AdaptateurImage;
-import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
 import com.openclassrooms.realestatemanager.Api.DI;
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.utils.Utils;
+import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
+import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
+import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
+import com.openclassrooms.realestatemanager.utils.AdaptateurImage;
+import com.openclassrooms.realestatemanager.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,12 +53,15 @@ public class DetailFragment extends Fragment {
     private RecyclerView recyclerView;
     private ExtendedServiceEstate serviceEstate = DI.getService();
     private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
+    private List<String> listDescription = new ArrayList<>();
+    private List<String> listImage = new ArrayList<>();
     private boolean amIInEuro = true;
     private LatLng latLngRealestate;
     private Bundle mapViewBundle = null;
     private ImageView mImageView;
     private Boolean modePhone;
     private RelativeLayout relativeLayout;
+    private DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(getContext());
 
     public DetailFragment() {
     }
@@ -64,8 +72,8 @@ public class DetailFragment extends Fragment {
         setHasOptionsMenu(true);
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             String id = getArguments().getString(ARG_ITEM_ID);
-            if (getArguments() != null && id!=null) {
-                modePhone=false;
+            if (getArguments() != null && id != null) {
+                modePhone = false;
                 for (int i = 0; i < listRealEstate.size(); i++) {
                     if (String.valueOf(listRealEstate.get(i).getId()).contains(getArguments().getString(ARG_ITEM_ID))) {
                         estateGrabbed = listRealEstate.get(i);
@@ -73,20 +81,10 @@ public class DetailFragment extends Fragment {
                     }
                 }
             } else {
-                modePhone=true;
+                modePhone = true;
 
             }
-
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-//            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
             Activity activity = this.getActivity();
-//            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-//            if (appBarLayout != null) {
-//                appBarLayout.setTitle(mItem.content);
-//            }
         }
     }
 
@@ -105,13 +103,36 @@ public class DetailFragment extends Fragment {
         Picasso.get().load(url).into(imageCarte);
     }
 
+    private void takeImageAndDesciption(final View container) {
+        DataBaseSQL database = DataBaseSQL.getInstance(getContext());
+        LiveData<List<ImagesRealEstate>> datalist = database.imageDao().selectAllImageDeuxFois(estateGrabbed.getId());
+
+        try {
+            datalist.observe(getViewLifecycleOwner(), new Observer<List<ImagesRealEstate>>() {
+                @Override
+                public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
+                    for (int i = 0; i < imagesRealEstates.size(); i++) {
+                        listImage.add(imagesRealEstates.get(i).getImage());
+                    }
+                }
+            });
+            datalist.observe(getViewLifecycleOwner(), new Observer<List<ImagesRealEstate>>() {
+                @Override
+                public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
+                    for (int i = 0; i < imagesRealEstates.size(); i++) {
+                        listDescription.add(imagesRealEstates.get(i).getDescriptionImage());
+                    }
+                    deployRecyclerViewDetails(container);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void deployRecyclerViewDetails(View container) {
-        if (estateGrabbed.getPhotosReal() != null && estateGrabbed.getPhotosReal().size() > 0) {
-            if (estateGrabbed.getLink() != null && estateGrabbed.getLink().size() > 0) {
-                adapter = new AdaptateurImage(estateGrabbed.getLink(), getContext(), estateGrabbed.getDescriptionImage());
-            } else {
-                adapter = new AdaptateurImage(estateGrabbed.getPhotosReal(), getContext(), estateGrabbed.getDescriptionImage());
-            }
+        if (listImage.size() > 0 && listDescription.size() > 0) {
+            adapter = new AdaptateurImage(listImage, getContext(), listDescription, "false");
         }
         recyclerView = container.findViewById(R.id.RecycleDetails);
         recyclerView.setHasFixedSize(true);
@@ -128,7 +149,6 @@ public class DetailFragment extends Fragment {
         adresse = container.findViewById(R.id.adresseDetails);
         description = container.findViewById(R.id.descirptionInputDetails);
         ville = container.findViewById(R.id.villeDetails);
-//        region = container.findViewById(R.id.regionVille);
         pays = container.findViewById(R.id.paysDetails);
         surfaceChiffre = container.findViewById(R.id.SurfacechiffresDetails);
         priceChiffre = container.findViewById(R.id.PriceChiffresDetails);
@@ -146,7 +166,7 @@ public class DetailFragment extends Fragment {
             estateGrabbed = grabEstatFromMainActivity();
         }
         if (estateGrabbed != null) {
-            deployRecyclerViewDetails(container);
+            takeImageAndDesciption(container);
             shareInformationsDetails(container);
             try2FindAddress(container);
             initiateSwitchSell(container);
@@ -165,20 +185,34 @@ public class DetailFragment extends Fragment {
     }
 
     private void shareInformationsDetails(View container) {
-        surfaceChiffre.setText(estateGrabbed.getSurface());
-        priceChiffre.setText(Utils.getEuroFormat(Integer.valueOf(estateGrabbed.getPrix())));
-        roomChiffre.setText(estateGrabbed.getPiece());
+        surfaceChiffre.setText(String.valueOf(estateGrabbed.getSurface()));
+        roomChiffre.setText(String.valueOf(estateGrabbed.getPiece()));
         typeCHiffre.setText(estateGrabbed.getType());
-        bathroomchiffre.setText(estateGrabbed.getSdb());
-        if (estateGrabbed.getNearby() != null) {
-            String nearby=estateGrabbed.getNearby().toString();
-            String nearbyNew=nearby.replace("[","");
-            String nearbyChiffreNew=nearbyNew.replace("]","");
-            nearbyChiffre.setText(nearbyChiffreNew);
+        bathroomchiffre.setText(String.valueOf(estateGrabbed.getSdb()));
+        if (dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estateGrabbed.getId())!= null) {
+            dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estateGrabbed.getId()).observe(getViewLifecycleOwner(), new Observer<List<NearbyEstate>>() {
+                @Override
+                public void onChanged(List<NearbyEstate> nearbyEstateList) {
+                    List <String> nearby = new ArrayList<>();
+                    for (int i = 0; i < nearbyEstateList.size() ; i++) {
+                        nearby.add( nearbyEstateList.get(i).getNearby());
+                    }
+                    String nearbylistline=nearby.toString();
+                    String nearbyNew = nearbylistline.replace("[", "");
+                    String nearbyChiffreNew = nearbyNew.replace("]", "");
+                    nearbyChiffre.setText(nearbyChiffreNew);
+                }
+            });
+
         }
-        chamber.setText(estateGrabbed.getChambre());
+        chamber.setText(String.valueOf(estateGrabbed.getChambre()));
         description.setText(estateGrabbed.getDescription());
         agent.setText(estateGrabbed.getNomAgent());
+        try {
+            priceChiffre.setText(Utils.getEuroFormat(Integer.valueOf(estateGrabbed.getPrix())));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initiateSwitchSell(View rootView) {
@@ -225,16 +259,6 @@ public class DetailFragment extends Fragment {
             public void onSuccess(List<Address> addressList) {
                 findTheRightAdress(container, addressList);
             }
-
-            @Override
-            public void onEchec() {
-                findTheDefaultAdress();
-            }
-
-            @Override
-            public void onCrash() {
-                findTheDefaultAdress();
-            }
         });
     }
 
@@ -257,7 +281,7 @@ public class DetailFragment extends Fragment {
     private void modifyThisEstate() {
         RealEstate estate = grabEstatFromMainActivity();
         phoneVersionForModify(estate);
-        tabletVersionForModify();
+        tabletVersionForModify(estate);
     }
 
     private void phoneVersionForModify(RealEstate estate) {
@@ -271,14 +295,13 @@ public class DetailFragment extends Fragment {
         }
     }
 
-    private void tabletVersionForModify() {
-        if (estateGrabbed != null) {
+    private void tabletVersionForModify(RealEstate estate) {
+        if (estateGrabbed != null && estate == null) {
             Intent intent = new Intent(getContext(), AddInformationActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("RealEstate", estateGrabbed);
             intent.putExtras(bundle);
             startActivity(intent);
-            getActivity().finish();
         }
     }
 
@@ -293,7 +316,7 @@ public class DetailFragment extends Fragment {
     }
 
     private void convertDollarEnEuro() {
-        int converted = Integer.parseInt(estateGrabbed.getPrix());
+        int converted = estateGrabbed.getPrix();
         priceChiffre.setText(converted + " Euros");
     }
 

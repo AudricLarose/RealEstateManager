@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,16 +13,22 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
+import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
+import com.openclassrooms.realestatemanager.dummy.MainActivity;
 import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
@@ -30,6 +37,7 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,20 +49,17 @@ import java.util.List;
 import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    private static final String TAG = "ShowResult";
-    private static final int IMAGE_REQUEST = 102;
-    private static final int REQUESTCODEGALLERY = 101;
-    private static boolean isItChecked = false;
-    private static RealEstate estate;
-    private static String dateActuelle, date;
     List<TextInputLayout> editTextContainer = new ArrayList<>();
-    private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus, cNone, cAp, cAttic, cLoft, cHouse,cOthers;
+    private Boolean binear;
+    private Chip Cecole;
+    private Chip Cmagasin;
+    private Chip Cmetro;
+    private Chip CParc;
+    private Chip Cbus;
+    private Chip cNone;
     private TextInputLayout ePrixmin, eSurfaceMax, ePrixMax, eSurface, ePiece, eChambre, eSdb, eTown;
-    private Switch search_switch_vendu;
     private TextView eMarket;
     private Spinner spinerPhoto, spinnerAgent, spinnersell;
-    private Switch switchVendu;
-    private Button btnOk, btnReset, btnDate, btnDateSell;
     private List<String> resultsValidatedByUserForNearBy = new ArrayList<>();
     private List<String> globalResult = new ArrayList<>();
     private ExtendedServiceEstate serviceEstate = DI.getService();
@@ -69,9 +74,17 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     private String resultsValidatedByUserForPhotos;
     private String resultsValidatedByUserForAgent;
-    private String resultsValidatedByUserForSell;
     private List<String> resultsValidatedByUserForTypes;
     private int positionSwitch;
+    private DataBaseSQL database = DataBaseSQL.getInstance(this);
+    Integer priceMinENtryByUserValue = null;
+    Integer priceMaxENtryByUserValue = null;
+    Integer surfaceMaxENtryByUserValue = null;
+    Integer surfaceMinENtryByUserValue = null;
+    Integer chambreENtryByUserValue = null;
+    Integer pieceENtryByUserValue = null;
+    Integer SDBENtryByUserValue = null;
+    String townENtryByUserValue = null;
 
 
     @Override
@@ -81,13 +94,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         setTitle(R.string.Search);
         initialiseListRealEstate();
         actionfleche();
-        deployRecyclerView();
         iniatiateAndActivateSwitch();
         editTextContainer = initiateEditText();
         deployeChipes();
         deployButton();
         deploySwitch();
-        deployRecyclerView();
         deployRelativeLayout();
         deployeSpinner();
     }
@@ -108,21 +119,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         return super.onSupportNavigateUp();
     }
 
-    private void deployRecyclerView() {
-        adapter = new Adaptateur(resultResearchRealEstate, false, null);
-        recyclerView = findViewById(R.id.search_RecyclerSearch);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(SearchActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-    }
-
     private void deployRelativeLayout() {
         relativeLayoutSell = findViewById(R.id.search_RelativeSellDetails);
     }
 
     private void deploySwitch() {
-        search_switch_vendu = findViewById(R.id.search_switch_vendu);
+        Switch search_switch_vendu = findViewById(R.id.search_switch_vendu);
     }
 
     private List<TextInputLayout> initiateEditText() {
@@ -154,7 +156,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         globalResultEstate.put("PrixMax", ePrixMax.getEditText().getText().toString());
         globalResultEstate.put("SDB", eSdb.getEditText().getText().toString());
         globalResultEstate.put("SurfaceMin", eSurface.getEditText().getText().toString());
-        globalResultEstate.put("SurfaceMAx", eSurfaceMax.getEditText().getText().toString());
+        globalResultEstate.put("SurfaceMax", eSurfaceMax.getEditText().getText().toString());
         globalResultEstate.put("town", eTown.getEditText().getText().toString());
     }
 
@@ -166,7 +168,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void initiateAndActivateResetButton() {
-        btnReset = findViewById(R.id.search_btn_Reset);
+        Button btnReset = findViewById(R.id.search_btn_Reset);
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,8 +176,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             }
         });
         resetEntry();
-
-
     }
 
     private void resetEntry() {
@@ -186,25 +186,150 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void reset() {
         resultResearchRealEstate.clear();
         resultResearchRealEstate.addAll(listRealEstate);
-        deployRecyclerView();
     }
 
     private void initiateAndActivateOkButton() {
-        btnOk = findViewById(R.id.search_btn_ok);
+        Button btnOk = findViewById(R.id.search_btn_ok);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 reset();
                 saveEntryEditText();
                 addGlobalResult();
-                compareListAll();
-
+                sendToSQLrequest();
             }
         });
     }
 
+    private void sendToSQLrequest() {
+
+        nulifyvalues();
+        edit_ontheSell.getText();
+        eMarket.getText();
+        DataBaseSQL database = DataBaseSQL.getInstance(this);
+        LiveData<List<RealEstate>> datalist = null;
+    }
+
+    private void caseIfListsAreEmpty() {
+        List<String> nearby = new ArrayList<>();
+        List<String> type = new ArrayList<>();
+        String datef = edit_ontheSell.getText().toString();
+
+
+        if (nearby.isEmpty()) {
+            if (type.isEmpty()) {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString());
+                resultResearchSQL(datalist);
+            } else {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString(),type, datef);
+                resultResearchSQL(datalist);
+            }
+        } else {
+            if (type.isEmpty()) {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString(), nearby, datef);
+                resultResearchSQL(datalist);
+            } else {
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, binear.toString(), eMarket.getText().toString(), type, nearby, datef);
+                resultResearchSQL(datalist);
+            }
+        }
+    }
+
+    private void resultResearchSQL(LiveData<List<RealEstate>> datalist) {
+        datalist.observe(this, new Observer<List<RealEstate>>() {
+            @Override
+            public void onChanged(List<RealEstate> realEstateList) {
+                if (edit_ontheSell.getText() != null && !edit_ontheSell.getText().toString().trim().isEmpty()) {
+                    LiveData<List<RealEstate>> realEstateListReal = database.estateDao().selectAllEstateSortediselled(edit_ontheSell.getText().toString());
+                    realEstateListReal.observe(SearchActivity.this, new Observer<List<RealEstate>>() {
+                        @Override
+                        public void onChanged(List<RealEstate> realEstates) {
+                            goToNextResultActivity(realEstates);
+                        }
+                    });
+                } else {
+                    goToNextResultActivity(realEstateList);
+                }
+            }
+        });
+    }
+
+    private void nulifyvalues() {
+
+        String priceMinENtryByUser = globalResultEstate.get("PrixMin");
+        String priceMaxENtryByUser = globalResultEstate.get("PrixMax");
+        String surfaceMaxENtryByUser = globalResultEstate.get("SurfaceMax");
+        String surfaceMinENtryByUser = globalResultEstate.get("SurfaceMin");
+        String chambreENtryByUser = globalResultEstate.get("Chambre");
+        String pieceENtryByUser = globalResultEstate.get("Piece");
+        String SDBENtryByUser = globalResultEstate.get("SDB");
+        String townENtryByUser = globalResultEstate.get("town");
+        Boolean binear = false;
+
+        if (!priceMinENtryByUser.isEmpty()) {
+            priceMinENtryByUserValue = Integer.valueOf(priceMinENtryByUser);
+        } else {
+            priceMinENtryByUserValue = null;
+        }
+
+        if (!priceMaxENtryByUser.isEmpty()) {
+            priceMaxENtryByUserValue = Integer.valueOf(priceMaxENtryByUser);
+        } else {
+            priceMaxENtryByUserValue = null;
+        }
+
+        if (!surfaceMaxENtryByUser.isEmpty()) {
+            surfaceMaxENtryByUserValue = Integer.valueOf(surfaceMaxENtryByUser);
+        } else {
+            surfaceMaxENtryByUserValue = null;
+        }
+
+        if (!surfaceMinENtryByUser.isEmpty()) {
+            surfaceMinENtryByUserValue = Integer.valueOf(surfaceMinENtryByUser);
+        } else {
+            surfaceMinENtryByUserValue = null;
+        }
+
+        if (!chambreENtryByUser.isEmpty()) {
+            chambreENtryByUserValue = Integer.valueOf(chambreENtryByUser);
+        } else {
+            chambreENtryByUserValue = null;
+        }
+
+        if (!pieceENtryByUser.isEmpty()) {
+            pieceENtryByUserValue = Integer.valueOf(pieceENtryByUser);
+        } else {
+            pieceENtryByUserValue = null;
+        }
+
+        if (!SDBENtryByUser.isEmpty()) {
+            SDBENtryByUserValue = Integer.valueOf(SDBENtryByUser);
+        } else {
+            SDBENtryByUserValue = null;
+        }
+
+
+        if (!townENtryByUser.isEmpty()) {
+            townENtryByUserValue = townENtryByUser;
+        } else {
+            townENtryByUserValue = null;
+        }
+
+        if (positionSwitch == 2) {
+            binear = true;
+        }
+        if (positionSwitch == 3) {
+            binear = false;
+        }
+
+    }
+
     private void iniatiateAndActivateSwitch() {
-        switchVendu = findViewById(R.id.search_switch_vendu);
+        Switch switchVendu = findViewById(R.id.search_switch_vendu);
         switchVendu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -218,7 +343,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void initiateAndActivateDateButton() {
-        btnDate = findViewById(R.id.search_btn_date);
+        Button btnDate = findViewById(R.id.search_btn_date);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,7 +354,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void initiateAndActivateDateSellButton() {
-        btnDateSell = findViewById(R.id.search_btn_date_Sell);
+        Button btnDateSell = findViewById(R.id.search_btn_date_Sell);
         btnDateSell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,8 +370,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, day);
-        dateActuelle = DateFormat.getDateInstance().format(c.getTime());
-        date = Utils.getDateFormat(SearchActivity.this, c);
+        String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String date = formatter.format(c.getTime());
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);
@@ -256,14 +382,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-
     private void deployeChipes() {
         final List<Chip> ChipesContainer = initiateChipesNearby();
         final List<Chip> ChipesContainer2 = initiateChipesType();
         resultsValidatedByUserForNearBy = activateChip(ChipesContainer);
         resultsValidatedByUserForTypes = activateChip(ChipesContainer2);
     }
-
 
     private void deployeSpinner() {
         initiateSpinner();
@@ -277,7 +401,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         spinnersell.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                resultsValidatedByUserForSell = adapterView.getSelectedItem().toString();
+                adapterView.getSelectedItem();
                 switch (i) {
                     case 0:
                         positionSwitch = 0;
@@ -318,7 +442,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         spinerPhoto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                resultsValidatedByUserForPhotos=adapterView.getSelectedItem().toString();
+                resultsValidatedByUserForPhotos = adapterView.getSelectedItem().toString();
             }
 
             @Override
@@ -328,11 +452,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void putDataOnSpinnerSell() {
-        List<String> categories = new ArrayList<String>();
-        categories.add(getString(R.string.both));
-        categories.add(getString(R.string.Available));
-        categories.add(getString(R.string.selledstate));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        String[] spinnerCAseType;
+        spinnerCAseType = getResources().getStringArray(R.array.SellorNot);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerCAseType);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnersell.setAdapter(dataAdapter);
     }
@@ -379,11 +501,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private List<Chip> initiateChipesType() {
         final List<Chip> ChipesContainer = new ArrayList<>();
-        cAp = findViewById(R.id.search_check_appartement);
-        cAttic = findViewById(R.id.search_check_attic);
-        cHouse = findViewById(R.id.search_check_house);
-        cLoft = findViewById(R.id.search_check_loft);
-        cOthers = findViewById(R.id.search_other);
+        Chip cAp = findViewById(R.id.search_check_appartement);
+        Chip cAttic = findViewById(R.id.search_check_attic);
+        Chip cHouse = findViewById(R.id.search_check_house);
+        Chip cLoft = findViewById(R.id.search_check_loft);
+        Chip cOthers = findViewById(R.id.search_other);
         ChipesContainer.add(cAp);
         ChipesContainer.add(cAttic);
         ChipesContainer.add(cHouse);
@@ -419,29 +541,39 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void compareListAll() {
         for (int i = 0; i < listRealEstate.size(); i++) {
-            deleteSDBIfResultMatch(i);
-            deletePieceIfResultMatch(i);
-            deleteChambreIfResultMatch(i);
-            deletePriceMinIfResultMatch(i);
-            deletePriceMaxIfResultMatch(i);
-            deleteSurfaceMinIfResultMatch(i);
-            deleteSurfaceMaxIfResultMatch(i);
-            deleteNumberPhotosByIfResultMatch(i);
-            deleteNearByIfResultMatch(i);
+            //     deleteSDBIfResultMatch(i);
+            //     deletePieceIfResultMatch(i);
+            //     deleteChambreIfResultMatch(i);
+            //     deletePriceMinIfResultMatch(i);
+            //     deletePriceMaxIfResultMatch(i);
+            //     deleteSurfaceMinIfResultMatch(i);
+            //     deleteSurfaceMaxIfResultMatch(i);
+            //      deleteNumberPhotosByIfResultMatch(i);
+            //      deleteNearByIfResultMatch(i);
+            deleteTypeByIfResultMatch(i);
             deleteDateEntryIfResultMatch(i);
             deleteDateSelledIfResultMatch(i);
-            deleteTypeByIfResultMatch(i);
             deleteifsimplyselled(i);
             deleteifsimplyNotselled(i);
-            deleteAgentByIfResultMatch(i);
-            deleteTownIfResultMatch(i);
+            //     deleteAgentByIfResultMatch(i);
+            //     deleteTownIfResultMatch(i);
         }
-        deployRecyclerView();
+
+        //deployRecyclerView();
+        //goToNextResultActivity(resultResearchRealEstates);
+    }
+
+    private void goToNextResultActivity(List<RealEstate> resultResearchRealEstates) {
+        Intent intent = new Intent(this, ResultsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("RealEstate", (Serializable) resultResearchRealEstates);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void deleteDateEntryIfResultMatch(int i) {
         try {
-            SimpleDateFormat sdf    = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date dateEntryByUSer = sdf.parse(eMarket.getText().toString().replace("/", "-"));
             Date dateRealEstate = sdf.parse(listRealEstate.get(i).getMarket().replace("/", "-"));
             if ((dateRealEstate.compareTo(dateEntryByUSer) < 0)) {
@@ -454,7 +586,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteDateSelledIfResultMatch(int i) {
         try {
-
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date dateEntryByUSer = sdf.parse(edit_ontheSell.getText().toString().replace("/", "-"));
             Date dateRealEstate = sdf.parse(listRealEstate.get(i).getSelled().replace("/", "-"));
@@ -466,20 +597,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-    private void deleteNearByIfResultMatch(int i) {
-
-        if (resultsValidatedByUserForNearBy != null && resultsValidatedByUserForNearBy.size() != 0 && !listRealEstate.isEmpty()) {
-            if (!listRealEstate.get(i).getNearby().containsAll(resultsValidatedByUserForNearBy)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-            if (cNone.isChecked()) {
-                if (listRealEstate.get(i).getNearby().size() == 0) {
-                    resultResearchRealEstate.remove(listRealEstate.get(i));
-                }
-            }
-        }
-
-    }
 
     private void deleteTypeByIfResultMatch(int i) {
         if (resultsValidatedByUserForTypes != null && resultsValidatedByUserForTypes.size() != 0 && !listRealEstate.isEmpty()) {
@@ -489,13 +606,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-    private void deleteNumberPhotosByIfResultMatch(int i) {
-            if (resultsValidatedByUserForPhotos!= null && !listRealEstate.isEmpty()) {
-                if (listRealEstate.get(i).getPhotosReal().size() < Integer.valueOf(resultsValidatedByUserForPhotos)) {
-                    resultResearchRealEstate.remove(listRealEstate.get(i));
-                }
-        }
-    }
 
     private void deleteAgentByIfResultMatch(int i) {
         if (resultsValidatedByUserForAgent != null && !listRealEstate.isEmpty()) {
@@ -507,9 +617,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deletePriceMinIfResultMatch(int i) {
         String priceMaxEntryByUser = globalResultEstate.get("PrixMax");
-        String priceOfMyList = listRealEstate.get(i).getPrix();
+        int priceOfMyList = listRealEstate.get(i).getPrix();
         if ((priceMaxEntryByUser != null && !priceMaxEntryByUser.isEmpty())) {
-            if ((Integer.valueOf(priceMaxEntryByUser) < Integer.valueOf(priceOfMyList))) {
+            if ((Integer.valueOf(priceMaxEntryByUser) < priceOfMyList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -518,9 +628,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void deletePriceMaxIfResultMatch(int i) {
 
         String priceMinENtryByUser = globalResultEstate.get("PrixMin");
-        String priceEstateList = listRealEstate.get(i).getPrix();
+        int priceEstateList = listRealEstate.get(i).getPrix();
         if ((priceMinENtryByUser != null && !priceMinENtryByUser.isEmpty())) {
-            if ((Integer.valueOf(priceMinENtryByUser) > Integer.valueOf(priceEstateList))) {
+            if ((Integer.valueOf(priceMinENtryByUser) > priceEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -528,9 +638,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteSurfaceMaxIfResultMatch(int i) {
         String surfaceMaxEntryByUSer = globalResultEstate.get("SurfaceMax");
-        String surfaceEstateList = listRealEstate.get(i).getSurface();
+        int surfaceEstateList = listRealEstate.get(i).getSurface();
         if ((surfaceMaxEntryByUSer != null && !surfaceMaxEntryByUSer.isEmpty())) {
-            if ((Integer.valueOf(surfaceMaxEntryByUSer) < Integer.valueOf(surfaceEstateList))) {
+            if ((Integer.valueOf(surfaceMaxEntryByUSer) < surfaceEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -538,9 +648,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteSurfaceMinIfResultMatch(int i) {
         String surfaceMinEntryByUser = globalResultEstate.get("SurfaceMin");
-        String surfaceEstateList = listRealEstate.get(i).getSurface();
+        int surfaceEstateList = listRealEstate.get(i).getSurface();
         if ((surfaceMinEntryByUser != null && !surfaceMinEntryByUser.isEmpty())) {
-            if ((Integer.valueOf(surfaceMinEntryByUser) > Integer.valueOf(surfaceEstateList))) {
+            if ((Integer.valueOf(surfaceMinEntryByUser) > surfaceEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -548,9 +658,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteChambreIfResultMatch(int i) {
         String chambreEntryByUser = globalResultEstate.get("Chambre");
-        String chambreEstateList = listRealEstate.get(i).getChambre();
+        int chambreEstateList = listRealEstate.get(i).getChambre();
         if (chambreEntryByUser != null && !chambreEntryByUser.isEmpty()) {
-            if ((Integer.valueOf(chambreEntryByUser) >= Integer.valueOf(chambreEstateList))) {
+            if ((Integer.valueOf(chambreEntryByUser) >= chambreEstateList)) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -558,9 +668,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deletePieceIfResultMatch(int i) {
         String pieceEntryByUser = globalResultEstate.get("Piece");
-        String pieceEstateList = listRealEstate.get(i).getPiece();
+        int pieceEstateList = listRealEstate.get(i).getPiece();
         if (pieceEntryByUser != null && !pieceEntryByUser.isEmpty()) {
-            if (Integer.valueOf(pieceEntryByUser) >= Integer.valueOf(pieceEstateList)) {
+            if (Integer.valueOf(pieceEntryByUser) >= pieceEstateList) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -568,9 +678,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void deleteSDBIfResultMatch(int i) {
         String sdbEntryByUser = globalResultEstate.get("SDB");
-        String sdbEstateList = listRealEstate.get(i).getSdb();
+        int sdbEstateList = listRealEstate.get(i).getSdb();
         if (sdbEntryByUser != null && !sdbEntryByUser.isEmpty()) {
-            if (Integer.valueOf(sdbEntryByUser) >= Integer.valueOf(sdbEstateList)) {
+            if (Integer.valueOf(sdbEntryByUser) >= sdbEstateList) {
                 resultResearchRealEstate.remove(listRealEstate.get(i));
             }
         }
@@ -631,6 +741,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         eSdb.getEditText().setText(savedInstanceState.getString("sdb"));
         eSurface.getEditText().setText(savedInstanceState.getString("surfacemin"));
         eSurfaceMax.getEditText().setText(savedInstanceState.getString("surfacemax"));
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reset();
     }
 }

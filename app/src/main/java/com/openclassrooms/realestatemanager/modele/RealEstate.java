@@ -2,40 +2,38 @@ package com.openclassrooms.realestatemanager.modele;
 
 import android.content.ContentValues;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Entity(tableName = "bdd")
 public class RealEstate implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
+
+    @ColumnInfo(name = "id")
     private int id;
+
     private String type;
     private String adresse;
-    private String postal;
+    private Integer postal;
     private String town;
     private String description;
     private String nomAgent;
 
-    @TypeConverters(Converters.class)
-    private List<String> descriptionImage;
-
-    @TypeConverters(Converters.class)
-    private List<String> nearby;
-    private String chambre;
-    private String piece;
-    private String sdb;
-    private String surface;
+    private Integer chambre;
+    private Integer piece;
+    private Integer sdb;
+    private Integer surface;
     private String market;
-    private String prix;
+    private Integer prix;
 
-    @TypeConverters(Converters.class)
-    private List<String> photosReal;
     private String ischecked;
     private Double lattitude;
     private Double longitude;
@@ -45,24 +43,17 @@ public class RealEstate implements Serializable {
     private String tempInsert = "false";
     private String tempUpdate = "false";
 
-    @TypeConverters(Converters.class)
-    private List<String> urlFireBase;
-
-    @TypeConverters(Converters.class)
-    private List<String> link;
-
 
     public RealEstate() {
     }
 
-    public RealEstate(String inEuro, String ischecked, String type, String nomAgent, List<String> nearby, String adresse, String chambre, String description, String market, String postal, String piece, String prix, String sdb, String surface, String town, String selled, Double latitude, Double longitude, String url, List<String> photosReal, List<String> descriptionImage) {
+    public RealEstate(String inEuro, String ischecked, String type, String nomAgent, String adresse, Integer chambre, String description, String market, Integer postal, Integer piece, Integer prix, Integer sdb, Integer surface, String town, String selled, Double latitude, Double longitude, String url) {
         this.type = type;
         this.adresse = adresse;
         this.postal = postal;
         this.town = town;
         this.description = description;
         this.nomAgent = nomAgent;
-        this.nearby = nearby;
         this.chambre = chambre;
         this.piece = piece;
         this.sdb = sdb;
@@ -73,10 +64,8 @@ public class RealEstate implements Serializable {
         this.lattitude = latitude;
         this.longitude = longitude;
         this.url = url;
-        this.photosReal = photosReal;
         this.inEuro = inEuro;
         this.selled = selled;
-        this.descriptionImage = descriptionImage;
     }
 
     public static RealEstate fromContentValues(ContentValues contentValues) {
@@ -99,20 +88,17 @@ public class RealEstate implements Serializable {
         if (contentValues.containsKey("nomAgent")) {
             estate.setNomAgent(contentValues.getAsString("nomAgent"));
         }
-        if (contentValues.containsKey("nearby")) {
-            estate.setNearby(Collections.singletonList(contentValues.getAsString("nearby")));
-        }
         if (contentValues.containsKey("chambre")) {
-            estate.setChambre(contentValues.getAsString("chambre"));
+            estate.setChambre(contentValues.getAsInteger("chambre"));
         }
         if (contentValues.containsKey("piece")) {
-            estate.setPiece(contentValues.getAsString("piece"));
+            estate.setPiece(contentValues.getAsInteger("piece"));
         }
         if (contentValues.containsKey("sdb")) {
-            estate.setSdb(contentValues.getAsString("sdb"));
+            estate.setSdb(contentValues.getAsInteger("sdb"));
         }
         if (contentValues.containsKey("surface")) {
-            estate.setSurface(contentValues.getAsString("surface"));
+            estate.setSurface(contentValues.getAsInteger("surface"));
         }
         if (contentValues.containsKey("market")) {
             estate.setMarket(contentValues.getAsString("market"));
@@ -121,10 +107,7 @@ public class RealEstate implements Serializable {
             estate.setMarket(contentValues.getAsString("selled"));
         }
         if (contentValues.containsKey("prix")) {
-            estate.setPrix(contentValues.getAsString("prix"));
-        }
-        if (contentValues.containsKey("photosReal")) {
-            estate.setPhotosReal(Collections.singletonList(contentValues.getAsString("photosReal")));
+            estate.setPrix(contentValues.getAsInteger("prix"));
         }
         if (contentValues.containsKey("ischecked")) {
             estate.setIschecked((contentValues.getAsString("ischecked")));
@@ -139,7 +122,7 @@ public class RealEstate implements Serializable {
             estate.setMarket(contentValues.getAsString("url"));
         }
         if (contentValues.containsKey("inEuro")) {
-            estate.setPrix(contentValues.getAsString("inEuro"));
+            estate.setInEuro(contentValues.getAsString("inEuro"));
         }
         return estate;
 
@@ -153,29 +136,6 @@ public class RealEstate implements Serializable {
         this.tempUpdate = tempUpdate;
     }
 
-    public List<String> getLink() {
-        return link;
-    }
-
-    public void setLink(List<String> link) {
-        this.link = link;
-    }
-
-    public List<String> getUrlFireBase() {
-        return urlFireBase;
-    }
-
-    public void setUrlFireBase(List<String> urlFireBase) {
-        this.urlFireBase = urlFireBase;
-    }
-
-    public List<String> getDescriptionImage() {
-        return descriptionImage;
-    }
-
-    public void setDescriptionImage(List<String> descriptionImage) {
-        this.descriptionImage = descriptionImage;
-    }
 
     public String getSelled() {
         return selled;
@@ -185,13 +145,6 @@ public class RealEstate implements Serializable {
         this.selled = selled;
     }
 
-    public List<String> getPhotosReal() {
-        return photosReal;
-    }
-
-    public void setPhotosReal(List<String> photosReal) {
-        this.photosReal = photosReal;
-    }
 
     public String getInEuro() {
         return inEuro;
@@ -257,11 +210,11 @@ public class RealEstate implements Serializable {
         this.market = market;
     }
 
-    public String getPrix() {
+    public Integer getPrix() {
         return prix;
     }
 
-    public void setPrix(String prix) {
+    public void setPrix(Integer prix) {
         this.prix = prix;
     }
 
@@ -289,11 +242,11 @@ public class RealEstate implements Serializable {
         this.adresse = adresse;
     }
 
-    public String getPostal() {
+    public Integer getPostal() {
         return postal;
     }
 
-    public void setPostal(String postal) {
+    public void setPostal(Integer postal) {
         this.postal = postal;
     }
 
@@ -313,43 +266,35 @@ public class RealEstate implements Serializable {
         this.description = description;
     }
 
-    public List<String> getNearby() {
-        return nearby;
-    }
-
-    public void setNearby(List<String> nearby) {
-        this.nearby = nearby;
-    }
-
-    public String getChambre() {
+    public Integer getChambre() {
         return chambre;
     }
 
-    public void setChambre(String chambre) {
+    public void setChambre(Integer chambre) {
         this.chambre = chambre;
     }
 
-    public String getPiece() {
+    public Integer getPiece() {
         return piece;
     }
 
-    public void setPiece(String piece) {
+    public void setPiece(Integer piece) {
         this.piece = piece;
     }
 
-    public String getSdb() {
+    public Integer getSdb() {
         return sdb;
     }
 
-    public void setSdb(String sdb) {
+    public void setSdb(Integer sdb) {
         this.sdb = sdb;
     }
 
-    public String getSurface() {
+    public Integer getSurface() {
         return surface;
     }
 
-    public void setSurface(String surface) {
+    public void setSurface(Integer surface) {
         this.surface = surface;
     }
 }

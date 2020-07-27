@@ -1,28 +1,28 @@
 package com.openclassrooms.realestatemanager.Api;
 
-import android.content.ContentValues;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
+import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.utils.EstateDao;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
-import com.openclassrooms.realestatemanager.utils.EstateDao_Impl;
+import com.openclassrooms.realestatemanager.utils.ImageDao;
 
-@Database(entities = {RealEstate.class}, version = 18, exportSchema = false )
+@Database(entities = {RealEstate.class, ImagesRealEstate.class, NearbyEstate.class}, version = 42, exportSchema = false )
 public abstract class DataBaseSQL extends RoomDatabase {
-    private static  DataBaseSQL instance;
+    private static volatile DataBaseSQL instance;
     public abstract EstateDao estateDao();
+    public abstract ImageDao imageDao();
+    public abstract NearbyDao nearbyDao();
 
     public static synchronized DataBaseSQL getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    DataBaseSQL.class, "bdd")
+                    DataBaseSQL.class, "bdd.db")
                     .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .build();

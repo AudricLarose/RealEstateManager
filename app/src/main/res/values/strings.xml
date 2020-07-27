@@ -1,23 +1,27 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
+
     <string-array name="Spinner_items">
-    <item>Appartement</item>
-    <item>Maison</item>
-    <item>Loft</item>
-    <item>Garage</item>
-    <item>Autres</item>
-</string-array>
+        <item>Appartement</item>
+        <item>Maison</item>
+        <item>Loft</item>
+        <item>Garage</item>
+        <item>Autres</item>
+    </string-array>
+
     <string-array name="Spinner_photos">
         <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
+
     <string-array name="SellorNot">
         <item>Both</item>
         <item>Available</item>
         <item>Selled</item>
     </string-array>
+
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC_WkswyFXkxGjNsC4Ie_zoMbA5WuiRR68</string>
     <string name="title_item_list" translatable="false">Items</string>
     <string name="title_item_detail" translatable="false">Item Detail</string>
@@ -101,4 +105,6 @@
     <string name="providerinternet">Vous devez etre connecté a Internet pour profiter de la carte</string>
     <string name="gpssetting">I set My GPS</string>
     <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">Vous devez allumer votre option GPS pour beneficier de toutes les fonctionnalitées de la carte</string>
+    <string name="map">carte</string>
+    <string name="dateselll">date</string>
 </resources>
