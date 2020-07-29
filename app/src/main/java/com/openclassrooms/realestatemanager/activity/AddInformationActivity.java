@@ -310,9 +310,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, day);
-        String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String date = formatter.format(c.getTime());
+        String date =Utils.getDateFormat(this,c);
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);
@@ -500,8 +498,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private void getTimeIfDateIsEmpty(TextView bloc) {
         if (bloc.getText().toString().trim().isEmpty() || bloc.getText().toString().contains("date")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String date = formatter.format(Calendar.getInstance().getTimeInMillis());
+            String date = Utils.getDateFormat(this,Calendar.getInstance());
             bloc.setText(date);
         }
     }
@@ -562,9 +559,15 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private RealEstate generateEstateObject() {
+        String selledEstated;
+        if (isItChecked){
+            selledEstated=Utils.reformatDate(globalResultEstate.get("dateSell"));
+        } else {
+            selledEstated=globalResultEstate.get("dateSell");
+        }
         estate = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), globalResultEstate.get("Adresse"),
-                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), globalResultEstate.get("date"), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
-                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url);
+                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), Utils.reformatDate(globalResultEstate.get("date")), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
+                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), selledEstated, lattitudeRealEState, longitudeRealEState, url);
         estate.setId(estate.hashCode());
         return estate;
     }
@@ -781,8 +784,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         saveEntryEditText();
         resultsValidatedByUser = activateChipCase(ChipesContainer);
         RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), globalResultEstate.get("Adresse"),
-                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), globalResultEstate.get("date"), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
-                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), globalResultEstate.get("dateSell"), lattitudeRealEState, longitudeRealEState, url);
+                Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), Utils.reformatDate(globalResultEstate.get("date")), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
+                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), Utils.reformatDate(globalResultEstate.get("dateSell")), lattitudeRealEState, longitudeRealEState, url);
         estateNew.setId(estate.getId());
         updateSQLite(estateNew);
         return estateNew;

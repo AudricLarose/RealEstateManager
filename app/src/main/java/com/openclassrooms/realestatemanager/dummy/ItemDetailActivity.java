@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.activity.MainActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;

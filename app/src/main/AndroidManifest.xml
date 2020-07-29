@@ -23,7 +23,7 @@
         android:theme="@style/AppTheme.PopupOverlay">
         <activity android:name=".activity.ResultsActivity"></activity>
         <activity
-            android:name=".dummy.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/title_item_list"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -38,11 +38,11 @@
         <activity
             android:name=".dummy.ItemDetailActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".dummy.MainActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.openclassrooms.realestatemanager.dummy.MainActivity" />
+                android:value="com.openclassrooms.realestatemanager.activity.MainActivity" />
         </activity>
         <activity android:name=".activity.SearchActivity" />
 

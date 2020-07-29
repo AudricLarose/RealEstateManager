@@ -12,6 +12,7 @@ import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.activity.MainActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

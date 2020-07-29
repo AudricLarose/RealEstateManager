@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,21 +20,18 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
 import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
-import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
-import com.openclassrooms.realestatemanager.dummy.MainActivity;
 import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -47,6 +43,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.internal.Util;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     List<TextInputLayout> editTextContainer = new ArrayList<>();
@@ -73,7 +71,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private List<String> globaleResulforCompare = new ArrayList<>();
     private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     private String resultsValidatedByUserForPhotos;
-    private String resultsValidatedByUserForAgent;
+    private String resultsValidatedByUserForAgent="";
     private List<String> resultsValidatedByUserForTypes;
     private int positionSwitch;
     private DataBaseSQL database = DataBaseSQL.getInstance(this);
@@ -126,7 +124,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void deploySwitch() {
-        Switch search_switch_vendu = findViewById(R.id.search_switch_vendu);
+        findViewById(R.id.search_switch_vendu);
     }
 
     private List<TextInputLayout> initiateEditText() {
@@ -185,7 +183,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void reset() {
-
         resultResearchRealEstate.clear();
         resultResearchRealEstate.addAll(listRealEstate);
     }
@@ -212,8 +209,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void addTimebyDefault() {
         if (eMarket.getText().toString().trim().isEmpty() || eMarket.getText().toString().contains("date")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String date = formatter.format(Calendar.getInstance().getTimeInMillis());
+            String date = Utils.getDateFormat(this,Calendar.getInstance());
             eMarket.setText(date);
         }
 
@@ -221,8 +217,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
 
     private void caseIfListsAreEmpty() {
-        List<String> type = new ArrayList<>();
-        String datef = edit_ontheSell.getText().toString();
+
         String choice=null;
         if (binear != null) {
              choice = binear.toString();
@@ -230,11 +225,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             choice = null;
         }
 
-
-        if (resultsValidatedByUserForNearBy.isEmpty()) {
-            if (resultsValidatedByUserForTypes.isEmpty()) {
+        if (resultsValidatedByUserForNearBy.size()==0) {
+            if ((resultsValidatedByUserForTypes.size()==0)) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarket.getText().toString());
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, Utils.reformatDate(eMarket.getText().toString()));
                 resultResearchSQL(datalist);
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
@@ -242,7 +236,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                 resultResearchSQL(datalist);
             }
         } else {
-            if (resultsValidatedByUserForTypes.isEmpty()) {
+            if (resultsValidatedByUserForTypes.size()==0) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
                         surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarket.getText().toString(), resultsValidatedByUserForNearBy);
                 resultResearchSQL(datalist);
@@ -254,27 +248,29 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
-    private void resultResearchSQL(LiveData<List<RealEstate>> datalist) {
+    private void resultResearchSQL(final LiveData<List<RealEstate>> datalist) {
+        List<String> datas=new ArrayList<>();
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
                 if (edit_ontheSell.getText() != null && !edit_ontheSell.getText().toString().trim().isEmpty() && !edit_ontheSell.getText().toString().equals("Date")) {
-                    LiveData<List<RealEstate>> realEstateListReal = database.estateDao().selectAllEstateSortediselled(edit_ontheSell.getText().toString());
+                    LiveData<List<RealEstate>> realEstateListReal = database.estateDao().selectAllEstateSortediselled(Utils.reformatDate(edit_ontheSell.getText().toString()));
                     realEstateListReal.observe(SearchActivity.this, new Observer<List<RealEstate>>() {
                         @Override
                         public void onChanged(List<RealEstate> realEstates) {
                             goToNextResultActivity(realEstates);
+                            datalist.removeObservers(SearchActivity.this);
                         }
                     });
                 } else {
                     goToNextResultActivity(realEstateList);
+                    datalist.removeObservers(SearchActivity.this);
                 }
             }
         });
     }
 
     private void nulifyvalues() {
-
         String priceMinENtryByUser = globalResultEstate.get("PrixMin");
         String priceMaxENtryByUser = globalResultEstate.get("PrixMax");
         String surfaceMaxENtryByUser = globalResultEstate.get("SurfaceMax");
@@ -391,7 +387,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         c.set(Calendar.DAY_OF_MONTH, day);
         String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String date = formatter.format(c.getTime());
+        String date = Utils.getDateFormat(this,Calendar.getInstance());
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.dummy.MainActivity;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.openclassrooms.realestatemanager.utils.Adaptateur;
 

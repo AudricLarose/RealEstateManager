@@ -35,26 +35,26 @@ public abstract class EstateDao {
     @Query("DELETE FROM bdd")
     public abstract void DeleteAllEstate();
 
-    @Query("SELECT DISTINCT * FROM bdd " +
-            "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
-            " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
+    @Query("SELECT DISTINCT bdd.*, bddTable.idEstate, bddTable.image,bddTable.descriptionImage,bddTable.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
+            "LEFT OUTER JOIN bddtable ON  bdd.id= bddTable.idEstate" +
+            " LEFT OUTER JOIN bddNearby ON bdd.id=bddNearby.idEstate " +
             "where  (bdd.town like COALESCE(:town, town))" +
             "AND (bdd.prix BETWEEN COALESCE(:minPrice, 0) AND COALESCE(:maxPrice, 100000000000))" +
             "AND (bdd.surface BETWEEN COALESCE(:minSurface, 0) AND COALESCE(:maxSurface, 10000000))" +
             "AND (bdd.chambre >= COALESCE(:minNbRoom, 0)) " +
             "AND (bdd.piece >= COALESCE(:minNbBedrooms, 0)) " +
-            "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
+            "AND (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
             "AND (bdd.selled like COALESCE(:binear, selled ))" +
-            "AND     strftime('%s', market) BETWEEN strftime('%s', :date) AND  '2060-01-20'"
-
+            "AND strftime('%s', market) BETWEEN strftime('%s', :date) AND  '2060-01-20'" +
+            " GROUP BY bdd.id "
     )
 
     public abstract LiveData<List<RealEstate>> selectAllEstateSorted(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                      Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String date);
 
-    @Query("SELECT DISTINCT * FROM bdd " +
+    @Query("SELECT DISTINCT bdd.*, bddTable.idEstate, bddTable.image,bddTable.descriptionImage,bddTable.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where  (bdd.town like COALESCE(:town, town))" +
@@ -67,38 +67,20 @@ public abstract class EstateDao {
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
             "AND (bdd.selled like COALESCE(:binear, selled ))" +
             "AND strftime('%s', market) >= strftime('%s', :start_date)" +
-            "AND (nearby IN (:listnearby))"
-
+            "AND (nearby IN (:listnearby))" +
+            " GROUP BY bdd.id "
     )
 
     public abstract LiveData<List<RealEstate>> selectAllEstateSortedListNEarby(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                                Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listnearby);
 
-    @Query("SELECT DISTINCT * FROM bdd " +
+    @Query("SELECT DISTINCT bdd.*, bddTable.idEstate, bddTable.image,bddTable.descriptionImage,bddTable.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where strftime('%s', selled)BETWEEN COALESCE(strftime('%s', :datef),'1999-01-01')AND '2060-01-20'")
     public abstract LiveData<List<RealEstate>> selectAllEstateSortediselled(String datef);
 
-    @Query("SELECT DISTINCT * FROM bdd " +
-            "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
-            " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
-            "where  (bdd.town like COALESCE(:town, town))" +
-            "AND (bdd.prix BETWEEN COALESCE(:minPrice, 0) AND COALESCE(:maxPrice, 100000000000))" +
-            "AND (bdd.surface BETWEEN COALESCE(:minSurface, 0) AND COALESCE(:maxSurface, 10000000))" +
-            "AND (bdd.chambre >= COALESCE(:minNbRoom, 0)) " +
-            "AND (bdd.piece >= COALESCE(:minNbBedrooms, 0)) " +
-            "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
-            "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
-            "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.selled like COALESCE(:binear, selled ))" +
-            "AND strftime('%s', market) >= strftime('%s', :start_date)" +
-            "AND (type IN (:listType))" )
-
-    public abstract LiveData<List<RealEstate>> selectAllEstateSortedListType(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
-                                                                             Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listType);
-
-    @Query("SELECT DISTINCT * FROM bdd " +
+    @Query("SELECT DISTINCT bdd.*, bddTable.idEstate, bddTable.image,bddTable.descriptionImage,bddTable.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where  (bdd.town like COALESCE(:town, town))" +
@@ -112,7 +94,27 @@ public abstract class EstateDao {
             "AND (bdd.selled like COALESCE(:binear, selled ))" +
             "AND strftime('%s', market) >= strftime('%s', :start_date)" +
             "AND (type IN (:listType))" +
-            "AND (nearby IN (:listNearby))")
+            " GROUP BY bdd.id " )
+
+    public abstract LiveData<List<RealEstate>> selectAllEstateSortedListType(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
+                                                                             Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listType);
+
+    @Query("SELECT DISTINCT bdd.*, bddTable.idEstate, bddTable.image,bddTable.descriptionImage,bddTable.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
+            "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
+            " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
+            "where  (bdd.town like COALESCE(:town, town))" +
+            "AND (bdd.prix BETWEEN COALESCE(:minPrice, 0) AND COALESCE(:maxPrice, 100000000000))" +
+            "AND (bdd.surface BETWEEN COALESCE(:minSurface, 0) AND COALESCE(:maxSurface, 10000000))" +
+            "AND (bdd.chambre >= COALESCE(:minNbRoom, 0)) " +
+            "AND (bdd.piece >= COALESCE(:minNbBedrooms, 0)) " +
+            "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
+            "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
+            "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
+            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            "AND strftime('%s', market) >= strftime('%s', :start_date)" +
+            "AND (type IN (:listType))" +
+            "AND (nearby IN (:listNearby))" +
+            " GROUP BY bdd.id ")
 
     public abstract LiveData<List<RealEstate>> selectAllEstateSortedListTypeNEarbyToo(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                                       Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listType, List<String> listNearby);

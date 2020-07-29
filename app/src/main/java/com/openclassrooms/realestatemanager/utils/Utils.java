@@ -23,16 +23,13 @@ import android.widget.Toast;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -48,6 +45,7 @@ import com.openclassrooms.realestatemanager.modele.RealEstate;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -106,6 +104,46 @@ public class Utils {
     public static String getEuroFormat(int converted) {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.FRANCE);
         return format.format(converted);
+    }
+
+    public static String reformatDate(String oldDateString) {
+
+        final String OLD_FORMAT = "dd/MM/yyyy";
+        final String NEW_FORMAT = "yyyy/MM/dd";
+
+        String newDateString;
+
+        SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+        Date d = null;
+        try {
+            d = sdf.parse(oldDateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sdf.applyPattern(NEW_FORMAT);
+        newDateString = sdf.format(d);
+
+        return newDateString.replace("/", "-");
+    }
+
+    public static String reformatInverseDate(String oldDateString) {
+
+        final String OLD_FORMAT = "yyyy-MM-dd";
+        final String NEW_FORMAT = "dd/MM/yyyy";
+
+        String newDateString;
+
+        SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+        Date d = null;
+        try {
+            d = sdf.parse(oldDateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sdf.applyPattern(NEW_FORMAT);
+        newDateString = sdf.format(d);
+
+        return newDateString;
     }
 
     /**
@@ -273,60 +311,63 @@ public class Utils {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<RealEstate> listeRealEstate = servicePlace.getRealEstateList();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("realestate1")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        List<RealEstate> resultsBDD = null;
-                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
-                            resultsBDD = queryDocumentSnapshots.toObjects(RealEstate.class);
-                            callBackInterfaceForBDD.onFinishEstate(resultsBDD, e);
+        firebaseFirestore.collection("realestate1").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<RealEstate> resultsBDD = null;
+                if (task.getResult() != null && task.getResult().getDocuments().size() > 0) {
+                    resultsBDD = task.getResult().toObjects(RealEstate.class);
+                    callBackInterfaceForBDD.onFinishEstate(resultsBDD);
 
-                        } else {
-                            callBackInterfaceForBDD.onFail();
+                } else {
+                    callBackInterfaceForBDD.onFail();
 
-                        }
-                    }
-                });
+                }
+            }
+        });
     }
+
     public static void takeDataImageInBDD(final CallBackInterfaceForBDDImage callBackInterfaceForBDD) {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<ImagesRealEstate> listeRealEstate = servicePlace.getImageRealEstates();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate1")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        List<ImagesRealEstate> resultsBDD = null;
-                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
-                            resultsBDD = queryDocumentSnapshots.toObjects(ImagesRealEstate.class);
-                            callBackInterfaceForBDD.onFinishImage(resultsBDD, e);
-                        } else {
-                            callBackInterfaceForBDD.onFail();
+        firebaseFirestore.collection("imageEstate3").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<ImagesRealEstate> resultsBDD = null;
+                if (task.getResult() != null && task.getResult().getDocuments().size() > 0) {
+                    resultsBDD = task.getResult().toObjects(ImagesRealEstate.class);
+                    callBackInterfaceForBDD.onFinishImage(resultsBDD);
+                } else {
+                    callBackInterfaceForBDD.onFail();
 
-                        }
-                    }
-                });
+                }
+            }
+        });
     }
+
     public static void takeDataNEarbyInBDD(final CallBackInterfaceForBDDNearbu callBackInterfaceForBDD) {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<NearbyEstate> listeRealEstate = servicePlace.getNearbyEstates();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates2")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        List<NearbyEstate> resultsBDD = null;
-                            if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
-                                resultsBDD = queryDocumentSnapshots.toObjects(NearbyEstate.class);
-                                callBackInterfaceForBDD.onFinishNearby(resultsBDD, e);
-
-                            } else {
-                                callBackInterfaceForBDD.onFail();
-
-                            }
+        firebaseFirestore.collection("nearbyestates3").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<NearbyEstate> resultsBDD = null;
+                if (task != null && task.getResult().size() > 0) {
+                    try {
+                        resultsBDD = task.getResult().toObjects(NearbyEstate.class);
+                        callBackInterfaceForBDD.onFinishNearby(resultsBDD);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
-                });
+
+                } else {
+                    callBackInterfaceForBDD.onFail();
+
+                }
+            }
+        });
     }
 
     public static void sendItToMyBDDatRealEstate(RealEstate estate) {
@@ -388,7 +429,7 @@ public class Utils {
         note.put("linkFb", imagesRealEstate.getLinkFb());
         note.put("image", imagesRealEstate.getImage());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate1").document(String.valueOf(imagesRealEstate.getId())).set(note);
+        firebaseFirestore.collection("imageEstate3").document(String.valueOf(imagesRealEstate.getId())).set(note);
     }
 
     public static void upDateMyBDDImagePlease(ImagesRealEstate imagesRealEstate) {
@@ -399,7 +440,7 @@ public class Utils {
         note.put("linkFb", imagesRealEstate.getLinkFb());
         note.put("image", imagesRealEstate.getImage());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate1").document(String.valueOf(imagesRealEstate.getId())).update(note);
+        firebaseFirestore.collection("imageEstate3").document(String.valueOf(imagesRealEstate.getId())).update(note);
     }
 
     public static void sendMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
@@ -408,7 +449,7 @@ public class Utils {
         note.put("idEstate", nearbyEstate.getIdEstate());
         note.put("nearby", nearbyEstate.getNearby());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates2").document(String.valueOf(nearbyEstate.getId())).set(note);
+        firebaseFirestore.collection("nearbyestates3").document(String.valueOf(nearbyEstate.getId())).set(note);
     }
 
     public static void upDateMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
@@ -417,12 +458,12 @@ public class Utils {
         note.put("idEstate", nearbyEstate.getIdEstate());
         note.put("nearby", nearbyEstate.getNearby());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates2").document(String.valueOf(nearbyEstate.getId())).update(note);
+        firebaseFirestore.collection("nearbyestates3").document(String.valueOf(nearbyEstate.getId())).update(note);
     }
 
     public static List<String> uploadImage(final RealEstate estate, final List<String> imagesRealEstateList, final Context context, final CallBackImage callBackImage) throws Exception {
         final List<String> urlList = new ArrayList<>();
-        final DataBaseSQL dataBaseSQL= DataBaseSQL.getInstance(context);
+        final DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(context);
         final int[] count = {1};
         for (int i = 0; i < imagesRealEstateList.size(); i++) {
             final String[] url = {""};
@@ -465,16 +506,21 @@ public class Utils {
     }
 
     public interface CallBackInterfaceForBDD {
-        void onFinishEstate(List<RealEstate> realEstateList, FirebaseFirestoreException e);
+        void onFinishEstate(List<RealEstate> realEstateList);
+
         void onFail();
     }
+
     public interface CallBackInterfaceForBDDImage {
-        void onFinishImage(List<ImagesRealEstate> imagesRealEstateList, FirebaseFirestoreException e);
+        void onFinishImage(List<ImagesRealEstate> imagesRealEstateList);
+
         void onFail();
     }
+
     public interface CallBackInterfaceForBDDNearbu {
 
-        void onFinishNearby(List<NearbyEstate> nearbyEstateList, FirebaseFirestoreException e);
+        void onFinishNearby(List<NearbyEstate> nearbyEstateList);
+
         void onFail();
     }
 

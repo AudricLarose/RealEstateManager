@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.dummy;
+package com.openclassrooms.realestatemanager.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -26,14 +26,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
-import com.openclassrooms.realestatemanager.activity.MapsActivity;
-import com.openclassrooms.realestatemanager.activity.SearchActivity;
+import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
 import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
 import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
@@ -41,10 +38,7 @@ import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.utils.Utils.CallBackInterfaceForBDD;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -265,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     private void takeDataForNearby() {
         Utils.takeDataNEarbyInBDD(new Utils.CallBackInterfaceForBDDNearbu() {
             @Override
-            public void onFinishNearby(final List<NearbyEstate> nearbyEstateList, FirebaseFirestoreException e) {
+            public void onFinishNearby(final List<NearbyEstate> nearbyEstateList) {
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && nearbyEstateList.size() > 0) {
                     database.nearbyDao().DeleteAllNearby();
                     for (int i = 0; i < nearbyEstateList.size(); i++) {
@@ -286,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
     private void takeDataForImage() {
         Utils.takeDataImageInBDD(new Utils.CallBackInterfaceForBDDImage() {
             @Override
-            public void onFinishImage(List<ImagesRealEstate> imagesRealEstateList, FirebaseFirestoreException e) {
+            public void onFinishImage(List<ImagesRealEstate> imagesRealEstateList) {
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && imagesRealEstateList.size() > 0) {
                     database.imageDao().DeleteAllEstate();
                     for (int i = 0; i < imagesRealEstateList.size(); i++) {
@@ -306,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
     private void takeDataForEstates() {
         Utils.takeDataInBDD(new CallBackInterfaceForBDD() {
             @Override
-            public void onFinishEstate(List<RealEstate> realEstateList, FirebaseFirestoreException e) {
+            public void onFinishEstate(List<RealEstate> realEstateList) {
 
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && realEstateList.size() > 0) {
                     database.estateDao().DeleteAllEstate();
