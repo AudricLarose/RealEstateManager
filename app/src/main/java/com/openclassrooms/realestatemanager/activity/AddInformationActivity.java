@@ -783,9 +783,15 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private RealEstate modifyEstate() {
         saveEntryEditText();
         resultsValidatedByUser = activateChipCase(ChipesContainer);
+        String selledEstated;
+        if (isItChecked){
+            selledEstated=Utils.reformatDate(globalResultEstate.get("dateSell"));
+        } else {
+            selledEstated=globalResultEstate.get("dateSell");
+        }
         RealEstate estateNew = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), globalResultEstate.get("Adresse"),
                 Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), Utils.reformatDate(globalResultEstate.get("date")), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
-                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), Utils.reformatDate(globalResultEstate.get("dateSell")), lattitudeRealEState, longitudeRealEState, url);
+                , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), selledEstated, lattitudeRealEState, longitudeRealEState, url);
         estateNew.setId(estate.getId());
         updateSQLite(estateNew);
         return estateNew;

@@ -117,11 +117,13 @@ public class Utils {
         Date d = null;
         try {
             d = sdf.parse(oldDateString);
+            sdf.applyPattern(NEW_FORMAT);
+            newDateString = sdf.format(d);
         } catch (ParseException e) {
             e.printStackTrace();
+            newDateString=oldDateString;
         }
-        sdf.applyPattern(NEW_FORMAT);
-        newDateString = sdf.format(d);
+
 
         return newDateString.replace("/", "-");
     }
@@ -440,7 +442,7 @@ public class Utils {
         note.put("linkFb", imagesRealEstate.getLinkFb());
         note.put("image", imagesRealEstate.getImage());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("imageEstate3").document(String.valueOf(imagesRealEstate.getId())).update(note);
+        firebaseFirestore.collection("imageEstate3").document(String.valueOf(imagesRealEstate.getId())).set(note);
     }
 
     public static void sendMyBDDNearbyPlease(NearbyEstate nearbyEstate) {
@@ -458,7 +460,7 @@ public class Utils {
         note.put("idEstate", nearbyEstate.getIdEstate());
         note.put("nearby", nearbyEstate.getNearby());
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates3").document(String.valueOf(nearbyEstate.getId())).update(note);
+        firebaseFirestore.collection("nearbyestates3").document(String.valueOf(nearbyEstate.getId())).set(note);
     }
 
     public static List<String> uploadImage(final RealEstate estate, final List<String> imagesRealEstateList, final Context context, final CallBackImage callBackImage) throws Exception {
