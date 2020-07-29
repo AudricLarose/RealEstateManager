@@ -35,7 +35,7 @@ public abstract class EstateDao {
     @Query("DELETE FROM bdd")
     public abstract void DeleteAllEstate();
 
-    @Query("SELECT * FROM bdd " +
+    @Query("SELECT DISTINCT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where  (bdd.town like COALESCE(:town, town))" +
@@ -54,7 +54,7 @@ public abstract class EstateDao {
     public abstract LiveData<List<RealEstate>> selectAllEstateSorted(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                      Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String date);
 
-    @Query("SELECT * FROM bdd " +
+    @Query("SELECT DISTINCT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where  (bdd.town like COALESCE(:town, town))" +
@@ -74,13 +74,13 @@ public abstract class EstateDao {
     public abstract LiveData<List<RealEstate>> selectAllEstateSortedListNEarby(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                                Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listnearby);
 
-    @Query("SELECT * FROM bdd " +
+    @Query("SELECT DISTINCT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where strftime('%s', selled)BETWEEN COALESCE(strftime('%s', :datef),'1999-01-01')AND '2060-01-20'")
     public abstract LiveData<List<RealEstate>> selectAllEstateSortediselled(String datef);
 
-    @Query("SELECT * FROM bdd " +
+    @Query("SELECT DISTINCT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where  (bdd.town like COALESCE(:town, town))" +
@@ -98,7 +98,7 @@ public abstract class EstateDao {
     public abstract LiveData<List<RealEstate>> selectAllEstateSortedListType(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                              Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listType);
 
-    @Query("SELECT * FROM bdd " +
+    @Query("SELECT DISTINCT * FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where  (bdd.town like COALESCE(:town, town))" +

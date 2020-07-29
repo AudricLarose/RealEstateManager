@@ -500,7 +500,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private void getTimeIfDateIsEmpty(TextView bloc) {
         if (bloc.getText().toString().trim().isEmpty() || bloc.getText().toString().contains("date")) {
-            bloc.setText(Utils.getDateFormat(AddInformationActivity.this, Calendar.getInstance()));
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String date = formatter.format(Calendar.getInstance().getTimeInMillis());
+            bloc.setText(date);
         }
     }
 
@@ -741,17 +743,22 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                         nearbyEstate.setId(nearbyEstate.hashCode());
                         Utils.upDateMyBDDNearbyPlease(nearbyEstate);
                     }
-                    try {
-                        Utils.uploadImage(modifyEstate(), listPhotoRealistetate, AddInformationActivity.this, new Utils.CallBackImage() {
-                            @Override
-                            public void onFinish(List<String> s) {
-                                link.addAll(s);
-                                redirectToDetailsActivity(modifyEstate());
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if ( listPhotoRealistetate.size()>0) {
+                        try {
+                            Utils.uploadImage(modifyEstate(), listPhotoRealistetate, AddInformationActivity.this, new Utils.CallBackImage() {
+                                @Override
+                                public void onFinish(List<String> s) {
+                                    link.addAll(s);
+                                    redirectToDetailsActivity(modifyEstate());
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        redirectToDetailsActivity(modifyEstate());
                     }
+
                 } else {
                     saveInTempUpdateIfNoInternet(estateForModifier);
                     updateSQLite(estateForModifier);

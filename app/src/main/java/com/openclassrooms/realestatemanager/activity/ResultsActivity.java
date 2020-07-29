@@ -67,6 +67,7 @@ public class ResultsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.icone_check:
                 goToMainActivity();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

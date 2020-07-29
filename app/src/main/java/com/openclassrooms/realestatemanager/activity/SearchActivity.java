@@ -105,12 +105,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     }
 
-    private void deployDAteMarket() {
-        if (eMarket.getText().toString().isEmpty()){
-            addTimebyDefault();
-        }
-    }
-
     private void initialiseListRealEstate() {
         resultResearchRealEstate.clear();
         resultResearchRealEstate.addAll(listRealEstate);
@@ -191,6 +185,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void reset() {
+
         resultResearchRealEstate.clear();
         resultResearchRealEstate.addAll(listRealEstate);
     }
@@ -771,5 +766,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     protected void onResume() {
         super.onResume();
         reset();
+        resultsValidatedByUserForAgent="";
     }
 }
