@@ -465,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void send2nearby(DataBaseSQL dataBaseSQL, int i, final int finalI) {
-        dataBaseSQL.nearbyDao().selectAllImageDeuxFois(listTemp.get(i).getId()).observe(this, new Observer<List<NearbyEstate>>() {
+        dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTemp.get(i).getId()).observe(this, new Observer<List<NearbyEstate>>() {
             @Override
             public void onChanged(List<NearbyEstate> nearbyEstateList) {
                 for (int j = 0; j < nearbyEstateList.size(); j++) {

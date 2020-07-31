@@ -190,8 +190,8 @@ public class DetailFragment extends Fragment {
         roomChiffre.setText(String.valueOf(estateGrabbed.getPiece()));
         typeCHiffre.setText(estateGrabbed.getType());
         bathroomchiffre.setText(String.valueOf(estateGrabbed.getSdb()));
-        if (dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estateGrabbed.getId())!= null) {
-            dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estateGrabbed.getId()).observe(getViewLifecycleOwner(), new Observer<List<NearbyEstate>>() {
+        if (dataBaseSQL.nearbyDao().selectAllNearbyCondition(estateGrabbed.getId())!= null) {
+            dataBaseSQL.nearbyDao().selectAllNearbyCondition(estateGrabbed.getId()).observe(getViewLifecycleOwner(), new Observer<List<NearbyEstate>>() {
                 @Override
                 public void onChanged(List<NearbyEstate> nearbyEstateList) {
                     List <String> nearby = new ArrayList<>();

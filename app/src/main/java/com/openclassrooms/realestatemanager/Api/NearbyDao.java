@@ -18,7 +18,7 @@ public interface NearbyDao {
     LiveData<List<NearbyEstate>> selectAllImage();
 
     @Query("SELECT * FROM bddNearby WHERE idEstate = :itemid")
-    LiveData<List<NearbyEstate>> selectAllImageDeuxFois(int itemid);
+    LiveData<List<NearbyEstate>> selectAllNearbyCondition(int itemid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertNearby(NearbyEstate task);
@@ -26,12 +26,12 @@ public interface NearbyDao {
     @Update
     int upDateNearby(NearbyEstate task);
 
-    @Query("DELETE FROM bddTable WHERE id = :itemid")
+    @Query("DELETE FROM bddNearby WHERE idEstate = :itemid")
     int deleteNearby(long itemid);
 
-    @Query("DELETE FROM bddTable")
+    @Query("DELETE FROM bddNearby")
     void DeleteAllNearby();
 
-    @Query("DELETE FROM bddTable WHERE idEstate = :itemid")
+    @Query("DELETE FROM bddNearby WHERE idEstate = :itemid")
     void DeletePArticularNearbysGroup(int itemid);
 }

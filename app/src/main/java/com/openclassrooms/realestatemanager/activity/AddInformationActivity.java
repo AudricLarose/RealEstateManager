@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.activity;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
@@ -49,8 +50,6 @@ import com.openclassrooms.realestatemanager.utils.AdaptateurImage;
 import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -663,12 +662,18 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void ChipCase() {
-        List<Chip> checkForPosition = initiateChipes();
+        final List<Chip> checkForPosition = initiateChipes();
         for (int i = 0; i < checkForPosition.size(); i++) {
-            if (dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estate.getId()).getValue() != null && dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estate.getId()).getValue().size() > 0) {
-                if (dataBaseSQL.nearbyDao().selectAllImageDeuxFois(estate.getId()).getValue().contains(checkForPosition.get(i).getText().toString())) {
-                    checkForPosition.get(i).setChecked(true);
-                }
+            if (dataBaseSQL.nearbyDao().selectAllNearbyCondition(estate.getId()) != null) {
+                final int finalI = i;
+                dataBaseSQL.nearbyDao().selectAllNearbyCondition(estate.getId()).observe(this, new Observer<List<NearbyEstate>>() {
+                    @Override
+                    public void onChanged(List<NearbyEstate> nearbyEstates) {
+                        if (nearbyEstates.contains(checkForPosition.get(finalI).getText().toString())) {
+                            checkForPosition.get(finalI).setChecked(true);
+                        }
+                    }
+                });
             }
         }
     }
@@ -741,11 +746,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                         imagesRealEstate.setId(imagesRealEstate.hashCode());
                         Utils.upDateMyBDDImagePlease(imagesRealEstate);
                     }
-                    for (int i = 0; i < resultsValidatedByUser.size(); i++) {
-                        NearbyEstate nearbyEstate = new NearbyEstate(estate.getId(), resultsValidatedByUser.get(i));
-                        nearbyEstate.setId(nearbyEstate.hashCode());
-                        Utils.upDateMyBDDNearbyPlease(nearbyEstate);
-                    }
+                    handleNearbyUpdate();
+
                     if ( listPhotoRealistetate.size()>0) {
                         try {
                             Utils.uploadImage(modifyEstate(), listPhotoRealistetate, AddInformationActivity.this, new Utils.CallBackImage() {
@@ -766,6 +768,21 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                     saveInTempUpdateIfNoInternet(estateForModifier);
                     updateSQLite(estateForModifier);
                     redirectToDetailsActivity(modifyEstate());
+                }
+            }
+        });
+    }
+
+    @SuppressLint("NewApi")
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void handleNearbyUpdate() {
+        Utils.eraseDataNEarbyInBDD((modifyEstate().getId()), new Utils.CallbackErase() {
+            @Override
+            public void onFinish() {
+                for (int i = 0; i < resultsValidatedByUser.size(); i++) {
+                    NearbyEstate nearbyEstate = new NearbyEstate(estate.getId(), resultsValidatedByUser.get(i));
+                    nearbyEstate.setId(nearbyEstate.hashCode());
+                    Utils.upDateMyBDDNearbyPlease(nearbyEstate);
                 }
             }
         });
@@ -806,9 +823,10 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             imagesRealEstate.setId(imagesRealEstate.hashCode());
             dataBaseSQL.imageDao().insertEstate(imagesRealEstate);
         }
-        dataBaseSQL.nearbyDao().deleteNearby(estateNew.getId());
+        dataBaseSQL = DataBaseSQL.getInstance(AddInformationActivity.this);
+        dataBaseSQL.nearbyDao().DeletePArticularNearbysGroup(estateNew.getId());
         for (int i = 0; i < resultsValidatedByUser.size(); i++) {
-            NearbyEstate nearbyEstate = new NearbyEstate(estateNew.getId(), resultsValidatedByUser.get(i));
+            NearbyEstate nearbyEstate = new NearbyEstate(estate.getId(), resultsValidatedByUser.get(i));
             nearbyEstate.setId(nearbyEstate.hashCode());
             dataBaseSQL.nearbyDao().insertNearby(nearbyEstate);
         }

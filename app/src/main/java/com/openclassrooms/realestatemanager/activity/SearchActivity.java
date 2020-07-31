@@ -387,7 +387,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         c.set(Calendar.DAY_OF_MONTH, day);
         String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String date = Utils.getDateFormat(this,Calendar.getInstance());
+        String date = Utils.getDateFormat(this,c);
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);

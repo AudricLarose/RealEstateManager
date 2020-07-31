@@ -16,6 +16,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -56,6 +58,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.wangjie.rapidfloatingactionbutton.util.RFABTextUtil.TAG;
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -368,6 +372,36 @@ public class Utils {
                     callBackInterfaceForBDD.onFail();
 
                 }
+            }
+        });
+    }
+public interface CallbackErase{
+        void onFinish();
+}
+    public static void eraseDataNEarbyInBDD(final int document, final CallbackErase callbackErase){
+        ExtendedServiceEstate servicePlace = DI.getService();
+        final List<NearbyEstate> listeRealEstate = servicePlace.getNearbyEstates();
+        final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("nearbyestates3").whereEqualTo("idEstate",document).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        firebaseFirestore.collection("nearbyestates3").document(document.getId()).delete();
+                   }
+                    callbackErase.onFinish();
+                }
+            }
+        });
+    }
+    public static void eraseDataImageInBDD( String document){
+        ExtendedServiceEstate servicePlace = DI.getService();
+        final List<NearbyEstate> listeRealEstate = servicePlace.getNearbyEstates();
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("nearbyestates3").document(document).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
             }
         });
     }
