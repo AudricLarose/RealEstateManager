@@ -217,7 +217,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
 
     private void caseIfListsAreEmpty() {
-
         String choice=null;
         if (binear != null) {
              choice = binear.toString();
@@ -228,7 +227,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         if (resultsValidatedByUserForNearBy.size()==0) {
             if ((resultsValidatedByUserForTypes.size()==0)) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, Utils.reformatDate(eMarket.getText().toString()));
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice,Utils.reformatDate(eMarket.getText().toString()));
                 resultResearchSQL(datalist);
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,

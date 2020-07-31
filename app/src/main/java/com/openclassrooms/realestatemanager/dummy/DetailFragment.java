@@ -113,7 +113,11 @@ public class DetailFragment extends Fragment {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
                     for (int i = 0; i < imagesRealEstates.size(); i++) {
-                        listImage.add(imagesRealEstates.get(i).getImage());
+                        if (imagesRealEstates.get(i).getLinkFb() != null && !imagesRealEstates.get(i).getLinkFb().equals("") && !imagesRealEstates.get(i).getLinkFb().equals("notlinked")) {
+                            listImage.add(imagesRealEstates.get(i).getLinkFb());
+                        }else{
+                            listImage.add(imagesRealEstates.get(i).getImage());
+                        }
                     }
                 }
             });
@@ -190,15 +194,15 @@ public class DetailFragment extends Fragment {
         roomChiffre.setText(String.valueOf(estateGrabbed.getPiece()));
         typeCHiffre.setText(estateGrabbed.getType());
         bathroomchiffre.setText(String.valueOf(estateGrabbed.getSdb()));
-        if (dataBaseSQL.nearbyDao().selectAllNearbyCondition(estateGrabbed.getId())!= null) {
+        if (dataBaseSQL.nearbyDao().selectAllNearbyCondition(estateGrabbed.getId()) != null) {
             dataBaseSQL.nearbyDao().selectAllNearbyCondition(estateGrabbed.getId()).observe(getViewLifecycleOwner(), new Observer<List<NearbyEstate>>() {
                 @Override
                 public void onChanged(List<NearbyEstate> nearbyEstateList) {
-                    List <String> nearby = new ArrayList<>();
-                    for (int i = 0; i < nearbyEstateList.size() ; i++) {
-                        nearby.add( nearbyEstateList.get(i).getNearby());
+                    List<String> nearby = new ArrayList<>();
+                    for (int i = 0; i < nearbyEstateList.size(); i++) {
+                        nearby.add(nearbyEstateList.get(i).getNearby());
                     }
-                    String nearbylistline=nearby.toString();
+                    String nearbylistline = nearby.toString();
                     String nearbyNew = nearbylistline.replace("[", "");
                     String nearbyChiffreNew = nearbyNew.replace("]", "");
                     nearbyChiffre.setText(nearbyChiffreNew);

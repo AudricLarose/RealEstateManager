@@ -2,6 +2,9 @@ package com.openclassrooms.realestatemanager.utils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +19,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
@@ -40,6 +43,7 @@ import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.activity.AddInformationActivity;
 import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
 import com.openclassrooms.realestatemanager.modele.NearbyEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
@@ -58,8 +62,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import static com.wangjie.rapidfloatingactionbutton.util.RFABTextUtil.TAG;
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -125,7 +127,7 @@ public class Utils {
             newDateString = sdf.format(d);
         } catch (ParseException e) {
             e.printStackTrace();
-            newDateString=oldDateString;
+            newDateString = oldDateString;
         }
 
 
@@ -138,16 +140,18 @@ public class Utils {
         final String NEW_FORMAT = "dd/MM/yyyy";
 
         String newDateString;
-
         SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
         Date d = null;
         try {
             d = sdf.parse(oldDateString);
+            sdf.applyPattern(NEW_FORMAT);
+            newDateString = sdf.format(d);
         } catch (ParseException e) {
+            newDateString = oldDateString;
             e.printStackTrace();
+
         }
-        sdf.applyPattern(NEW_FORMAT);
-        newDateString = sdf.format(d);
+
 
         return newDateString;
     }
@@ -341,12 +345,16 @@ public class Utils {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 List<ImagesRealEstate> resultsBDD = null;
-                if (task.getResult() != null && task.getResult().getDocuments().size() > 0) {
-                    resultsBDD = task.getResult().toObjects(ImagesRealEstate.class);
-                    callBackInterfaceForBDD.onFinishImage(resultsBDD);
-                } else {
-                    callBackInterfaceForBDD.onFail();
+                try {
+                    if (task.getResult() != null && task.getResult().getDocuments().size() > 0) {
+                        resultsBDD = task.getResult().toObjects(ImagesRealEstate.class);
+                        callBackInterfaceForBDD.onFinishImage(resultsBDD);
+                    } else {
+                        callBackInterfaceForBDD.onFail();
 
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -375,33 +383,57 @@ public class Utils {
             }
         });
     }
-public interface CallbackErase{
-        void onFinish();
-}
-    public static void eraseDataNEarbyInBDD(final int document, final CallbackErase callbackErase){
+
+    public static void eraseDataNEarbyInBDD(final int document, final CallbackErase callbackErase) {
         ExtendedServiceEstate servicePlace = DI.getService();
         final List<NearbyEstate> listeRealEstate = servicePlace.getNearbyEstates();
         final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates3").whereEqualTo("idEstate",document).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection("nearbyestates3").whereEqualTo("idEstate", document).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         firebaseFirestore.collection("nearbyestates3").document(document.getId()).delete();
-                   }
+                    }
                     callbackErase.onFinish();
                 }
             }
         });
     }
-    public static void eraseDataImageInBDD( String document){
-        ExtendedServiceEstate servicePlace = DI.getService();
-        final List<NearbyEstate> listeRealEstate = servicePlace.getNearbyEstates();
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("nearbyestates3").document(document).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
 
+    public static void notifyme(Context context) {
+        Intent intent = new Intent(context, AddInformationActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel notificationChannel = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel = new NotificationChannel("channel1", "Votre envoie est une reussite", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(notificationChannel);
+        } else {
+            Toast.makeText(context, "Erreur Notification", Toast.LENGTH_SHORT).show();
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "channel1");
+        builder.setContentTitle("Votre envoie")
+                .setContentText("Votre envoie est une reussité")
+                .setSmallIcon(R.mipmap.ic_launcher);
+        if (notificationManager != null) {
+            notificationManager.notify(1, builder.build());
+        }
+    }
+
+    public static void eraseDataImageInBDD(final int document, final CallbackErase callbackErase) {
+        ExtendedServiceEstate servicePlace = DI.getService();
+        final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("imageEstate3").whereEqualTo("idEstate", document).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        firebaseFirestore.collection("imageEstate3").document(document.getId()).delete();
+                    }
+                    callbackErase.onFinish();
+                }
             }
         });
     }
@@ -535,6 +567,10 @@ public interface CallbackErase{
     public static void buttonBlocker(Button button) {
         button.setEnabled(false);
         button.setBackgroundColor(R.color.colorPrimary);
+    }
+
+    public interface CallbackErase {
+        void onFinish();
     }
 
     public interface CallBackImage {

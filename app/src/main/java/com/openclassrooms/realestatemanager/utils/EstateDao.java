@@ -46,7 +46,7 @@ public abstract class EstateDao {
             "AND (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            "AND (bdd.ischecked like COALESCE(:binear, ischecked ))" +
             "AND strftime('%s', market) BETWEEN strftime('%s', :date) AND  '2060-01-20'" +
             " GROUP BY bdd.id "
     )
@@ -65,7 +65,7 @@ public abstract class EstateDao {
             "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            "AND (bdd.ischecked like COALESCE(:binear, selled ))" +
             "AND strftime('%s', market) >= strftime('%s', :start_date)" +
             "AND (nearby IN (:listnearby))" +
             " GROUP BY bdd.id "
@@ -91,7 +91,7 @@ public abstract class EstateDao {
             "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            "AND (bdd.ischecked like COALESCE(:binear, selled ))" +
             "AND strftime('%s', market) >= strftime('%s', :start_date)" +
             "AND (type IN (:listType))" +
             " GROUP BY bdd.id " )
@@ -110,7 +110,7 @@ public abstract class EstateDao {
             "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.selled like COALESCE(:binear, selled ))" +
+            "AND (bdd.ischecked like COALESCE(:binear, selled ))" +
             "AND strftime('%s', market) >= strftime('%s', :start_date)" +
             "AND (type IN (:listType))" +
             "AND (nearby IN (:listNearby))" +

@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.Welcome);
         initiateDataBaseSQL();
         detailsIfTablet();
-        deployementButtonCancel();
         resultsActivityIfEstateExist();
         testResultSqlRequet();
     }
@@ -185,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
             layoutManager = new LinearLayoutManager(MainActivity.this);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
-            initiateButtonCAncel().setVisibility(View.VISIBLE);
         } else {
             NoExistingEstateAction();
         }
@@ -244,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                DeploytempHandler();
+                deployRecyclerView();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -264,7 +262,9 @@ public class MainActivity extends AppCompatActivity {
                     database.nearbyDao().DeleteAllNearby();
                     for (int i = 0; i < nearbyEstateList.size(); i++) {
                         database.nearbyDao().insertNearby(nearbyEstateList.get(i));
+
                     }
+                    Toast.makeText(MainActivity.this, "" + nearbyEstateList.size(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
                 }
@@ -502,11 +502,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void deployementButtonCancel() {
-        final ImageButton cancelButton = initiateButtonCAncel();
-        activateButtonCancel(cancelButton);
-    }
-
     private void activateButtonCancel(final ImageButton cancelButton) {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -518,10 +513,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private ImageButton initiateButtonCAncel() {
-        return findViewById(R.id.buttoncancelactivitymain);
-
-    }
 
     private void deployementButtonAdd() {
         final ImageButton addButton = initiateButtonAdd();
