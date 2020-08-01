@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                takeDataInBDDIfInternetIsHere();
                 deployRecyclerView();
                 mSwipeRefreshLayout.setRefreshing(false);
             }

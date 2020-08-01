@@ -65,8 +65,8 @@ public abstract class EstateDao {
             "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.ischecked like COALESCE(:binear, selled ))" +
-            "AND strftime('%s', market) >= strftime('%s', :start_date)" +
+            "AND (bdd.ischecked like COALESCE(:binear, ischecked ))" +
+            "AND strftime('%s', market) BETWEEN strftime('%s', :start_date) AND  '2060-01-20'" +
             "AND (nearby IN (:listnearby))" +
             " GROUP BY bdd.id "
     )
@@ -77,7 +77,7 @@ public abstract class EstateDao {
     @Query("SELECT DISTINCT bdd.*, bddTable.idEstate, bddTable.image,bddTable.descriptionImage,bddTable.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddtable ON  bdd.id= bddTable.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
-            "where strftime('%s', selled)BETWEEN COALESCE(strftime('%s', :datef),'1999-01-01')AND '2060-01-20'")
+            "where strftime('%s', ischecked)BETWEEN COALESCE(strftime('%s', :datef),'1999-01-01')AND '2060-01-20'")
     public abstract LiveData<List<RealEstate>> selectAllEstateSortediselled(String datef);
 
     @Query("SELECT DISTINCT bdd.*, bddTable.idEstate, bddTable.image,bddTable.descriptionImage,bddTable.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
@@ -91,8 +91,8 @@ public abstract class EstateDao {
             "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.ischecked like COALESCE(:binear, selled ))" +
-            "AND strftime('%s', market) >= strftime('%s', :start_date)" +
+            "AND (bdd.ischecked like COALESCE(:binear, ischecked ))" +
+            "AND strftime('%s', market) BETWEEN strftime('%s', :start_date) AND  '2060-01-20'" +
             "AND (type IN (:listType))" +
             " GROUP BY bdd.id " )
 
@@ -110,8 +110,8 @@ public abstract class EstateDao {
             "AND  (bdd.sdb >= COALESCE(:minNbBathrooms, 0)) " +
             "AND (SELECT count(*) from bddTable)>=COALESCE(:count, 0)" +
             "AND (bdd.nomAgent like COALESCE(:agentName, nomAgent))" +
-            "AND (bdd.ischecked like COALESCE(:binear, selled ))" +
-            "AND strftime('%s', market) >= strftime('%s', :start_date)" +
+            "AND (bdd.ischecked like COALESCE(:binear, ischecked ))" +
+            "AND strftime('%s', market) BETWEEN strftime('%s', :start_date) AND  '2060-01-20'" +
             "AND (type IN (:listType))" +
             "AND (nearby IN (:listNearby))" +
             " GROUP BY bdd.id ")

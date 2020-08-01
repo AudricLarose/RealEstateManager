@@ -72,7 +72,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     private String resultsValidatedByUserForPhotos;
     private String resultsValidatedByUserForAgent="";
-    private List<String> resultsValidatedByUserForTypes;
+    private List<String>    resultsValidatedByUserForTypes;
     private int positionSwitch;
     private DataBaseSQL database = DataBaseSQL.getInstance(this);
     Integer priceMinENtryByUserValue = null;
@@ -83,6 +83,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     Integer pieceENtryByUserValue = null;
     Integer SDBENtryByUserValue = null;
     String townENtryByUserValue = null;
+    String eMarketValue=null;
 
 
     @Override
@@ -227,21 +228,21 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         if (resultsValidatedByUserForNearBy.size()==0) {
             if ((resultsValidatedByUserForTypes.size()==0)) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice,Utils.reformatDate(eMarket.getText().toString()));
-                resultResearchSQL(datalist);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice,(eMarketValue));
+                        resultResearchSQL(datalist);
             } else {
-                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarket.getText().toString(), resultsValidatedByUserForTypes);
+                    LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarketValue, resultsValidatedByUserForTypes);
                 resultResearchSQL(datalist);
             }
         } else {
             if (resultsValidatedByUserForTypes.size()==0) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarket.getText().toString(), resultsValidatedByUserForNearBy);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarketValue, resultsValidatedByUserForNearBy);
                 resultResearchSQL(datalist);
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice   , eMarket.getText().toString(), resultsValidatedByUserForTypes, resultsValidatedByUserForNearBy);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice   , eMarketValue, resultsValidatedByUserForTypes, resultsValidatedByUserForNearBy);
                 resultResearchSQL(datalist);
             }
         }
@@ -316,6 +317,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             pieceENtryByUserValue = null;
         }
 
+        if (!eMarket.getText().toString().trim().isEmpty()) {
+            eMarketValue = Utils.reformatDate(eMarket.getText().toString());
+        } else {
+            eMarketValue = null;
+        }
+
         if (!SDBENtryByUser.isEmpty()) {
             SDBENtryByUserValue = Integer.valueOf(SDBENtryByUser);
         } else {
@@ -333,11 +340,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             townENtryByUserValue = null;
         }
 
+        if (positionSwitch == 1) {
+            binear = false;
+        }
         if (positionSwitch == 2) {
             binear = true;
-        }
-        if (positionSwitch == 3) {
-            binear = false;
         }
 
     }

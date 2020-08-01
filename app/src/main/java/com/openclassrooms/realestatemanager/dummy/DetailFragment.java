@@ -113,7 +113,7 @@ public class DetailFragment extends Fragment {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
                     for (int i = 0; i < imagesRealEstates.size(); i++) {
-                        if (imagesRealEstates.get(i).getLinkFb() != null && !imagesRealEstates.get(i).getLinkFb().equals("") && !imagesRealEstates.get(i).getLinkFb().equals("notlinked")) {
+                        if (imagesRealEstates.get(i).getLinkFb() != null && !imagesRealEstates.get(i).getLinkFb().equals("") && !imagesRealEstates.get(i).getLinkFb().equals("notLinked")) {
                             listImage.add(imagesRealEstates.get(i).getLinkFb());
                         }else{
                             listImage.add(imagesRealEstates.get(i).getImage());

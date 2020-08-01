@@ -65,13 +65,15 @@
                 android:id="@+id/Relativedetails1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+
                 android:layout_below="@+id/descirptionInputDetails">
 
                 <RelativeLayout
                     android:id="@+id/RelativeSurfaceDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp">
+                    android:layout_marginLeft="48dp">
 
                     <ImageView
                         android:id="@+id/icone_surface"
@@ -96,7 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/surfaceDetails"
-
+                        android:layout_marginTop="8dp"
                         android:text="@string/chiffres"
                         android:textColor="@android:color/black"
                         android:textSize="20dp" />
@@ -137,7 +139,7 @@
                         android:layout_below="@+id/PriceDetails"
                         android:text="@string/chiffres"
                         android:textColor="@android:color/black"
-
+                        android:layout_marginTop="8dp"
                         android:textSize="20dp" />
                 </RelativeLayout>
             </RelativeLayout>
@@ -146,6 +148,8 @@
                 android:id="@+id/Relativedetails2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+
                 android:layout_below="@+id/Relativedetails1">
 
                 <RelativeLayout
@@ -179,6 +183,7 @@ android:layout_marginBottom="10dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/RoomDetails"
                         android:text="chiffres"
+                        android:layout_marginTop="8dp"
 
                         android:textColor="@android:color/black"
                         android:textSize="20dp" />
@@ -219,7 +224,7 @@ android:layout_marginBottom="10dp"
                         android:layout_below="@+id/TypeDetails"
                         android:layout_alignParentStart="true"
                         android:text="appartement"
-
+                        android:layout_marginTop="8dp"
                         android:textColor="@android:color/black"
                         android:textSize="20dp" />
                 </RelativeLayout>
@@ -229,6 +234,8 @@ android:layout_marginBottom="10dp"
                 android:id="@+id/Relativedetails3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+
                 android:layout_below="@+id/Relativedetails2">
 
                 <RelativeLayout
@@ -261,7 +268,7 @@ android:layout_marginBottom="10dp"
                         android:id="@+id/BathroomchiffresDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:layout_marginTop="8dp"
                         android:layout_below="@+id/BathroomDetails"
                         android:text="@string/chiffres"
                         android:textColor="@android:color/black"
@@ -299,6 +306,7 @@ android:layout_marginBottom="10dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/RoomsDetails"
                         android:text="@string/chiffres"
+                        android:layout_marginTop="8dp"
 
                         android:textColor="@android:color/black"
                         android:textSize="20dp" />
@@ -309,6 +317,8 @@ android:layout_marginBottom="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/RelativeBathroomDetails"
+                    android:layout_marginTop="16dp"
+
                     android:layout_marginLeft="50dp"
                     >
 
@@ -338,6 +348,7 @@ android:layout_marginBottom="10dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/NearbyDetails"
                         android:text="@string/chiffres"
+                        android:layout_marginTop="8dp"
 
                         android:textColor="@android:color/black"
                         android:textSize="20dp" />
@@ -348,6 +359,8 @@ android:layout_marginBottom="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/RelativeNearbyDetails"
+                    android:layout_marginTop="16dp"
+
                     android:layout_marginLeft="50dp">
 
                     <ImageView
@@ -376,6 +389,7 @@ android:layout_marginBottom="10dp"
                         android:layout_below="@+id/agentDetailsText"
                         android:text="@string/agent"
                         android:textColor="@android:color/black"
+                        android:layout_marginTop="8dp"
 
                         android:textSize="20dp"
                         android:textStyle="bold" />
@@ -417,7 +431,7 @@ android:layout_marginBottom="10dp"
                         android:layout_below="@+id/selledDetails"
                         android:text="@string/chiffres"
                         android:textColor="@android:color/black"
-
+                        android:layout_marginTop="8dp"
                         android:textSize="20dp" />
 
 

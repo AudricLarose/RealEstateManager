@@ -118,7 +118,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()).observe((LifecycleOwner) context, new Observer<List<ImagesRealEstate>>() {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
-                    if (imagesRealEstateList.size() > 0 && imagesRealEstateList.get(0).getLinkFb() != null  && !imagesRealEstateList.get(0).getLinkFb().contains("notlinked")) {
+                    if (imagesRealEstateList.size() > 0  && (!imagesRealEstateList.get(0).getLinkFb().contains("notLinked") && !imagesRealEstateList.get(0).getLinkFb().contains("notlinked"))) {
                         Picasso.get().load(imagesRealEstateList.get(0).getLinkFb()).into(holder.imageRealestate);
                     } else if (imagesRealEstateList.size() > 0){
                         Picasso.get().load(Uri.parse(imagesRealEstateList.get(0).getImage())).into(holder.imageRealestate);
