@@ -68,6 +68,28 @@ public class RealEstate implements Serializable {
         this.selled = selled;
     }
 
+
+    public RealEstate(String inEuro, String ischecked, String type, String nomAgent, String adresse, int chambre, String description, String market, int postal, int piece, int prix, int sdb, int surface, String town, String selled, double longitude, double lattitude, String url) {
+        this.type = type;
+        this.adresse = adresse;
+        this.postal = postal;
+        this.town = town;
+        this.description = description;
+        this.nomAgent = nomAgent;
+        this.chambre = chambre;
+        this.piece = piece;
+        this.sdb = sdb;
+        this.surface = surface;
+        this.market = market;
+        this.prix = prix;
+        this.ischecked = ischecked;
+        this.longitude = longitude;
+        this.lattitude = lattitude;
+        this.url = url;
+        this.inEuro = inEuro;
+        this.selled = selled;
+    }
+
     public static RealEstate fromContentValues(ContentValues contentValues) {
         RealEstate estate = new RealEstate();
         if (contentValues.containsKey("id")) {

@@ -58,10 +58,9 @@ public class DetailFragment extends Fragment {
     private List<String> listImage = new ArrayList<>();
     private boolean amIInEuro = true;
     private LatLng latLngRealestate;
-    private Bundle mapViewBundle = null;
-    private ImageView mImageView;
     private Boolean modePhone;
     private RelativeLayout relativeLayout;
+    private ImageView imageCarte;
     private DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(getContext());
 
     public DetailFragment() {
@@ -78,7 +77,6 @@ public class DetailFragment extends Fragment {
                 for (int i = 0; i < listRealEstate.size(); i++) {
                     if (String.valueOf(listRealEstate.get(i).getId()).contains(getArguments().getString(ARG_ITEM_ID))) {
                         estateGrabbed = listRealEstate.get(i);
-                        estateGrabbed = estateGrabbed;
                     }
                 }
             } else {
@@ -100,7 +98,7 @@ public class DetailFragment extends Fragment {
 
 
     private void deployCarteImageView(String url, View container) {
-        ImageView imageCarte = container.findViewById(R.id.mapLiteView);
+        imageCarte = container.findViewById(R.id.mapLiteView);
         Picasso.get().load(url).into(imageCarte);
     }
 
@@ -113,7 +111,7 @@ public class DetailFragment extends Fragment {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
                     for (int i = 0; i < imagesRealEstates.size(); i++) {
-                        if (imagesRealEstates.get(i).getLinkFb() != null && !imagesRealEstates.get(i).getLinkFb().equals("") && !imagesRealEstates.get(i).getLinkFb().equals("notLinked")) {
+                        if (imagesRealEstates.get(i).getLinkFb() != null && !imagesRealEstates.get(i).getLinkFb().equals("") && (!imagesRealEstates.get(i).getLinkFb().equals("notLinked") && !imagesRealEstates.get(i).getLinkFb().equals("notlinked"))) {
                             listImage.add(imagesRealEstates.get(i).getLinkFb());
                         }else{
                             listImage.add(imagesRealEstates.get(i).getImage());
@@ -173,7 +171,11 @@ public class DetailFragment extends Fragment {
         if (estateGrabbed != null) {
             takeImageAndDesciption(container);
             shareInformationsDetails(container);
-            try2FindAddress(container);
+            if (Utils.internetOnVerify(getContext())) {
+                try2FindAddress(container);
+            } else {
+                findTheDefaultAdress();
+            }
             initiateSwitchSell(container);
 
         }
@@ -223,7 +225,7 @@ public class DetailFragment extends Fragment {
     private void initiateSwitchSell(View rootView) {
         relativeLayout = rootView.findViewById(R.id.RelativeSelledDetails);
         if (estateGrabbed.getIschecked() != null && estateGrabbed.getSelled() != null) {
-            if (!Boolean.valueOf(estateGrabbed.getIschecked()) && estateGrabbed.getSelled().equals("date")) {
+            if (estateGrabbed.getSelled().equals("date")) {
                 relativeLayout.setVisibility(View.INVISIBLE);
             } else {
                 relativeLayout.setVisibility(View.VISIBLE);
@@ -234,7 +236,7 @@ public class DetailFragment extends Fragment {
 
     private void appearDateSell(View rootView) {
         vendu = rootView.findViewById(R.id.dateSelledDetails);
-        vendu.setText(estateGrabbed.getSelled());
+        vendu.setText(Utils.reformatInverseDate(estateGrabbed.getSelled()));
     }
 
     @Override
@@ -264,13 +266,19 @@ public class DetailFragment extends Fragment {
             public void onSuccess(List<Address> addressList) {
                 findTheRightAdress(container, addressList);
             }
+
+            @Override
+            public void onFail() {
+                findTheDefaultAdress();
+            }
         });
     }
 
     private void findTheDefaultAdress() {
         adresse.setText(estateGrabbed.getAdresse());
         ville.setText(estateGrabbed.getTown());
-        pays.setText(estateGrabbed.getTown());
+        pays.setText(" ");
+        imageCarte.setVisibility(View.GONE);
     }
 
     private void findTheRightAdress(View container, List<Address> addressList) {

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.List;
 
-@Entity(tableName = "bddTable", foreignKeys = @ForeignKey(entity = RealEstate.class,
+@Entity(tableName = "bddImage", foreignKeys = @ForeignKey(entity = RealEstate.class,
         parentColumns = "id",
         childColumns = "idEstate",onDelete = ForeignKey.CASCADE))
 public class ImagesRealEstate {
@@ -23,9 +23,6 @@ public class ImagesRealEstate {
     private String linkFb;
 
     public ImagesRealEstate() {
-    }
-
-    public ImagesRealEstate(int idEstate, String description, List<String> listPhotoRealistetate, String fi) {
     }
 
     public ImagesRealEstate(int idEstate, String descriptionImage, String image, String linkFb) {

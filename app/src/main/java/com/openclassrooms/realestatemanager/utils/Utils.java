@@ -313,7 +313,7 @@ public class Utils {
                 retroAction.onSuccess(addressList);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            retroAction.onFail();
         }
     }
 
@@ -602,6 +602,7 @@ public class Utils {
 
     public interface AdressGenerators {
         void onSuccess(List<Address> addressList);
+        void onFail();
     }
 }
 

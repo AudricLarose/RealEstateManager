@@ -507,10 +507,16 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/proximit"
                 android:textColor="@android:color/black" />
-
+            <HorizontalScrollView
+                android:id="@+id/relativeCBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_proximité"
+                android:fillViewport="true"
+                android:measureAllChildren="false"
+                android:scrollbars="none">
             <RelativeLayout
 
-                android:id="@+id/relativeCBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/text_proximité"
@@ -586,7 +592,7 @@
                     app:chipCornerRadius="24dp" />
 
             </RelativeLayout>
-
+            </HorizontalScrollView>
             <Button
                 android:id="@+id/btn_photo_on_phone"
                 android:layout_width="wrap_content"

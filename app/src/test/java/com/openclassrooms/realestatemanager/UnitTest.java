@@ -64,21 +64,18 @@ public class UnitTest {
     public void setUp() {
 
         resultsValidatedByUser.add("ecoles");
-        estate1 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Myrtis Jackson", resultsValidatedByUser, "5 rue henrio cardinaud",
-                "1", "Super", "20/03/2019", "94000", "5", "95000000", "1", "1"
-                , "creteil", "26/02/2020", 20000.20, 2000.23, "google.ccom", listPhotoRealistetate, listDescriptionRealistetate);
-        estate5 = new RealEstate(String.valueOf(true), String.valueOf(true), "Maison", "Gilles de SaintPatu", resultsValidatedByUser, "5 rue henrio cardinaud",
-                "1", "Super", "20/03/2019", "87000", "7", "85000000", "1", "1"
-                , "Croatie", "26/02/2020", 14520.20, 2000.23, "google.ccom", listPhotoRealistetate, listDescriptionRealistetate);
-        estate2 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Benjamin Doteil", resultsValidatedByUser, "5 rue henrio cardinaud",
-                "1", "Super", "20/03/2019", "59000", "1", "75000000", "1", "1"
-                , "Saint-JEan-Luz", "26/02/2020", 4547.20, 5000.83, "google.ccom", listPhotoRealistetate, listDescriptionRealistetate);
-        estate3 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Myrtis Jackson", resultsValidatedByUser, "5 rue henrio cardinaud",
-                "1", "Super", "20/03/2019", "15000", "5", "65000000", "1", "1"
-                , "issy-les_mouilneaux", "26/02/2020", 11400.20, 700.23, "google.ccom", listPhotoRealistetate, listDescriptionRealistetate);
-        estate4 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Myrtis Jackson", resultsValidatedByUser, "5 rue henrio cardinaud",
-                "1", "Super", "20/03/2019", "89500", "8", "55000000", "1", "1"
-                , "bonneuil", "26/02/2020", 147500.20, 45000.23, "google.ccom", listPhotoRealistetate, listDescriptionRealistetate);
+        estate1 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Myrtis Jackson", "5 rue henrio cardinaud",1, "Super", "20/03/2019", 94000, 5, 95000000, 1, 1, "creteil", "26/02/2020", 20000.20, 2000.23, "google.ccom");
+        estate5 = new RealEstate(String.valueOf(true), String.valueOf(true), "Maison", "Gilles de SaintPatu", "5 rue henrio cardinaud",
+                1, "Super", "20/03/2019", 87000, 7, 85000000, 1, 1
+                , "Croatie", "26/02/2020", 14520.20, 2000.23, "google.ccom" );
+        estate2 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Benjamin Doteil", "5 rue henrio cardinaud",
+                1, "Super", "20/03/2019", 59000, 1, 75000000, 1, 1
+                , "Saint-JEan-Luz", "26/02/2020", 4547.20, 5000.83, "google.ccom");
+        estate3 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Myrtis Jackson", "5 rue henrio cardinaud",
+                1, "Super", "20/03/2019", 15000, 5, 65000000, 1, 1
+                , "issy-les_mouilneaux", "26/02/2020", 11400.20, 700.23, "google.ccom");
+        estate4 = new RealEstate(String.valueOf(true), String.valueOf(true), "appartement", "Myrtis Jackson", "5 rue henrio cardinaud",
+                1, "Super", "20/03/2019", 89500, 8, 55000000, 1, 1, "bonneuil", "26/02/2020", 147500.20, 45000.23, "google.ccom");
     }
 
     // ---

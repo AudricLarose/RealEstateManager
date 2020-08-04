@@ -65,7 +65,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private static RealEstate estate;
     public DataBaseSQL dataBaseSQL;
     public Uri imageUri;
-    List<MaterialTextField> editTextContainer = new ArrayList<>();
     private Chip Cecole, Cmagasin, Cmetro, CParc, Cbus;
     private TextInputLayout eAdress, ePostal, eVille, ePrix, eSurface, ePiece, eChambre, eSdb, eDescr;
     private TextView eMarket, edit_ontheSell;
@@ -77,14 +76,11 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     private Map<String, String> globalResultEstate = new HashMap<>();
     private List<String> globalResult = new ArrayList<>();
     private ExtendedServiceEstate serviceEstate = DI.getService();
-    private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
     private List<RealEstate> tempListInsert = serviceEstate.getTempListInsert();
     private List<RealEstate> tempListUpdate = serviceEstate.getTempListUpdate();
-    private List<ImagesRealEstate> imagesRealEstateList = serviceEstate.getImageRealEstates();
-    private Uri imageURL;
-    private Double lattitudeRealEState;
-    private Double longitudeRealEState;
-    private String url;
+    private Double lattitudeRealEState=null;
+    private Double longitudeRealEState=null;
+    private String url= "";
     private List<Chip> ChipesContainer = new ArrayList<>();
     private List<String> listPhotoRealistetate = new ArrayList<>();
     private List<String> descritpionImage = new ArrayList<>();
@@ -159,12 +155,9 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 if (isChecked) {
                     relativeLayoutSell.setVisibility(View.VISIBLE);
                     getTimeIfDateIsEmpty(edit_ontheSell);
-                    isItChecked=true;
                 } else {
                     relativeLayoutSell.setVisibility(View.GONE);
                     edit_ontheSell.setText(getString(R.string.date));
-                    isItChecked=false;
-
                 }
             }
         });
@@ -499,7 +492,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         Utils.buttonBlocker(btnOk);
         Utils.buttonBlocker(btnCancel);
         RealEstate estate1 = generateEstateObject();
-        Utils.notifyme(this);
         if (estate1 != null) {
             if (listPhotoRealistetate.size() > 0) {
                 sendPhotoAtBDD(estate1, estate1);
@@ -562,11 +554,20 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         } else {
             selledEstated = globalResultEstate.get("dateSell");
         }
-        estate = new RealEstate(String.valueOf(true), String.valueOf(isItChecked), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), globalResultEstate.get("Adresse"),
+        estate = new RealEstate(String.valueOf(true), String.valueOf(dateverifier()), globalResultEstate.get("TypeEstate"), globalResultEstate.get("nameEstate"), globalResultEstate.get("Adresse"),
                 Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), Utils.reformatDate(globalResultEstate.get("date")), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
                 , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), selledEstated, lattitudeRealEState, longitudeRealEState, url);
         estate.setId(estate.hashCode());
         return estate;
+    }
+
+    private Boolean dateverifier() {
+        if (edit_ontheSell.getText().toString().equals("date")|| edit_ontheSell.getText().toString().equals("Date")) {
+            isItChecked = false;
+        } else {
+            isItChecked=true;
+        }
+        return isItChecked;
     }
 
     private void sendToFireStock(final RealEstate estate1, final SendCallBack sendCallBack) {
@@ -602,6 +603,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             }
             Toast.makeText(AddInformationActivity.this, R.string.filesuploads, Toast.LENGTH_SHORT).show();
             estate.setTempInsert("false");
+            Utils.notifyme(this);
         } else {
             estate = saveInTempIfNoInternet(estate);
             insertToRoom(estate);
@@ -653,7 +655,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void switchCase() {
-        if (Boolean.valueOf(estate.getIschecked()) || !estate.getSelled().equals("date")) {
+        if (Boolean.valueOf(estate.getIschecked()) && !estate.getSelled().equals("date")) {
             switchVendu.setChecked(true);
             selled = true;
 
@@ -946,7 +948,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     public interface SendCallBack {
         void onFinish(RealEstate estateFireBase);
-
         void onFail();
     }
 }

@@ -103,7 +103,7 @@
                         android:layout_width="84dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="8dp"
                         android:layout_toRightOf="@+id/icone_money"
                         android:text="@string/price"
                         android:textColor="@android:color/black"
@@ -124,7 +124,7 @@
                 android:id="@+id/Relativedetails2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-android:layout_marginTop="4dp"
+android:layout_marginTop="8dp"
                 android:layout_below="@+id/Relativedetails1">
 
                 <RelativeLayout
@@ -203,8 +203,7 @@ android:layout_marginTop="4dp"
                 android:id="@+id/Relativedetails3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-
+                android:layout_marginTop="16dp"
                 android:layout_below="@+id/Relativedetails2"
 >
 
@@ -212,7 +211,6 @@ android:layout_marginTop="4dp"
                     android:id="@+id/RelativeBathroomDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
 
                     android:layout_marginLeft="16dp">
 
@@ -231,7 +229,6 @@ android:layout_marginTop="4dp"
                         android:layout_toRightOf="@+id/icone_sdb"
                         android:text="@string/sdb"
                         android:textColor="@android:color/black"
-
                         android:textStyle="bold" />
 
                     <TextView
@@ -283,7 +280,7 @@ android:layout_marginTop="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/RelativeBathroomDetails"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
 
                     android:layout_marginLeft="16dp"
 >
@@ -319,7 +316,7 @@ android:layout_marginTop="4dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/RelativeNearbyDetails"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     >
 
                     <ImageView
@@ -454,7 +451,7 @@ android:layout_marginTop="4dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="50dp" />
+                    android:layout_marginRight="16dp" />
             </RelativeLayout>
 
 

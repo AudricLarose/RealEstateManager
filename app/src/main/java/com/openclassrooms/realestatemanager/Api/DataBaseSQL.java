@@ -12,7 +12,7 @@ import com.openclassrooms.realestatemanager.utils.EstateDao;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
 import com.openclassrooms.realestatemanager.utils.ImageDao;
 
-@Database(entities = {RealEstate.class, ImagesRealEstate.class, NearbyEstate.class}, version = 44, exportSchema = false )
+@Database(entities = {RealEstate.class, ImagesRealEstate.class, NearbyEstate.class}, version = 46, exportSchema = false )
 public abstract class DataBaseSQL extends RoomDatabase {
     private static volatile DataBaseSQL instance;
     public abstract EstateDao estateDao();

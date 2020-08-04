@@ -20,12 +20,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
 import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
-import com.openclassrooms.realestatemanager.utils.Adaptateur;
 import com.openclassrooms.realestatemanager.Api.DI;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
 import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
@@ -43,8 +40,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.internal.Util;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     List<TextInputLayout> editTextContainer = new ArrayList<>();
@@ -65,9 +60,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private Map<String, String> globalResultEstate = new HashMap<>();
     private RelativeLayout relativeLayoutSell;
     private TextView edit_ontheSell;
-    private Adaptateur adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView recyclerView;
     private List<String> globaleResulforCompare = new ArrayList<>();
     private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     private String resultsValidatedByUserForPhotos;
@@ -178,11 +170,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         });
     }
 
-    private void resetEntry() {
-        eMarket.setText("");
-        edit_ontheSell.setText("");
-    }
-
     private void reset() {
         resultResearchRealEstate.clear();
         resultResearchRealEstate.addAll(listRealEstate);
@@ -204,7 +191,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void sendToSQLrequest() {
         nulifyvalues();
         edit_ontheSell.setText("");
-        DataBaseSQL database = DataBaseSQL.getInstance(this);
         caseIfListsAreEmpty();
     }
 
@@ -560,29 +546,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
 
-    private void compareListAll() {
-        for (int i = 0; i < listRealEstate.size(); i++) {
-            //     deleteSDBIfResultMatch(i);
-            //     deletePieceIfResultMatch(i);
-            //     deleteChambreIfResultMatch(i);
-            //     deletePriceMinIfResultMatch(i);
-            //     deletePriceMaxIfResultMatch(i);
-            //     deleteSurfaceMinIfResultMatch(i);
-            //     deleteSurfaceMaxIfResultMatch(i);
-            //      deleteNumberPhotosByIfResultMatch(i);
-            //      deleteNearByIfResultMatch(i);
-            deleteTypeByIfResultMatch(i);
-            deleteDateEntryIfResultMatch(i);
-            deleteDateSelledIfResultMatch(i);
-            deleteifsimplyselled(i);
-            deleteifsimplyNotselled(i);
-            //     deleteAgentByIfResultMatch(i);
-            //     deleteTownIfResultMatch(i);
-        }
-
-        //deployRecyclerView();
-        //goToNextResultActivity(resultResearchRealEstates);
-    }
 
     private void goToNextResultActivity(List<RealEstate> resultResearchRealEstates) {
         Intent intent = new Intent(this, ResultsActivity.class);
@@ -592,149 +555,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         startActivity(intent);
     }
 
-    private void deleteDateEntryIfResultMatch(int i) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            Date dateEntryByUSer = sdf.parse(eMarket.getText().toString().replace("/", "-"));
-            Date dateRealEstate = sdf.parse(listRealEstate.get(i).getMarket().replace("/", "-"));
-            if ((dateRealEstate.compareTo(dateEntryByUSer) < 0)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void deleteDateSelledIfResultMatch(int i) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            Date dateEntryByUSer = sdf.parse(edit_ontheSell.getText().toString().replace("/", "-"));
-            Date dateRealEstate = sdf.parse(listRealEstate.get(i).getSelled().replace("/", "-"));
-            if ((dateRealEstate.compareTo(dateEntryByUSer) < 0)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void deleteTypeByIfResultMatch(int i) {
-        if (resultsValidatedByUserForTypes != null && resultsValidatedByUserForTypes.size() != 0 && !listRealEstate.isEmpty()) {
-            if (!resultsValidatedByUserForTypes.contains(listRealEstate.get(i).getType())) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-
-    private void deleteAgentByIfResultMatch(int i) {
-        if (resultsValidatedByUserForAgent != null && !listRealEstate.isEmpty()) {
-            if (!listRealEstate.get(i).getNomAgent().contains(resultsValidatedByUserForAgent)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deletePriceMinIfResultMatch(int i) {
-        String priceMaxEntryByUser = globalResultEstate.get("PrixMax");
-        int priceOfMyList = listRealEstate.get(i).getPrix();
-        if ((priceMaxEntryByUser != null && !priceMaxEntryByUser.isEmpty())) {
-            if ((Integer.valueOf(priceMaxEntryByUser) < priceOfMyList)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deletePriceMaxIfResultMatch(int i) {
-
-        String priceMinENtryByUser = globalResultEstate.get("PrixMin");
-        int priceEstateList = listRealEstate.get(i).getPrix();
-        if ((priceMinENtryByUser != null && !priceMinENtryByUser.isEmpty())) {
-            if ((Integer.valueOf(priceMinENtryByUser) > priceEstateList)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deleteSurfaceMaxIfResultMatch(int i) {
-        String surfaceMaxEntryByUSer = globalResultEstate.get("SurfaceMax");
-        int surfaceEstateList = listRealEstate.get(i).getSurface();
-        if ((surfaceMaxEntryByUSer != null && !surfaceMaxEntryByUSer.isEmpty())) {
-            if ((Integer.valueOf(surfaceMaxEntryByUSer) < surfaceEstateList)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deleteSurfaceMinIfResultMatch(int i) {
-        String surfaceMinEntryByUser = globalResultEstate.get("SurfaceMin");
-        int surfaceEstateList = listRealEstate.get(i).getSurface();
-        if ((surfaceMinEntryByUser != null && !surfaceMinEntryByUser.isEmpty())) {
-            if ((Integer.valueOf(surfaceMinEntryByUser) > surfaceEstateList)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deleteChambreIfResultMatch(int i) {
-        String chambreEntryByUser = globalResultEstate.get("Chambre");
-        int chambreEstateList = listRealEstate.get(i).getChambre();
-        if (chambreEntryByUser != null && !chambreEntryByUser.isEmpty()) {
-            if ((Integer.valueOf(chambreEntryByUser) >= chambreEstateList)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deletePieceIfResultMatch(int i) {
-        String pieceEntryByUser = globalResultEstate.get("Piece");
-        int pieceEstateList = listRealEstate.get(i).getPiece();
-        if (pieceEntryByUser != null && !pieceEntryByUser.isEmpty()) {
-            if (Integer.valueOf(pieceEntryByUser) >= pieceEstateList) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deleteSDBIfResultMatch(int i) {
-        String sdbEntryByUser = globalResultEstate.get("SDB");
-        int sdbEstateList = listRealEstate.get(i).getSdb();
-        if (sdbEntryByUser != null && !sdbEntryByUser.isEmpty()) {
-            if (Integer.valueOf(sdbEntryByUser) >= sdbEstateList) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deleteTownIfResultMatch(int i) {
-        String townEntryByUser = globalResultEstate.get("town").toLowerCase();
-        String townEstateList = listRealEstate.get(i).getTown().toLowerCase();
-        if (townEntryByUser != null && !townEntryByUser.isEmpty()) {
-            if (!townEntryByUser.contains(townEstateList)) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
-
-    private void deleteifsimplyselled(int i) {
-        String selledEstateList = listRealEstate.get(i).getSelled();
-        if (positionSwitch == 2) {
-            if ((selledEstateList.equals("")) || selledEstateList.equals("date")) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-
-    }
-
-    private void deleteifsimplyNotselled(int i) {
-        String selledEstateList = listRealEstate.get(i).getSelled();
-        if (positionSwitch == 1) {
-            if (!selledEstateList.equals("date")) {
-                resultResearchRealEstate.remove(listRealEstate.get(i));
-            }
-        }
-    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {

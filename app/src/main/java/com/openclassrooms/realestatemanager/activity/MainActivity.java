@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private List<RealEstate> listRealEstate = serviceEstate.getRealEstateList();
     private List<RealEstate> listTemp = serviceEstate.getTempListInsert();
     private List<RealEstate> listTempUpdate = serviceEstate.getTempListUpdate();
-    private List<ImagesRealEstate> imagesRealEstateListes= serviceEstate.getImageRealEstates();
     private Adaptateur adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean amIInEuro = true;
@@ -106,72 +105,7 @@ public class MainActivity extends AppCompatActivity {
         initiateDataBaseSQL();
         detailsIfTablet();
         resultsActivityIfEstateExist();
-        testResultSqlRequet();
     }
-
-    private void testResultSqlRequet() {
-        List<String> listTest = new ArrayList<>();
-        DataBaseSQL database = DataBaseSQL.getInstance(this);
-        caseIfListsAreEmpty();
-    }
-
-    private void caseIfListsAreEmpty() {
-        DataBaseSQL database = DataBaseSQL.getInstance(this);
-        List<String> nearby= new ArrayList<>();
-        List<String> type= new ArrayList<>();
-        String datef="";
-        if (datef.trim().isEmpty()){
-            datef=null;
-        }
-        if (nearby.isEmpty()){
-            if (type.isEmpty()){
-                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(null, 1, null, null,
-                        null, null, null, null, 0,null,"false","2019-01-10");
-
-                datalist.observe(this, new Observer<List<RealEstate>>() {
-                    @Override
-                    public void onChanged(List<RealEstate> realEstateList) {
-                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            } else {
-                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(null, null, null, null,
-                        null, null, null, null, 0,null,null,"01/01/10",type);
-
-                datalist.observe(this, new Observer<List<RealEstate>>() {
-                    @Override
-                    public void onChanged(List<RealEstate> realEstateList) {
-                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        } else {
-            if (type.isEmpty()){
-                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(null, null, null, null,
-                        null, null, null, null, 0,null,null,"01/01/10",nearby);
-
-                datalist.observe(this, new Observer<List<RealEstate>>() {
-                    @Override
-                    public void onChanged(List<RealEstate> realEstateList) {
-                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            } else {
-                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(null, null, null, null,
-                        null, null, null, null, 0,null,null,"01/01/10",type,nearby);
-
-                datalist.observe(this, new Observer<List<RealEstate>>() {
-                    @Override
-                    public void onChanged(List<RealEstate> realEstateList) {
-                        Toast.makeText(MainActivity.this, "" + realEstateList.size(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void resultsActivityIfEstateExist() {
@@ -192,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void NoExistingEstateAction() {
         takeDataInBDDIfInternetIsHere();
-        takeImageInSQLITE();
         DeploytempHandler();
         deployementButtonAdd();
         deployementButtonMail();
@@ -202,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
         askPermission();
         saveDataInSQLITE();
         deployRecyclerView();
-
     }
+
 
     private void initiateDataBaseSQL() {
         database = DataBaseSQL.getInstance(this);
@@ -341,28 +274,6 @@ public class MainActivity extends AppCompatActivity {
                 listRealEstate.addAll(realEstates);
                 searchForNotif(realEstates);
                 deployRecyclerView();
-            }
-        });
-    }
-
-    private void takeImageInSQLITE() {
-        DataBaseSQL database = DataBaseSQL.getInstance(this);
-        LiveData<List<ImagesRealEstate>> datalist = database.imageDao().selectAllImage();
-        LiveData<List<NearbyEstate>> datalist3 = database.nearbyDao().selectAllImage();
-        datalist.observe(this, new Observer<List<ImagesRealEstate>>() {
-            @Override
-            public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
-                if (imagesRealEstates.size() > 0) {
-                    //         Toast.makeText(MainActivity.this, "images "+imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        datalist3.observe(this, new Observer<List<NearbyEstate>>() {
-            @Override
-            public void onChanged(List<NearbyEstate> nearbyEstates) {
-                if (nearbyEstates.size() > 0) {
-                    //           Toast. (MainActivity.this, "nearby precise" + nearbyEstates.size(), Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }
@@ -637,7 +548,6 @@ public class MainActivity extends AppCompatActivity {
     private void SQLITactionSettings() {
         takeDataInBDDIfInternetIsHere();
         saveDataInSQLITE();
-        takeImageInSQLITE();
         majNotif();
     }
 }

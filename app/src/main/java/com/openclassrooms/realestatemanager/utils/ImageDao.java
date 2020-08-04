@@ -18,10 +18,10 @@ import java.util.List;
 @Dao
 public interface ImageDao {
 
-    @Query("SELECT * FROM bddTable")
+    @Query("SELECT * FROM bddImage")
     LiveData<List<ImagesRealEstate>> selectAllImage();
 
-    @Query("SELECT * FROM bddTable WHERE idEstate = :itemid")
+    @Query("SELECT * FROM bddImage WHERE idEstate = :itemid")
     LiveData<List<ImagesRealEstate>> selectAllImageDeuxFois(int itemid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,12 +30,12 @@ public interface ImageDao {
     @Update
     int upDateEstate(ImagesRealEstate task);
 
-    @Query("DELETE FROM bddTable WHERE id = :itemid")
+    @Query("DELETE FROM bddImage WHERE id = :itemid")
     int deleteEstate(long itemid);
 
-    @Query("DELETE FROM bddTable")
+    @Query("DELETE FROM bddImage")
     void DeleteAllEstate();
 
-    @Query("DELETE FROM bddTable WHERE idEstate = :itemid")
+    @Query("DELETE FROM bddImage WHERE idEstate = :itemid")
     void DeletePArticularEstatesGroup(int itemid);
 }
