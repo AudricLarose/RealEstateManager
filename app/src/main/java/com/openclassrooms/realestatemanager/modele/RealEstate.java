@@ -33,6 +33,7 @@ public class RealEstate implements Serializable {
     private Integer surface;
     private String market;
     private Integer prix;
+    private Integer numberPhotos;
 
     private String ischecked;
     private Double lattitude;
@@ -148,6 +149,14 @@ public class RealEstate implements Serializable {
         }
         return estate;
 
+    }
+
+    public Integer getNumberPhotos() {
+        return numberPhotos;
+    }
+
+    public void setNumberPhotos(Integer numberPhotos) {
+        this.numberPhotos = numberPhotos;
     }
 
     public String getTempUpdate() {

@@ -91,7 +91,7 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
-        deployTextView(rootView);
+    deployTextView(rootView);
         realStateIfExist(rootView);
         return rootView;
     }
@@ -104,7 +104,7 @@ public class DetailFragment extends Fragment {
 
     private void takeImageAndDesciption(final View container) {
         DataBaseSQL database = DataBaseSQL.getInstance(getContext());
-        LiveData<List<ImagesRealEstate>> datalist = database.imageDao().selectAllImageDeuxFois(estateGrabbed.getId());
+        LiveData<List<ImagesRealEstate>> datalist = database.imageDao().selectAllImageinParticular(estateGrabbed.getId());
 
         try {
             datalist.observe(getViewLifecycleOwner(), new Observer<List<ImagesRealEstate>>() {
@@ -167,14 +167,14 @@ public class DetailFragment extends Fragment {
     private void realStateIfExist(View container) {
         if (modePhone) {
             estateGrabbed = grabEstatFromMainActivity();
+
         }
         if (estateGrabbed != null) {
             takeImageAndDesciption(container);
             shareInformationsDetails(container);
+            findTheDefaultAdress ();
             if (Utils.internetOnVerify(getContext())) {
                 try2FindAddress(container);
-            } else {
-                findTheDefaultAdress();
             }
             initiateSwitchSell(container);
 
@@ -225,7 +225,7 @@ public class DetailFragment extends Fragment {
     private void initiateSwitchSell(View rootView) {
         relativeLayout = rootView.findViewById(R.id.RelativeSelledDetails);
         if (estateGrabbed.getIschecked() != null && estateGrabbed.getSelled() != null) {
-            if (estateGrabbed.getSelled().equals("date")) {
+            if (estateGrabbed.getSelled().equals("date") || (estateGrabbed.getSelled().equals("Date"))) {
                 relativeLayout.setVisibility(View.INVISIBLE);
             } else {
                 relativeLayout.setVisibility(View.VISIBLE);
@@ -278,7 +278,6 @@ public class DetailFragment extends Fragment {
         adresse.setText(estateGrabbed.getAdresse());
         ville.setText(estateGrabbed.getTown());
         pays.setText(" ");
-        imageCarte.setVisibility(View.GONE);
     }
 
     private void findTheRightAdress(View container, List<Address> addressList) {

@@ -36,7 +36,6 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.florent37.materialtextfield.MaterialTextField;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
 import com.openclassrooms.realestatemanager.Api.DI;
@@ -413,7 +412,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.TITLE, "New Picture");
             values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-            values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
             imageUri = getContentResolver().insert(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -429,9 +427,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK) {
             try {
-                Bitmap thumbnail = MediaStore.Images.Media.getBitmap(
-                        getContentResolver(), imageUri);
-                String imageurl = getRealPathFromURI(imageUri);
                 listPhotoRealistetate.add(imageUri.toString());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -558,6 +553,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), Utils.reformatDate(globalResultEstate.get("date")), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
                 , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), selledEstated, lattitudeRealEState, longitudeRealEState, url);
         estate.setId(estate.hashCode());
+        estate.setNumberPhotos(listPhotoRealistetate.size());
         return estate;
     }
 
@@ -640,8 +636,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     private void photoCAse() {
-        if (dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()) != null) {
-            dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+        if (dataBaseSQL.imageDao().selectAllImageinParticular(estate.getId()) != null) {
+            dataBaseSQL.imageDao().selectAllImageinParticular(estate.getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
                     listPhotoRealistetate.clear();
@@ -752,8 +748,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 RealEstate estateForModifier = modifyEstate();
                 if (Utils.internetOnVerify(AddInformationActivity.this)) {
                     Utils.upDateMyBDDPlease(modifyEstate(), estate);
-                    handleImageUpdate();
-                    handleNearbyUpdate();
+                    handleImageUpdate(link);
+                    handleNearbyUpdate(li);
 
                     if (listPhotoRealistetate.size() > 0) {
                         try {
@@ -763,6 +759,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                                 public void onFinish(List<String> s) {
                                     progressBar.setVisibility(View.GONE);
                                     link.addAll(s);
+                                    handleImageUpdate(link);
                                     finish();
                                 }
                             });
@@ -783,12 +780,12 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void handleImageUpdate() {
+    private void handleImageUpdate(final List<String> linked) {
         Utils.eraseDataImageInBDD(modifyEstate().getId(), new Utils.CallbackErase() {
             @Override
             public void onFinish() {
                 for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-                    ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), "notlinked");
+                    ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), linked.get(i));
                     imagesRealEstate.setId(imagesRealEstate.hashCode());
                     Utils.upDateMyBDDImagePlease(imagesRealEstate);
                 }

@@ -185,6 +185,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onSuccess(List<Address> addressList) {
                     searchAndPlacePlaces(Map, addressList, estate);
                 }
+
+                @Override
+                public void onFail() {
+
+                }
             });
         }
     }

@@ -77,7 +77,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             holder.type.setTextColor(Color.BLACK);
         }
         estate = liste.get(position);
-        holder.type.setText(estate.getType());
+        holder.type.setText(estate.getIschecked());
         if (Boolean.valueOf(estate.getInEuro())) {
             try {
                 holder.prix.setText(Utils.getEuroFormat(estate.getPrix()));
@@ -113,9 +113,9 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
 
     private void imageHandling(@NonNull final LeHolder holder) {
           DataBaseSQL dataBaseSQL= DataBaseSQL.getInstance(mParentActivity);
-        if (dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId())!=null ) {
+        if (dataBaseSQL.imageDao().selectAllImageinParticular(estate.getId())!=null ) {
 
-            dataBaseSQL.imageDao().selectAllImageDeuxFois(estate.getId()).observe((LifecycleOwner) context, new Observer<List<ImagesRealEstate>>() {
+            dataBaseSQL.imageDao().selectAllImageinParticular(estate.getId()).observe((LifecycleOwner) context, new Observer<List<ImagesRealEstate>>() {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
                     if (imagesRealEstateList.size() > 0  && (!imagesRealEstateList.get(0).getLinkFb().contains("notLinked") && !imagesRealEstateList.get(0).getLinkFb().contains("notlinked"))) {

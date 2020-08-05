@@ -354,7 +354,6 @@ public class Utils {
 
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -373,7 +372,6 @@ public class Utils {
                         resultsBDD = task.getResult().toObjects(NearbyEstate.class);
                         callBackInterfaceForBDD.onFinishNearby(resultsBDD);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
                     }
 
                 } else {
@@ -454,6 +452,7 @@ public class Utils {
         note.put("surface", estate.getSurface());
         note.put("market", estate.getMarket());
         note.put("prix", estate.getPrix());
+        note.put("numberPhotos", estate.getNumberPhotos());
         note.put("lattitude", estate.getLattitude());
         note.put("longitude", estate.getLongitude());
         note.put("url", estate.getUrl());
@@ -480,6 +479,7 @@ public class Utils {
         note.put("surface", estate.getSurface());
         note.put("market", estate.getMarket());
         note.put("prix", estate.getPrix());
+        note.put("numberPhotos", estate.getNumberPhotos());
         note.put("lattitude", estate.getLattitude());
         note.put("longitude", estate.getLongitude());
         note.put("url", estate.getUrl());
