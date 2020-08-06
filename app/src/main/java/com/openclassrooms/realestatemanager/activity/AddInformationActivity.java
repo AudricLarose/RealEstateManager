@@ -748,8 +748,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 RealEstate estateForModifier = modifyEstate();
                 if (Utils.internetOnVerify(AddInformationActivity.this)) {
                     Utils.upDateMyBDDPlease(modifyEstate(), estate);
-                    handleImageUpdate(link);
-                    handleNearbyUpdate(li);
 
                     if (listPhotoRealistetate.size() > 0) {
                         try {
@@ -760,6 +758,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                                     progressBar.setVisibility(View.GONE);
                                     link.addAll(s);
                                     handleImageUpdate(link);
+                                    handleNearbyUpdate();
                                     finish();
                                 }
                             });
@@ -767,6 +766,8 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                             e.printStackTrace();
                         }
                     } else {
+                        handleImageUpdate(link);
+                        handleNearbyUpdate();
                         redirectToDetailsActivity(modifyEstate());
                     }
 
@@ -831,6 +832,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                 Integer.valueOf(globalResultEstate.get("Chambre")), globalResultEstate.get("Description"), Utils.reformatDate(globalResultEstate.get("date")), Integer.valueOf(globalResultEstate.get("Postal")), Integer.valueOf(globalResultEstate.get("Piece"))
                 , Integer.valueOf(globalResultEstate.get("Prix")), Integer.valueOf(globalResultEstate.get("SDB")), Integer.valueOf(globalResultEstate.get("Surface")), globalResultEstate.get("Ville"), selledEstated, lattitudeRealEState, longitudeRealEState, url);
         estateNew.setId(estate.getId());
+        estateNew.setNumberPhotos(listPhotoRealistetate.size());
         updateSQLite(estateNew);
         return estateNew;
     }

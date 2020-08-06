@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         resultsActivityIfEstateExist();
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void resultsActivityIfEstateExist() {
         List<RealEstate> realEstateList = grabEstatFromSearchActivity();
@@ -187,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void takeDataForNearby() {
         Utils.takeDataNEarbyInBDD(new Utils.CallBackInterfaceForBDDNearbu() {
             @Override
@@ -194,8 +196,9 @@ public class MainActivity extends AppCompatActivity {
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && nearbyEstateList.size() > 0) {
                     database.nearbyDao().DeleteAllNearby();
                     for (int i = 0; i < nearbyEstateList.size(); i++) {
-                        database.nearbyDao().insertNearby(nearbyEstateList.get(i));
-
+                        if (nearbyEstateList.get(i).getNearby() != null) {
+                            database.nearbyDao().insertNearby(nearbyEstateList.get(i));
+                        }
                     }
                 } else {
                     Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
@@ -216,10 +219,10 @@ public class MainActivity extends AppCompatActivity {
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && imagesRealEstateList.size() > 0) {
                     database.imageDao().DeleteAllEstate();
                     for (int i = 0; i < imagesRealEstateList.size(); i++) {
-                        database.imageDao().insertEstate(imagesRealEstateList.get(i));
+                        if (imagesRealEstateList.get(i).getImage() != null) {
+                            database.imageDao().insertEstate(imagesRealEstateList.get(i));
+                        }
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -237,13 +240,16 @@ public class MainActivity extends AppCompatActivity {
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && realEstateList.size() > 0) {
                     database.estateDao().DeleteAllEstate();
                     for (int i = 0; i < realEstateList.size(); i++) {
-                        database.estateDao().insertEstate(realEstateList.get(i));
+                        if (realEstateList.get(i).getPrix() != null &&realEstateList.get(i).getTown() != null && realEstateList.get(i).getType() != null) {
+                            database.estateDao().insertEstate(realEstateList.get(i));
+                        }
                     }
                     takeDataForNearby();
                     takeDataForImage();
                 } else {
                     Toast.makeText(MainActivity.this, R.string.actualisation, Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
@@ -274,23 +280,6 @@ public class MainActivity extends AppCompatActivity {
                 deployRecyclerView();
             }
         });
-        LiveData<List<ImagesRealEstate>> datalistZ = database.imageDao().selectAllImage();
-        LiveData<List<ImagesRealEstate>> datalist3 = database.imageDao().selectAllImageNumber();
-        int datalist4 = database.imageDao().selectAllImageNumbered();
-        Toast.makeText(this, ""+ datalist4, Toast.LENGTH_SHORT).show();
-        datalist3.observe(this, new Observer<List<ImagesRealEstate>>() {
-            @Override
-            public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
-                Toast.makeText(MainActivity.this, ""+ imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        datalistZ.observe(this, new Observer<List<ImagesRealEstate>>() {
-            @Override
-            public void onChanged(List<ImagesRealEstate> imagesRealEstates) {
-                Toast.makeText(MainActivity.this, ""+ imagesRealEstates.size(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
 
@@ -341,28 +330,34 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < listTemp.size(); i++) {
                         Utils.sendItToMyBDDatRealEstate(listTemp.get(i));
                         final int finalI = i;
-                        send2nearby(dataBaseSQL, i, finalI);
-                        send2Image(dataBaseSQL, i, finalI);
                         final List<String> photos = new ArrayList<>();
                         final int finalI1 = i;
+                        final List<String> link = new ArrayList<>();
                         dataBaseSQL.imageDao().selectAllImageinParticular(listTemp.get(i).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
                             @Override
                             public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
-                                for (int j = 0; j < imagesRealEstateList.size(); j++) {
-                                    photos.add(imagesRealEstateList.get(finalI1).getImage());
-                                }
-                                try {
-                                    Utils.uploadImage(listTemp.get(finalI1), photos, MainActivity.this, new Utils.CallBackImage() {
-                                        @Override
-                                        public void onFinish(List<String> s) {
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                if (imagesRealEstateList.size() > 0) {
+                                    for (int j = 0; j < imagesRealEstateList.size(); j++) {
+                                        photos.add(imagesRealEstateList.get(finalI1).getImage());
+                                    }
+                                    try {
+                                        Utils.uploadImage(listTemp.get(finalI1), photos, MainActivity.this, new Utils.CallBackImage() {
+                                            @Override
+                                            public void onFinish(List<String> s) {
+                                                link.addAll(s);
+                                                send2nearby(dataBaseSQL, finalI);
+                                                send2Image(dataBaseSQL, finalI, link);
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    send2nearby(dataBaseSQL, finalI);
+                                    send2Image(dataBaseSQL, finalI, link);
                                 }
                             }
                         });
-
                         listTemp.get(i).setTempInsert("False");
                         database.estateDao().upDateEstate(listTemp.get(i));
                     }
@@ -383,19 +378,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void send2Image(DataBaseSQL dataBaseSQL, int i, final int finalI) {
-        dataBaseSQL.imageDao().selectAllImageinParticular(listTemp.get(i).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+    private void send2Image(DataBaseSQL dataBaseSQL, final int finalI, final List<String> link) {
+        dataBaseSQL.imageDao().selectAllImageinParticular(listTemp.get(finalI).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
             @Override
             public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
                 for (int j = 0; j < imagesRealEstateList.size(); j++) {
+                    imagesRealEstateList.get(finalI).setLinkFb(link.get(0));
                     Utils.sendMyBDDImagePlease(imagesRealEstateList.get(finalI));
                 }
             }
         });
     }
 
-    private void send2nearby(DataBaseSQL dataBaseSQL, int i, final int finalI) {
-        dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTemp.get(i).getId()).observe(this, new Observer<List<NearbyEstate>>() {
+    private void send2nearby(DataBaseSQL dataBaseSQL, final int finalI) {
+        dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTemp.get(finalI).getId()).observe(this, new Observer<List<NearbyEstate>>() {
             @Override
             public void onChanged(List<NearbyEstate> nearbyEstateList) {
                 for (int j = 0; j < nearbyEstateList.size(); j++) {

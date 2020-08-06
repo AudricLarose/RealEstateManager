@@ -62,7 +62,6 @@ public class AdaptateurImage extends RecyclerView.Adapter<AdaptateurImage.LeHold
          holder.details_description.setText(listDescription.get(position));
     }
 
-
     private void erAseImage(Context context, String estateImage, int position) {
         AlertDialog alertDialog = eraseImageAlertDIalg(context,estateImage,position);
         alertDialog.show();

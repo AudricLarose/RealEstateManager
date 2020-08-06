@@ -77,7 +77,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             holder.type.setTextColor(Color.BLACK);
         }
         estate = liste.get(position);
-        holder.type.setText(estate.getIschecked());
+        holder.type.setText(estate.getType());
         if (Boolean.valueOf(estate.getInEuro())) {
             try {
                 holder.prix.setText(Utils.getEuroFormat(estate.getPrix()));
