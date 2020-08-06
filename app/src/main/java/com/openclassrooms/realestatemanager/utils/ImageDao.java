@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.utils;
 
-import android.database.Cursor;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -9,9 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.openclassrooms.realestatemanager.modele.ImageAndRealEstate;
 import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
-import com.openclassrooms.realestatemanager.modele.RealEstate;
 
 import java.util.List;
 

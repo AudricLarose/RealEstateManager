@@ -513,7 +513,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private void insertCHildToRoom(RealEstate estate1) {
         for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-            ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate1.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), "notlinked");
+            ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate1.getId(), descritpionImage.get(i), listPhotoRealistetate.get(i), "notlinked");
             imagesRealEstate.setId(imagesRealEstate.hashCode());
             dataBaseSQL.imageDao().insertEstate(imagesRealEstate);
         }
@@ -574,7 +574,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         if (Utils.internetOnVerify(this)) {
             Utils.sendItToMyBDDatRealEstate(estate);
             for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-                ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), link.get(i));
+                ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(),descritpionImage.get(i), listPhotoRealistetate.get(i), link.get(i));
                 imagesRealEstate.setId(imagesRealEstate.hashCode());
                 Utils.sendMyBDDImagePlease(imagesRealEstate);
             }
@@ -773,7 +773,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
             @Override
             public void onFinish() {
                 for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-                    ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), linked.get(i));
+                    ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estate.getId(), descritpionImage.get(i), listPhotoRealistetate.get(i), linked.get(i));
                     imagesRealEstate.setId(imagesRealEstate.hashCode());
                     Utils.upDateMyBDDImagePlease(imagesRealEstate);
                 }
@@ -836,7 +836,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
 
     private void imageinsertInSqlite(RealEstate estateNew) {
         for (int i = 0; i < listPhotoRealistetate.size(); i++) {
-            ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estateNew.getId(), globalResultEstate.get("Description"), listPhotoRealistetate.get(i), "notLinked");
+            ImagesRealEstate imagesRealEstate = new ImagesRealEstate(estateNew.getId(), descritpionImage.get(i), listPhotoRealistetate.get(i), "notLinked");
             imagesRealEstate.setId(imagesRealEstate.hashCode());
             dataBaseSQL.imageDao().insertEstate(imagesRealEstate);
         }

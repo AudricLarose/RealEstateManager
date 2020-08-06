@@ -82,6 +82,13 @@
         app:srcCompat="@drawable/ic_markunread_mailbox_black_24dp"
         tools:ignore="VectorDrawableCompat" />
 
-
+    <ProgressBar
+        android:id="@+id/progress_bar_main"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:progress="@android:integer/config_longAnimTime"
+        android:progressBackgroundTint="@color/colorSecondary"
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

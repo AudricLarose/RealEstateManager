@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView textNotif;
     private DataBaseSQL database;
+    private ProgressBar progressBar;
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void askPermission() {
@@ -100,12 +103,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        deployProgressBar();
         setSupportActionBar(toolbar);
         setTitle(R.string.Welcome);
         initiateDataBaseSQL();
         detailsIfTablet();
         resultsActivityIfEstateExist();
+    }
 
+    private void deployProgressBar() {
+        progressBar = findViewById(R.id.progress_bar_main);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -135,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         askPermission();
         saveDataInSQLITE();
         deployRecyclerView();
+
     }
 
 
@@ -241,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 if (listTemp.size() == 0 || listTempUpdate.size() == 0 && realEstateList.size() > 0) {
                     database.estateDao().DeleteAllEstate();
                     for (int i = 0; i < realEstateList.size(); i++) {
-                        if (realEstateList.get(i).getPrix() != null &&realEstateList.get(i).getTown() != null && realEstateList.get(i).getType() != null) {
+                        if (realEstateList.get(i).getPrix() != null && realEstateList.get(i).getTown() != null && realEstateList.get(i).getType() != null) {
                             database.estateDao().insertEstate(realEstateList.get(i));
                         }
                     }
@@ -318,60 +326,69 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void DeploytempHandler() {
-        sendTempInsertFileToFireB();
+        sendTempInsertFileToFireB(listTemp);
     }
 
-    private void sendTempInsertFileToFireB() {
-        if (listTemp.size() == 0) {
+    private void sendTempInsertFileToFireB(final List<RealEstate> listTempE) {
+        if (listTempE.size() == 0) {
+            if (listTempUpdate.size() != 0) {
+                sendTempUpdateFileToFireB(listTempUpdate);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
             Toast.makeText(this, R.string.aucunmail, Toast.LENGTH_SHORT).show();
         } else {
             if (Utils.internetOnVerify(this)) {
-                if (listTemp.size() > 0) {
+                if (listTempE.size() > 0) {
                     final DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(this);
-                    for (int i = 0; i < listTemp.size(); i++) {
-                        Utils.sendItToMyBDDatRealEstate(listTemp.get(i));
-                        final int finalI = i;
+                    for (int i = 0; i < listTempE.size(); i++) {
+                        Utils.sendItToMyBDDatRealEstate(listTempE.get(i));
                         final List<String> photos = new ArrayList<>();
-                        final int finalI1 = i;
                         final List<String> link = new ArrayList<>();
-                        dataBaseSQL.imageDao().selectAllImageinParticular(listTemp.get(i).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+                        dataBaseSQL.imageDao().selectAllImageinParticular(listTempE.get(i).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
                             @Override
                             public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
                                 if (imagesRealEstateList.size() > 0) {
                                     for (int j = 0; j < imagesRealEstateList.size(); j++) {
-                                        photos.add(imagesRealEstateList.get(finalI1).getImage());
+                                        photos.add(imagesRealEstateList.get(j).getImage());
                                     }
                                     try {
-                                        Utils.uploadImage(listTemp.get(finalI1), photos, MainActivity.this, new Utils.CallBackImage() {
+                                        Utils.uploadImage(listTempE.get(listTempE.size() - 1), photos, MainActivity.this, new Utils.CallBackImage() {
                                             @Override
                                             public void onFinish(List<String> s) {
                                                 link.addAll(s);
-                                                send2nearby(dataBaseSQL, finalI);
-                                                send2Image(dataBaseSQL, finalI, link);
+                                                send2nearby(dataBaseSQL, listTempE);
+                                                send2Image(dataBaseSQL, link, listTempE);
+                                                if (listTempE.size() != 0) {
+                                                    listTempE.remove(listTempE.size() - 1);
+                                                }
                                             }
                                         });
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        send2nearby(dataBaseSQL, finalI);
-                                        send2Image(dataBaseSQL, finalI, link);
+                                        send2nearby(dataBaseSQL, listTempE);
+                                        send2Image(dataBaseSQL, link, listTempE);
+                                        if (listTempE.size() != 0) {
+                                            listTempE.remove(listTempE.size() - 1);
+                                        }
                                     }
                                 } else {
-                                    send2nearby(dataBaseSQL, finalI);
-                                    send2Image(dataBaseSQL, finalI, link);
+                                    send2nearby(dataBaseSQL, listTempE);
+                                    send2Image(dataBaseSQL, link, listTempE);
+                                    if (listTempE.size() != 0) {
+                                        listTempE.remove(listTempE.size() - 1);
+                                    }
                                 }
                             }
                         });
-                        listTemp.get(i).setTempInsert("False");
-                        database.estateDao().upDateEstate(listTemp.get(i));
+                        listTempE.get(i).setTempInsert("False");
+                        database.estateDao().upDateEstate(listTempE.get(i));
                     }
                     Toast.makeText(this, R.string.sent, Toast.LENGTH_SHORT).show();
-                    if (listTempUpdate.size() > 0) {
-                        sendTempUpdateFileToFireB();
-                    }
                     majNotif();
                 } else {
                     if (listTempUpdate.size() > 0) {
-                        sendTempUpdateFileToFireB();
+                        sendTempUpdateFileToFireB(listTempUpdate);
                     }
                 }
             } else {
@@ -380,46 +397,154 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void send2Image(DataBaseSQL dataBaseSQL, final int finalI, final List<String> link) {
-        if ( listTemp.size()>0 && link.size()>0) {
-            dataBaseSQL.imageDao().selectAllImageinParticular(listTemp.get(finalI).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+    interface CallBack {
+        void onFinish();
+    }
+
+    private void send2ImageUpdate(final DataBaseSQL dataBaseSQL, final List<String> link, final List<RealEstate> listTempUp, final CallBack callBack) {
+        if (listTempUp.size() > 0 && link.size() > 0) {
+            Utils.eraseDataImageInBDD(listTempUp.get(listTempUp.size() - 1).getId(), new Utils.CallbackErase() {
+                @Override
+                public void onFinish() {
+                    if (listTempUp.size() > 0 && link.size() > 0) {
+                        dataBaseSQL.imageDao().selectAllImageinParticular(listTempUp.get(listTempUp.size() - 1).getId()).observe(MainActivity.this, new Observer<List<ImagesRealEstate>>() {
+                            @Override
+                            public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
+                                for (int j = 0; j < imagesRealEstateList.size(); j++) {
+                                    imagesRealEstateList.get(j).setLinkFb(link.get(0));
+                                    Utils.sendMyBDDImagePlease(imagesRealEstateList.get(j));
+                                }
+                                callBack.onFinish();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        ;
+    }
+
+    private void send2Image(DataBaseSQL dataBaseSQL, final List<String> link, List<RealEstate> listTempE) {
+        if (listTempE.size() > 0 && link.size() > 0) {
+            dataBaseSQL.imageDao().selectAllImageinParticular(listTempE.get(listTempE.size() - 1).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
                     for (int j = 0; j < imagesRealEstateList.size(); j++) {
-                        imagesRealEstateList.get(finalI).setLinkFb(link.get(0));
-                        Utils.sendMyBDDImagePlease(imagesRealEstateList.get(finalI));
+                        imagesRealEstateList.get(j).setLinkFb(link.get(0));
+                        Utils.sendMyBDDImagePlease(imagesRealEstateList.get(j));
                     }
                 }
             });
         }
     }
 
-    private void send2nearby(DataBaseSQL dataBaseSQL, final int finalI) {
-        if ( listTemp.size()>0 ) {
-            dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTemp.get(finalI).getId()).observe(this, new Observer<List<NearbyEstate>>() {
+    private void send2nearby(DataBaseSQL dataBaseSQL, List<RealEstate> listTempE) {
+        if (listTempE.size() > 0) {
+            dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTempE.get(listTempE.size() - 1).getId()).observe(this, new Observer<List<NearbyEstate>>() {
                 @Override
                 public void onChanged(List<NearbyEstate> nearbyEstateList) {
                     for (int j = 0; j < nearbyEstateList.size(); j++) {
-                        Utils.sendMyBDDNearbyPlease(nearbyEstateList.get(finalI));
+                        Utils.sendMyBDDNearbyPlease(nearbyEstateList.get(j));
                     }
                 }
             });
         }
     }
 
-    private void sendTempUpdateFileToFireB() {
-        if (listTempUpdate.size() == 0) {
+    private void send2nearbyUpdate(final DataBaseSQL dataBaseSQL, final List<RealEstate> listTempE) {
+        if (listTempE.size() > 0) {
+            Utils.eraseDataNEarbyInBDD(listTempE.get(listTempE.size() - 1).getId(), new Utils.CallbackErase() {
+                @Override
+                public void onFinish() {
+                    if (listTempE.size() > 0) {
+                        dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTempE.get(listTempE.size() - 1).getId()).observe(MainActivity.this, new Observer<List<NearbyEstate>>() {
+                            @Override
+                            public void onChanged(List<NearbyEstate> nearbyEstateList) {
+                                for (int j = 0; j < nearbyEstateList.size(); j++) {
+                                    Utils.sendMyBDDNearbyPlease(nearbyEstateList.get(j));
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+        }
+    }
+
+    private void sendTempUpdateFileToFireB(final List<RealEstate> listTempA) {
+
+        if (listTempA.size() == 0) {
             Toast.makeText(this, R.string.aucunmail, Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
         } else {
             if (Utils.internetOnVerify(this)) {
-                if (listTempUpdate.size() > 0) {
-                    for (int i = 0; i < listTempUpdate.size(); i++) {
-                        Utils.upDateMyBDDPlease(listTempUpdate.get(i), listTempUpdate.get(i));
-                        listTempUpdate.get(i).setTempInsert("False");
-                        database.estateDao().upDateEstate(listTempUpdate.get(i));
+                progressBar.setVisibility(View.VISIBLE);
+                if (listTempA.size() > 0) {
+                    final DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(this);
+                    for (int i = 0; i < listTempA.size(); i++) {
+                        Utils.sendItToMyBDDatRealEstate(listTempA.get(i));
+                        final List<String> photos = new ArrayList<>();
+                        final List<String> link = new ArrayList<>();
+                        dataBaseSQL.imageDao().selectAllImageinParticular(listTempA.get(i).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+                            @Override
+                            public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
+                                if (imagesRealEstateList.size() > 0) {
+                                    for (int j = 0; j < imagesRealEstateList.size(); j++) {
+                                        photos.add(imagesRealEstateList.get(j).getImage());
+                                    }
+                                    try {
+                                        send2nearbyUpdate(dataBaseSQL, listTempA);
+                                        Utils.uploadImage(listTempA.get(listTempA.size() - 1), photos, MainActivity.this, new Utils.CallBackImage() {
+                                            @Override
+                                            public void onFinish(List<String> s) {
+                                                link.addAll(s);
+                                                send2ImageUpdate(dataBaseSQL, link, listTempA, new CallBack() {
+                                                    @Override
+                                                    public void onFinish() {
+                                                        if (listTempA.size() != 0) {
+                                                            listTempA.remove(listTempA.size() - 1);
+                                                        }
+                                                        progressBar.setVisibility(View.GONE);
+
+                                                    }
+                                                });
+
+
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        send2nearbyUpdate(dataBaseSQL, listTempA);
+                                        send2ImageUpdate(dataBaseSQL, link, listTempA, new CallBack() {
+                                            @Override
+                                            public void onFinish() {
+                                                if (listTempA.size() != 0) {
+                                                    listTempA.remove(listTempA.size() - 1);
+                                                }
+                                            }
+                                        });
+                                        progressBar.setVisibility(View.GONE);
+
+                                    }
+                                } else {
+                                    send2nearbyUpdate(dataBaseSQL, listTempA);
+                                    send2ImageUpdate(dataBaseSQL, link, listTempA, new CallBack() {
+                                        @Override
+                                        public void onFinish() {
+                                            if (listTempA.size() != 0) {
+                                                listTempA.remove(listTempA.size() - 1);
+                                            }
+                                        }
+                                    });
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+                        listTempA.get(i).setTempUpdate("false");
+
                     }
                     Toast.makeText(this, R.string.sent, Toast.LENGTH_SHORT).show();
-                    listTempUpdate.clear();
                     majNotif();
                 }
             } else {
