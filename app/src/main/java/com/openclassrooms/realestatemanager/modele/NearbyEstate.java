@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.modele;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "bddNearby", foreignKeys = @ForeignKey(entity = RealEstate.class,
@@ -21,6 +22,7 @@ public class NearbyEstate {
     public NearbyEstate() {
     }
 
+    @Ignore
     public NearbyEstate(int idEstate, String nearby) {
         this.idEstate = idEstate;
         this.nearby = nearby;

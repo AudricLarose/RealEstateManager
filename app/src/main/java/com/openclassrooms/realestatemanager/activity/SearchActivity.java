@@ -20,29 +20,38 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
-import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.DI;
+import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.Api.ExtendedServiceEstate;
-import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
+import com.openclassrooms.realestatemanager.utils.DatePickerFragment;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+    private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     List<TextInputLayout> editTextContainer = new ArrayList<>();
+    Integer priceMinENtryByUserValue = null;
+    Integer priceMaxENtryByUserValue = null;
+    Integer surfaceMaxENtryByUserValue = null;
+    Integer surfaceMinENtryByUserValue = null;
+    Integer chambreENtryByUserValue = null;
+    Integer pieceENtryByUserValue = null;
+    Integer SDBENtryByUserValue = null;
+    String townENtryByUserValue = null;
+    String eMarketValue = null;
     private Boolean binear;
     private Chip Cecole;
     private Chip Cmagasin;
@@ -61,22 +70,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private RelativeLayout relativeLayoutSell;
     private TextView edit_ontheSell;
     private List<String> globaleResulforCompare = new ArrayList<>();
-    private static List<RealEstate> resultResearchRealEstate = new ArrayList<>();
     private String resultsValidatedByUserForPhotos;
-    private String resultsValidatedByUserForAgent="";
-    private List<String>    resultsValidatedByUserForTypes;
+    private String resultsValidatedByUserForAgent = "";
+    private List<String> resultsValidatedByUserForTypes;
     private int positionSwitch;
     private DataBaseSQL database = DataBaseSQL.getInstance(this);
-    Integer priceMinENtryByUserValue = null;
-    Integer priceMaxENtryByUserValue = null;
-    Integer surfaceMaxENtryByUserValue = null;
-    Integer surfaceMinENtryByUserValue = null;
-    Integer chambreENtryByUserValue = null;
-    Integer pieceENtryByUserValue = null;
-    Integer SDBENtryByUserValue = null;
-    String townENtryByUserValue = null;
-    String eMarketValue=null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +194,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
     private void addTimebyDefault() {
         if (eMarket.getText().toString().trim().isEmpty() || eMarket.getText().toString().contains("date")) {
-            String date = Utils.getDateFormat(this,Calendar.getInstance());
+            String date = Utils.getDateFormat(this, Calendar.getInstance());
             eMarket.setText(date);
         }
 
@@ -204,38 +202,38 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
 
     private void caseIfListsAreEmpty() {
-        String choice=null;
+        String choice = null;
         if (binear != null) {
-             choice = binear.toString();
+            choice = binear.toString();
         } else {
             choice = null;
         }
 
-        if (resultsValidatedByUserForNearBy.size()==0) {
-            if ((resultsValidatedByUserForTypes.size()==0)) {
+        if (resultsValidatedByUserForNearBy.size() == 0) {
+            if ((resultsValidatedByUserForTypes.size() == 0)) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSorted(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice,(eMarketValue));
-                        resultResearchSQL(datalist);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, (eMarketValue));
+                resultResearchSQL(datalist);
             } else {
-                    LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
+                LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListType(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
                         surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarketValue, resultsValidatedByUserForTypes);
                 resultResearchSQL(datalist);
             }
         } else {
-            if (resultsValidatedByUserForTypes.size()==0) {
+            if (resultsValidatedByUserForTypes.size() == 0) {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListNEarby(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
                         surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarketValue, resultsValidatedByUserForNearBy);
                 resultResearchSQL(datalist);
             } else {
                 LiveData<List<RealEstate>> datalist = database.estateDao().selectAllEstateSortedListTypeNEarbyToo(townENtryByUserValue, priceMinENtryByUserValue, priceMaxENtryByUserValue, surfaceMinENtryByUserValue,
-                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice   , eMarketValue, resultsValidatedByUserForTypes, resultsValidatedByUserForNearBy);
+                        surfaceMaxENtryByUserValue, pieceENtryByUserValue, chambreENtryByUserValue, SDBENtryByUserValue, Integer.valueOf(resultsValidatedByUserForPhotos), resultsValidatedByUserForAgent, choice, eMarketValue, resultsValidatedByUserForTypes, resultsValidatedByUserForNearBy);
                 resultResearchSQL(datalist);
             }
         }
     }
 
     private void resultResearchSQL(final LiveData<List<RealEstate>> datalist) {
-        List<String> datas=new ArrayList<>();
+        List<String> datas = new ArrayList<>();
         datalist.observe(this, new Observer<List<RealEstate>>() {
             @Override
             public void onChanged(List<RealEstate> realEstateList) {
@@ -379,7 +377,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         c.set(Calendar.DAY_OF_MONTH, day);
         String dateActuelle = DateFormat.getDateInstance().format(c.getTime());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String date = Utils.getDateFormat(this,c);
+        String date = Utils.getDateFormat(this, c);
         FragmentManager fragmanager = getSupportFragmentManager();
         if (fragmanager.findFragmentByTag("Date Picker1") != null) {
             edit_ontheSell.setText(date);
@@ -546,7 +544,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
 
-
     private void goToNextResultActivity(List<RealEstate> resultResearchRealEstates) {
         Intent intent = new Intent(this, ResultsActivity.class);
         Bundle bundle = new Bundle();
@@ -588,6 +585,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     protected void onResume() {
         super.onResume();
         reset();
-        resultsValidatedByUserForAgent="";
+        resultsValidatedByUserForAgent = "";
     }
 }

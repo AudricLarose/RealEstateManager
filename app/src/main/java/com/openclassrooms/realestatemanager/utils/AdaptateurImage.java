@@ -97,12 +97,10 @@ public class AdaptateurImage extends RecyclerView.Adapter<AdaptateurImage.LeHold
 
     public static class LeHolder extends RecyclerView.ViewHolder {
         private ImageView imageRealEstate;
-        private RelativeLayout relativeLayoutImage;
         private TextView details_description;
         public LeHolder(@NonNull View itemView) {
             super(itemView);
             imageRealEstate = itemView.findViewById(R.id.imageRealEstate);
-            relativeLayoutImage= itemView.findViewById(R.id.RelativeLayoutRoowImage);
             details_description= itemView.findViewById(R.id.details_description);
         }
     }

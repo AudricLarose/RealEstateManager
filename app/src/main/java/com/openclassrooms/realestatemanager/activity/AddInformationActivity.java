@@ -438,20 +438,6 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
         }
     }
 
-    public String getRealPathFromURI(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        assert cursor != null;
-        if (cursor.moveToFirst()) {
-            ;
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        return res;
-    }
-
     private void initiateAndActivateCancelButton() {
         btnCancel = findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -759,6 +745,7 @@ public class AddInformationActivity extends AppCompatActivity implements DatePic
                                     link.addAll(s);
                                     handleImageUpdate(link);
                                     handleNearbyUpdate();
+                                    Utils.notifyme(AddInformationActivity.this);
                                     finish();
                                 }
                             });

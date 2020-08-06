@@ -106,5 +106,7 @@
     <string name="gpssetting">I set My GPS</string>
     <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">Vous devez allumer votre option GPS pour beneficier de toutes les fonctionnalitées de la carte</string>
     <string name="map">carte</string>
-    <string name="dateselll">date</string>
+    <string name="dateselll" translatable="false">date</string>
+    <string name="success">Votre envoie est une reussite</string>
+    <string name="send">Votre envoie</string>
 </resources>

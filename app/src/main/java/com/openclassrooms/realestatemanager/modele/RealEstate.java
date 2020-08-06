@@ -4,6 +4,7 @@ import android.content.ContentValues;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -48,6 +49,7 @@ public class RealEstate implements Serializable {
     public RealEstate() {
     }
 
+    @Ignore
     public RealEstate(String inEuro, String ischecked, String type, String nomAgent, String adresse, Integer chambre, String description, String market, Integer postal, Integer piece, Integer prix, Integer sdb, Integer surface, String town, String selled, Double latitude, Double longitude, String url) {
         this.type = type;
         this.adresse = adresse;
@@ -69,7 +71,7 @@ public class RealEstate implements Serializable {
         this.selled = selled;
     }
 
-
+    @Ignore
     public RealEstate(String inEuro, String ischecked, String type, String nomAgent, String adresse, int chambre, String description, String market, int postal, int piece, int prix, int sdb, int surface, String town, String selled, double longitude, double lattitude, String url) {
         this.type = type;
         this.adresse = adresse;

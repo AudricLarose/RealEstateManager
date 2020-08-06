@@ -4,6 +4,7 @@ package com.openclassrooms.realestatemanager.modele;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class ImagesRealEstate {
     public ImagesRealEstate() {
     }
 
+    @Ignore
     public ImagesRealEstate(int idEstate, String descriptionImage, String image, String linkFb) {
         this.idEstate = idEstate;
         this.descriptionImage = descriptionImage;

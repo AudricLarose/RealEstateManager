@@ -24,11 +24,6 @@ public interface ImageDao {
     @Query("SELECT * FROM bddImage WHERE idEstate = :itemid")
 
     LiveData<List<ImagesRealEstate>> selectAllImageinParticular(int itemid);
-    @Query("SELECT  bdd.*, bddImage.idEstate, bddImage.image,bddImage.descriptionImage,bddImage.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
-            "LEFT OUTER JOIN bddImage ON  bdd.id= bddImage.idEstate" +
-            "  LEFT OUTER JOIN bddNearby ON bdd.id=bddNearby.idEstate " +
-            "WHERE (SELECT count(bddImage.image) from bddImage WHERE bddImage.idEstate=bdd.id )>=COALESCE(1, 0)")
-    LiveData<List<ImagesRealEstate>> selectAllImageNumber();
 
     @Query("SELECT count(bddImage.image) from bddImage ")
     int selectAllImageNumbered();

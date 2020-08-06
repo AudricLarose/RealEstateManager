@@ -406,15 +406,15 @@ public class Utils {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel notificationChannel = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel = new NotificationChannel("channel1", "Votre envoie est une reussite", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel = new NotificationChannel("channel1", context.getString(R.string.success), NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(notificationChannel);
         } else {
             Toast.makeText(context, "Erreur Notification", Toast.LENGTH_SHORT).show();
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "channel1");
-        builder.setContentTitle("Votre envoie")
-                .setContentText("Votre envoie est une reussité")
+        builder.setContentTitle(context.getString(R.string.send))
+                .setContentText(context.getString(R.string.success))
                 .setSmallIcon(R.mipmap.ic_launcher);
         if (notificationManager != null) {
             notificationManager.notify(1, builder.build());

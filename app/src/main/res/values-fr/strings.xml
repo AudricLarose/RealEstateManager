@@ -100,4 +100,7 @@
     <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">Vous devez allumer votre option GPS pour beneficier de toutes les fonctionnalitées de la carte</string>
     <string name="gpssetting">GPS Activé !</string>
     <string name="map">Carte</string>
+    <string name="providerinternet">Vous devez etre connecté a Internet pour profiter de la carte</string>
+    <string name="success">Votre envoie est une reussite</string>
+    <string name="send">Votre envoie</string>
 </resources>

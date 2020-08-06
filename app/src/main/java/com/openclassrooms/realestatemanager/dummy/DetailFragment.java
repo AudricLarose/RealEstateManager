@@ -225,7 +225,7 @@ public class DetailFragment extends Fragment {
     private void initiateSwitchSell(View rootView) {
         relativeLayout = rootView.findViewById(R.id.RelativeSelledDetails);
         if (estateGrabbed.getIschecked() != null && estateGrabbed.getSelled() != null) {
-            if (estateGrabbed.getSelled().equals("date") || (estateGrabbed.getSelled().equals("Date"))) {
+              if (estateGrabbed.getSelled().equals("date") || (estateGrabbed.getSelled().equals("Date"))) {
                 relativeLayout.setVisibility(View.INVISIBLE);
             } else {
                 relativeLayout.setVisibility(View.VISIBLE);

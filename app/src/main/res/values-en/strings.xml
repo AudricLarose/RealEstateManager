@@ -101,4 +101,7 @@
     <string name="vous_devez_allumer_votre_option_gps_pour_beneficier_de_toutes_les_fonctionnalit_es_de_la_carte">You Have to set your gps to active the Map</string>
     <string name="gpssetting">I set My GPS</string>
     <string name="map">Map</string>
+    <string name="providerinternet">You must be connected to internet</string>
+    <string name="success">Your sent is a success</string>
+    <string name="send">Your Sent</string>
 </resources>

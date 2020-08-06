@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DeploytempHandler();
+                majNotif();
             }
         });
     }
@@ -351,6 +352,8 @@ public class MainActivity extends AppCompatActivity {
                                         });
                                     } catch (Exception e) {
                                         e.printStackTrace();
+                                        send2nearby(dataBaseSQL, finalI);
+                                        send2Image(dataBaseSQL, finalI, link);
                                     }
                                 } else {
                                     send2nearby(dataBaseSQL, finalI);
@@ -365,7 +368,6 @@ public class MainActivity extends AppCompatActivity {
                     if (listTempUpdate.size() > 0) {
                         sendTempUpdateFileToFireB();
                     }
-                    listTemp.clear();
                     majNotif();
                 } else {
                     if (listTempUpdate.size() > 0) {
@@ -379,26 +381,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void send2Image(DataBaseSQL dataBaseSQL, final int finalI, final List<String> link) {
-        dataBaseSQL.imageDao().selectAllImageinParticular(listTemp.get(finalI).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
-            @Override
-            public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
-                for (int j = 0; j < imagesRealEstateList.size(); j++) {
-                    imagesRealEstateList.get(finalI).setLinkFb(link.get(0));
-                    Utils.sendMyBDDImagePlease(imagesRealEstateList.get(finalI));
+        if ( listTemp.size()>0 && link.size()>0) {
+            dataBaseSQL.imageDao().selectAllImageinParticular(listTemp.get(finalI).getId()).observe(this, new Observer<List<ImagesRealEstate>>() {
+                @Override
+                public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
+                    for (int j = 0; j < imagesRealEstateList.size(); j++) {
+                        imagesRealEstateList.get(finalI).setLinkFb(link.get(0));
+                        Utils.sendMyBDDImagePlease(imagesRealEstateList.get(finalI));
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void send2nearby(DataBaseSQL dataBaseSQL, final int finalI) {
-        dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTemp.get(finalI).getId()).observe(this, new Observer<List<NearbyEstate>>() {
-            @Override
-            public void onChanged(List<NearbyEstate> nearbyEstateList) {
-                for (int j = 0; j < nearbyEstateList.size(); j++) {
-                    Utils.sendMyBDDNearbyPlease(nearbyEstateList.get(finalI));
+        if ( listTemp.size()>0 ) {
+            dataBaseSQL.nearbyDao().selectAllNearbyCondition(listTemp.get(finalI).getId()).observe(this, new Observer<List<NearbyEstate>>() {
+                @Override
+                public void onChanged(List<NearbyEstate> nearbyEstateList) {
+                    for (int j = 0; j < nearbyEstateList.size(); j++) {
+                        Utils.sendMyBDDNearbyPlease(nearbyEstateList.get(finalI));
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void sendTempUpdateFileToFireB() {

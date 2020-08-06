@@ -3,10 +3,12 @@ package com.openclassrooms.realestatemanager.utils;
 import android.database.Cursor;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.ColumnInfo;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RoomWarnings;
 import androidx.room.Update;
 
 import com.openclassrooms.realestatemanager.modele.RealEstate;
@@ -33,6 +35,7 @@ public abstract class EstateDao {
     @Query("DELETE FROM bdd")
     public abstract void DeleteAllEstate();
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT DISTINCT bdd.*, bddImage.idEstate, bddImage.image,bddImage.descriptionImage,bddImage.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT OUTER JOIN bddImage ON  bdd.id= bddImage.idEstate" +
             " LEFT OUTER JOIN bddNearby ON bdd.id=bddNearby.idEstate " +
@@ -54,7 +57,7 @@ public abstract class EstateDao {
 
 
 
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT DISTINCT bdd.*, bddImage.idEstate, bddImage.image,bddImage.descriptionImage,bddImage.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddImage ON  bdd.id= bddImage.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
@@ -75,18 +78,15 @@ public abstract class EstateDao {
     public abstract LiveData<List<RealEstate>> selectAllEstateSortedListNEarby(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                                Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listnearby);
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT DISTINCT bdd.*, bddImage.idEstate, bddImage.image,bddImage.descriptionImage,bddImage.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddImage ON  bdd.id= bddImage.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
             "where strftime('%s', ischecked)BETWEEN COALESCE(strftime('%s', :datef),'1999-01-01')AND '2060-01-20'")
     public abstract LiveData<List<RealEstate>> selectAllEstateSortediselled(String datef);
 
-    @Query("SELECT DISTINCT bdd.*, bddImage.idEstate, bddImage.image,bddImage.descriptionImage,bddImage.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
-            "LEFT OUTER JOIN bddImage ON  bdd.id= bddImage.idEstate" +
-            " LEFT OUTER JOIN bddNearby ON bddNearby.idEstate = bdd.id ")
-    public abstract LiveData<List<RealEstate>> selectAllEstateSortediselled();
 
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT DISTINCT bdd.*, bddImage.idEstate, bddImage.image,bddImage.descriptionImage,bddImage.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddImage ON  bdd.id= bddImage.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
@@ -106,6 +106,7 @@ public abstract class EstateDao {
     public abstract LiveData<List<RealEstate>> selectAllEstateSortedListType(String town, Integer minPrice, Integer maxPrice, Integer minSurface, Integer maxSurface,
                                                                              Integer minNbRoom, Integer minNbBedrooms, Integer minNbBathrooms, int count, String agentName, String binear, String start_date, List<String> listType);
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT DISTINCT bdd.*, bddImage.idEstate, bddImage.image,bddImage.descriptionImage,bddImage.linkFb,bddNearby.idEstate, bddNearby.nearby FROM bdd " +
             "LEFT JOIN bddImage ON  bdd.id= bddImage.idEstate" +
             " LEFT JOIN bddNearby ON bddNearby.idEstate = bdd.id " +
