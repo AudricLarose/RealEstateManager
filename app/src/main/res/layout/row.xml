@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="160dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/fond"
     android:layout_marginBottom="5dp"
     android:orientation="vertical">
@@ -29,6 +30,7 @@
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="15sp"
                 android:textStyle="bold" />
+
         </RelativeLayout>
 
         <ImageView
@@ -39,6 +41,18 @@
             android:background="@drawable/noimage"
             android:scaleType="fitXY"
             />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_row"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="18dp"
+            android:progress="@android:integer/config_longAnimTime"
+            android:progressBackgroundTint="@color/colorSecondary"
+            android:visibility="visible"
+            app:layout_anchor="@+id/swipeRefresh"
+            app:layout_anchorGravity="center" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -77,6 +91,5 @@
 
         </RelativeLayout>
     </RelativeLayout>
-
 
 </RelativeLayout>

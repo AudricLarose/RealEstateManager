@@ -90,6 +90,8 @@
 
         android:progress="@android:integer/config_longAnimTime"
         android:progressBackgroundTint="@color/colorSecondary"
-        android:visibility="visible" />
+        android:visibility="gone"
+        app:layout_anchor="@+id/swipeRefresh"
+        app:layout_anchorGravity="center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

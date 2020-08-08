@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import androidx.annotation.NonNull;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,9 +50,22 @@ public class AdaptateurImage extends RecyclerView.Adapter<AdaptateurImage.LeHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LeHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final LeHolder holder, final int position) {
         final String estateImage = liste.get(position);
-        Picasso.get().load(Uri.parse(estateImage)).into(holder.imageRealEstate);
+        holder.progressBar.setVisibility(View.VISIBLE);
+        Picasso.get().load(Uri.parse(estateImage)).into(holder.imageRealEstate, new Callback() {
+            @Override
+            public void onSuccess() {
+                holder.progressBar.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                holder.progressBar.setVisibility(View.GONE);
+
+            }
+        });
         holder.imageRealEstate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,8 +113,10 @@ public class AdaptateurImage extends RecyclerView.Adapter<AdaptateurImage.LeHold
     public static class LeHolder extends RecyclerView.ViewHolder {
         private ImageView imageRealEstate;
         private TextView details_description;
+        private ProgressBar progressBar;
         public LeHolder(@NonNull View itemView) {
             super(itemView);
+            progressBar=itemView.findViewById(R.id.progress_bar_imgerow);
             imageRealEstate = itemView.findViewById(R.id.imageRealEstate);
             details_description= itemView.findViewById(R.id.details_description);
         }

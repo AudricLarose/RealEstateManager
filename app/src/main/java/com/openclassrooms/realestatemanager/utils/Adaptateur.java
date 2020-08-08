@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,11 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.openclassrooms.realestatemanager.Api.DataBaseSQL;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
-import com.openclassrooms.realestatemanager.dummy.DetailFragment;
 import com.openclassrooms.realestatemanager.activity.MainActivity;
+import com.openclassrooms.realestatemanager.dummy.DetailFragment;
+import com.openclassrooms.realestatemanager.dummy.ItemDetailActivity;
 import com.openclassrooms.realestatemanager.modele.ImagesRealEstate;
 import com.openclassrooms.realestatemanager.modele.RealEstate;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -40,6 +42,14 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
 
     int selected_position = RecyclerView.NO_POSITION; // You have to set this globally in the Adapter class
 
+    public Adaptateur(List<RealEstate> liste, Boolean mTwoPane, MainActivity mParentActivity, Context context) {
+        this.liste = liste;
+        this.mTwoPane = mTwoPane;
+        this.mParentActivity = mParentActivity;
+        this.context = context;
+        notifyDataSetChanged();
+    }
+
     private void goToItemDetailsActivity(View view, RealEstate estate1) {
         Intent intent = new Intent(view.getContext(), ItemDetailActivity.class);
         //                    intent.putExtra(DetailFragment.ARG_ITEM_ID, item.id);
@@ -48,15 +58,6 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
         bundle.putSerializable("RealEstate", estate1);
         intent.putExtras(bundle);
         view.getContext().startActivity(intent);
-    }
-
-
-    public Adaptateur(List<RealEstate> liste, Boolean mTwoPane, MainActivity mParentActivity , Context context) {
-        this.liste = liste;
-        this.mTwoPane = mTwoPane;
-        this.mParentActivity = mParentActivity;
-        this.context=context;
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -71,7 +72,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
     public void onBindViewHolder(@NonNull final LeHolder holder, final int position) {
 
         holder.relativeLayout.setBackgroundColor(selected_position == position ? Color.MAGENTA : Color.TRANSPARENT);
-        if (selected_position == position){
+        if (selected_position == position) {
             holder.prix.setTextColor(Color.WHITE);
             holder.ville.setTextColor(Color.BLACK);
             holder.type.setTextColor(Color.BLACK);
@@ -86,7 +87,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             }
         } else {
             try {
-                if (estate.getPrix()!=null) {
+                if (estate.getPrix() != null) {
                     holder.prix.setText(Utils.getDollarFormat(estate.getPrix()));
                 }
             } catch (NumberFormatException e) {
@@ -102,7 +103,7 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
             public void onClick(View v) {
                 if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) return;
                 notifyItemChanged(selected_position);
-                selected_position =holder.getAdapterPosition();
+                selected_position = holder.getAdapterPosition();
                 notifyItemChanged(selected_position);
                 replaceIfTablet(v, position);
             }
@@ -112,16 +113,43 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
     }
 
     private void imageHandling(@NonNull final LeHolder holder) {
-          DataBaseSQL dataBaseSQL= DataBaseSQL.getInstance(mParentActivity);
-        if (dataBaseSQL.imageDao().selectAllImageinParticular(estate.getId())!=null ) {
+        DataBaseSQL dataBaseSQL = DataBaseSQL.getInstance(mParentActivity);
+        holder.progressBar.setVisibility(View.VISIBLE);
+
+        if (dataBaseSQL.imageDao().selectAllImageinParticular(estate.getId()) != null) {
 
             dataBaseSQL.imageDao().selectAllImageinParticular(estate.getId()).observe((LifecycleOwner) context, new Observer<List<ImagesRealEstate>>() {
                 @Override
                 public void onChanged(List<ImagesRealEstate> imagesRealEstateList) {
-                    if (imagesRealEstateList.size() > 0  && (!imagesRealEstateList.get(0).getLinkFb().contains("notLinked") && !imagesRealEstateList.get(0).getLinkFb().contains("notlinked"))) {
-                        Picasso.get().load(imagesRealEstateList.get(0).getLinkFb()).into(holder.imageRealestate);
-                    } else if (imagesRealEstateList.size() > 0){
-                        Picasso.get().load(Uri.parse(imagesRealEstateList.get(0).getImage())).into(holder.imageRealestate);
+                    if (imagesRealEstateList.size() > 0 && (!imagesRealEstateList.get(0).getLinkFb().contains("notLinked") && !imagesRealEstateList.get(0).getLinkFb().contains("notlinked"))) {
+                        Picasso.get().load(imagesRealEstateList.get(0).getLinkFb()).into(holder.imageRealestate, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.progressBar.setVisibility(View.GONE);
+
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                holder.progressBar.setVisibility(View.GONE);
+
+                            }
+                        });
+                    } else if (imagesRealEstateList.size() > 0) {
+                        Picasso.get().load(Uri.parse(imagesRealEstateList.get(0).getImage())).into(holder.imageRealestate, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        holder.progressBar.setVisibility(View.GONE);
+
+                                    }
+
+                                    @Override
+                                    public void onError(Exception e) {
+                                        holder.progressBar.setVisibility(View.GONE);
+
+                                    }
+                                }
+                        );
                     }
                 }
             });
@@ -140,22 +168,22 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
                         .replace(R.id.item_detail_container, fragment)
                         .commit();
             } else {
-                goToItemDetailsActivity(v,liste.get(position));
+                goToItemDetailsActivity(v, liste.get(position));
             }
-        }else {
-            goToItemDetailsActivity(v,liste.get(position));
+        } else {
+            goToItemDetailsActivity(v, liste.get(position));
         }
     }
 
     @SuppressLint("ResourceAsColor")
     private void verifyIfitisTemp(LeHolder holder) {
-        if (estate.getTempInsert()!=null && estate.getTempInsert().contains("true")) {
+        if (estate.getTempInsert() != null && estate.getTempInsert().contains("true")) {
             holder.relativeLayout.setBackgroundColor(R.color.colorPrimary);
         }
-   }
+    }
 
     private void checkIfitsSellOrNot(@NonNull LeHolder holder) {
-        if (estate.getIschecked()!=null && estate.getSelled()!=null) {
+        if (estate.getIschecked() != null && estate.getSelled() != null) {
             if (!Boolean.valueOf(estate.getIschecked()) && estate.getSelled().equals("date")) {
                 holder.selled.setText(" Disponible !");
             } else {
@@ -177,10 +205,12 @@ public class Adaptateur extends RecyclerView.Adapter<Adaptateur.LeHolder> {
         private TextView type, prix, ville, selled;
         private ImageView imageRealestate;
         private RelativeLayout relativeLayout;
+        private ProgressBar progressBar;
 
 
         public LeHolder(@NonNull View itemView) {
             super(itemView);
+            progressBar = itemView.findViewById(R.id.progress_bar_row);
             relativeLayout = itemView.findViewById(R.id.Row);
             imageRealestate = itemView.findViewById(R.id.imageRow);
             type = itemView.findViewById(R.id.TextTypeRow);
